@@ -1,0 +1,324 @@
+<StaffProvisoning>
+<Settings>
+<UseFirstNameInitial>false</UseFirstNameInitial> <!-- Only enter first name initials for staff. Eg: John Doe would become J Doe in the directory. -->
+<DefaultPassword>Apples543%</DefaultPassword> <!-- Password for newly made accounts. Must be changed on first login. -->
+<ValidateWorkEmailEndsWith></ValidateWorkEmailEndsWith> <!-- Validate SIMS work email contains the correct domain. Can be left blank for most schools. -->
+</Settings>
+
+<!-- ADMIN STAFF-->
+	<Role name="Head Teacher"> <!--This is the persons 'Role' on their contract on SIMS.-->
+        <OU>OU=Senior,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU> <!--OU to place staff. USE DISTINGUISHED NAME. -->
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath> <!-- Home Folder. Will Map this path as S:. The %username% will be added automatically by MattMIS.  -->
+		<UPN>@contoso.com</UPN> <!-- UPN domain to create accounts with. This will also be the primary email address. The %username% will be added automatically by MattMIS.-->
+        <groups> 					<!--Groups to add staff to. -->
+            <group>Staff</group>
+			<group>Head Office</group>
+        </groups>
+    </Role>
+	<Role name="Deputy Head">
+        <OU>OU=Senior,OU=Admin Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Senior StaffData</group>
+			<group>Z Drive Users</group>
+			<group>Admin Staff</group>
+			<group>Senior Staff</group>
+        </groups>
+    </Role>
+	<Role name="Data Manager / Analyst">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+        </groups>
+    </Role>
+	<Role name="Finance Officer">
+        <OU>OU=Senior,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffDataStaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Site Staff</group>
+			<group>Drive Users</group>
+        </groups>
+    </Role>
+	<Role name="Welfare Assistant">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Safe Staff</group>
+        </groups>
+    </Role>
+	<Role name="Other Pupil Welfare">
+        <OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+        </groups>
+    </Role>
+	<Role name="Attendance Officer">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Attendance Staff</group>>
+        </groups>
+    </Role>
+	<Role name="Examinations Officer">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Examinations</group>
+			<group>Drive Users</group>
+        </groups>
+    </Role>
+	<Role name="Assistant Head">
+        <OU>OU=Senior StaffData,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+			<group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Drive Users</group>
+        </groups>
+    </Role>
+	<Role name="ICT Technician">
+        <OU>OU=ITS Support Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Technician Staff</group>
+        </groups>
+    </Role>
+	<Role name="Other Technician">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+		<ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Teaching Staff</group>
+        </groups>
+	</Role>
+	<Role name="SEN Co-Ordinator">
+		<OU>OU=Admin,OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+			<group>SE Staff</group>
+        </groups>
+	</Role>
+	<Role name="Receptionist">
+		<OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Office Staff</group>
+			<group>Admin Staff</group>
+        </groups>
+	</Role>
+	<Role name="Administrator / Clerk">
+		<OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+        </groups>
+	</Role>
+	<Role name="Pastoral Support">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Safe Staff</group>
+        </groups>
+    </Role>
+	
+	<!-- Active Directory Groups for subjects exists-->
+	<!--	TODO: identify teaching staff's subjects-->
+	<!-- TEACHING STAFF-->
+	<Role name="Head of Department">
+        <OU>OU=Teaching Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+    </Role>
+	<Role name="Classroom Teacher">
+        <OU>OU=Teaching Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+    </Role>
+	<Role name="Cover Supervisor">
+        <OU>OU=Teaching Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+    </Role>
+	<Role name="Teaching Assistant">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Science Technician">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+			<group>Science</group>
+        </groups>
+	</Role>
+	<Role name="Art &amp;/or Design Technician">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>DT Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Learning Support Assistant">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Peripatetic Teacher">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+			<group>Peripatetic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Advisory Teacher">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Librarian">
+		<OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Academic Staff</group>
+        </groups>
+	</Role>
+	<Role name="Exam Invigilator">
+		<OU>OU=Teaching,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+	</Role>
+	<Role name="Midday Supervisor">
+        <OU>OU=Adminstrator Support Staff,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+    </Role>
+	<!-- FACULTY STAFF-->
+	<Role name="Cook">
+		<OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\FILESVR-01\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+			<group>Admin Staff</group>
+        </groups>
+	</Role>
+	<Role name="Cleaner">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+    </Role>
+	<Role name="Caretaker">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+    </Role>
+	<Role name="Other Catering Staff">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+	</Role>
+	<Role name="Other Premises Staff">
+        <OU>OU=Admin,OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\StaffData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>
+        </groups>
+	</Role>
+	
+	<!-- FALLBACK GROUP IF CANNOT BE MATCHED-->
+	<Role name="Staff">
+        <OU>OU=Staff,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\TeachingData$\</ProfilePath>
+		<UPN>@contoso.com</UPN>
+        <groups>
+            <group>Staff</group>			
+        </groups>
+    </Role>
+</Roles>
+</StaffProvisoning>

@@ -1,0 +1,79 @@
+<YearGroupProvisoning>
+<ExpiresOn>25/8/23</ExpiresOn>  <!-- This date is a failsafe to ensure you update this file ahead of the next academic year. Once this date is reached the program will refuse to make accounts. -->
+<Settings>
+<UseFirstNameInitial>false</UseFirstNameInitial> <!-- Only enter first name initials. Eg: John Doe would become J Doe in the directory. -->
+<DefaultPassword>Apples543%</DefaultPassword> <!-- Password for newly made accounts. Must be changed on first login. -->
+</Settings>
+<years>
+	<year code="7"> <!--Year group code -->
+        <OU>OU=2022,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU> <!--OU to place students. USE DISTINGUISHED NAME. -->
+        <ProfilePath>\\fileserver\2022$\</ProfilePath> <!-- Home Folder for students. Will Map this path as S:. The %username% will be added automatically by MattMIS.-->
+		<ShortStartYearCode>22</ShortStartYearCode> <!-- This number is used for username generation. Year when yeargroup would have been year 7.  -->
+		<UPN>@student.contoso.com</UPN> <!-- UPN domain to create accounts with. This will also be the primary email address. The %username% will be added automatically by MattMIS. -->
+        <groups> <!--Groups to add students to. -->
+            <group>Students</group>
+			<group>2022</group>
+        </groups>
+    </year>
+	<year code="8">
+        <OU>OU=2021,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2021$\</ProfilePath>
+		<ShortStartYearCode>21</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2021</group>
+        </groups>
+    </year>
+	<year code="9">
+        <OU>OU=2020,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2020$\</ProfilePath>
+		<ShortStartYearCode>20</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2020</group>
+        </groups>
+    </year>
+	<year code="10">
+        <OU>OU=2019,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2019$\</ProfilePath>
+		<ShortStartYearCode>19</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2019</group>
+        </groups>
+    </year>
+	<year code="11">
+        <OU>OU=2018,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2018$\</ProfilePath>
+		<ShortStartYearCode>18</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2018</group>
+        </groups>
+    </year>
+	<year code="12">
+        <OU>OU=2017,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2017$\</ProfilePath>
+		<ShortStartYearCode>17</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2017</group>
+        </groups>
+    </year>
+	<year code="13">
+        <OU>OU=2016,OU=Pupils,OU=User Accounts,DC=contoso,DC=local</OU>
+        <ProfilePath>\\fileserver\2016$\</ProfilePath>
+		<ShortStartYearCode>16</ShortStartYearCode>
+		<UPN>@student.contoso.com</UPN>
+        <groups>
+            <group>Students</group>
+			<group>2016</group>
+        </groups>
+    </year>
+</years>
+</YearGroupProvisoning>

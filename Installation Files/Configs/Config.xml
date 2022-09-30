@@ -1,0 +1,33 @@
+<ConfigurationModel>
+<!-- MattMIS Sync Configuration File. Setup guide: https://github.com/matt1235r/MattMIS-Sync -->
+<!-- USE AT YOUR OWN RISK! THIS PRODUCT COMES WITH NO WARRANTY, NEITHER ME NON MY EMPLOYER TAKE ANY RESPONSIBLITY FOR ANY ISSUES THAT MAY ARISE.-->
+	
+	<ActiveDirectory>	
+		<ShortDomainName>CONTOSO</ShortDomainName> <!-- EG: If your domain was contoso.local enter 'CONTOSO'-->
+	    <UserGroupsRootOU>DC=contoso,DC=local</UserGroupsRootOU> <!-- Top level container to match user groups. USE DISTINGUISHED NAME. For most this can be domain root.  -->
+        <StaffRootOU>OU=Staff,OU=User Accounts,DC=contoso,DC=local</StaffRootOU> <!-- Top level container to match staff accounts. USE DISTINGUISHED NAME-->
+		<StudentRootOU>OU=Pupils,OU=User Accounts,DC=contoso,DC=local</StudentRootOU> <!-- Top level container to match student accounts. This container should contain all year groups. USE DISTINGUISHED NAME-->
+	</ActiveDirectory>
+	<MISExports>
+	    <ReportRunnerPath>RunSIMSReports.bat</ReportRunnerPath> <!-- Path to the .bat file that generates your MIS reports. Refer to https://github.com/matt1235r/MattMIS-Sync for more info.-->
+        <StaffReportPath>Exports/Staff.xml</StaffReportPath> <!-- Path for program to pick up staff export AFTER they has been generated. Make sure the report runner is saving the reports to this location. --> 
+		<StudentReportPath>Exports/Students.xml</StudentReportPath> <!-- Path for program to pick up student export AFTER it has been generated. Make sure the report runner is saving the reports to this location. --> 
+		<DeleteReportsAfterProcessing>false</DeleteReportsAfterProcessing> <!-- Should MattMIS delete export files once processed? Change this to true once setup. -->
+	</MISExports>
+	<AccountProvisioning>
+	    <StaffSettingsPath>Configs/StaffGroupProvisioning.xml</StaffSettingsPath> <!-- Path to the staff allocation file. Dictates how and where new staff are created. -->
+		<StudentSettingsPath>Configs/YearGroupProvisioning.xml</StudentSettingsPath>	<!-- Refer to https://github.com/matt1235r/MattMIS-Sync. THIS FILE MUST BE UPDATED EACH ACADEMIC YEAR.-->
+	</AccountProvisioning>
+	<Reporting>		
+		<EmailAlerts> <!-- Refer to https://github.com/matt1235r/MattMIS-Sync for setup guide.-->
+		    <Enabled>false</Enabled> <!--Should MattMIS try to send email alerts?-->
+	        <GmailAppKey></GmailAppKey> <!--Must be generated on googles website. See: https://support.google.com/mail/answer/185833?hl=en-GB-->
+		    <SendFromAddress>example@gmail.com</SendFromAddress> <!--Send from address. MUST HAVE APP PASSWORD GENERATED FIRST. -->
+		    <SendTo> <!-- Email addresses to send reports to -->
+		        <Email>example@contoso.local</Email>
+		        <Email>ithelpdesk@contoso.local</Email> 
+		    </SendTo>
+	    </EmailAlerts>
+	</Reporting>
+
+</ConfigurationModel> 
