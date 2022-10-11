@@ -6,6 +6,7 @@ using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MattMIS_Sync
@@ -170,6 +171,8 @@ namespace MattMIS_Sync
             }
         }
 
+
+
         public static void CheckAccountDeprovision(DirectoryEntry StaffADObject, string role)
         {
             //check whether account has been set to be ignored or set to keep
@@ -229,6 +232,12 @@ namespace MattMIS_Sync
 
             Console.WriteLine("======================================= Finished SIMS Reports =====================================\n\nStarting MattMIS...");
 
+        }
+
+        public static string StripSpecialChars(string input)
+        {
+            Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+            return rgx.Replace(input, "");
         }
     }
 }

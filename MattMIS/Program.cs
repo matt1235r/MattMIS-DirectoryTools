@@ -34,6 +34,8 @@ namespace MattMIS_Sync
 
         static void Main(string[] args)
         {
+            
+
             try
             {
                 SharedMethods.CreateRequiredFolders(); // Creates required folders for logging.
@@ -75,6 +77,7 @@ namespace MattMIS_Sync
             
         }
 
+
         private static int CreateStaffAccount(StaffModel.StaffMISRecord simsRecord)
         {
             //CHECK IF SIMS ID IS EXCLUDED FROM HAVING AN AD ACCOUNT.
@@ -109,7 +112,7 @@ namespace MattMIS_Sync
                 
 
                 //EXTRACT USERNAME FROM WORK EMAIL             
-                string SAMname = simsRecord.WorkEmail.Split('@')[0];
+                string SAMname = StaffUsernameFromEmail(simsRecord.WorkEmail);
                 string userUPN = SAMname + staffRoleDetails.UPN;
 
                 staffLog.Info($"Creating AD account for user: {userUPN}");
@@ -194,13 +197,30 @@ namespace MattMIS_Sync
 
         //NOT YET IMPLEMENTED
 
-        private static string StudentUsernameGenerator(string FirstName, string LastName, string end)
+        private static string StudentUsernameGenerator(string FirstName, string LastName, YearGroupModel.YearGroupRecord yearGroupRecord)
         {
+            //See if special characters need stripping
+            Regex alphaNumeric = new Regex("[^a-zA-Z0-9-]");
+            if (StudentProvisoningSettings.StripSpecialCharacters) { LastName = alphaNumeric.Replace(LastName, ""); }
+            if (StudentProvisoningSettings.StripSpecialCharacters) { FirstName = alphaNumeric.Replace(FirstName, ""); }
+            
             int surnamelength = LastName.Length;
             if (surnamelength > 5) { surnamelength = 5; }
             LastName = LastName.Substring(0, surnamelength);
             
-            return Regex.Replace(FirstName, "[^a-zA-Z]+", "", RegexOptions.Compiled)[0] + LastName + end;
+            return Regex.Replace(FirstName, "[^a-zA-Z]+", "", RegexOptions.Compiled)[0] + LastName + yearGroupRecord.ShortStartYearCode;
+        }
+
+        private static string StaffUsernameFromEmail(string email)
+        {
+            //See if special characters need stripping
+            Regex alphaNumeric = new Regex("[^a-zA-Z0-9-]");
+
+            string emailAlias = email.Split('@')[0];
+
+            if (StaffProvisoningSettings.StripSpecialCharacters) { emailAlias = alphaNumeric.Replace(emailAlias, ""); }
+
+            return emailAlias;
         }
 
         private static int CreateStudentAccount(StudentModel.StudentMISRecord simsRecord)
@@ -210,10 +230,11 @@ namespace MattMIS_Sync
             if (SIMSIDDoNotMakeADAccount.Contains(simsRecord.ID.ToString())) { studentLog.Info($"SIMS ID {simsRecord.ID} has been excluded from AD account creation. Will be skipped."); return 3; }
 
             try
-            {
+            {               
                 //GET STUDENT YEAR DETAILS
                 YearGroupModel.YearGroupRecord studentYearDetails = Program.CurrentYearGroups[simsRecord.YeartaughtinCode];
-                string SAMname = StudentUsernameGenerator(simsRecord.Forename, simsRecord.Surname, studentYearDetails.ShortStartYearCode.ToString());
+
+                string SAMname = StudentUsernameGenerator(simsRecord.Forename, simsRecord.Surname, studentYearDetails);
                 string userUPN = SAMname + studentYearDetails.UPN;
 
                 studentLog.Info($"Creating AD account for user: {userUPN}");
@@ -309,12 +330,14 @@ namespace MattMIS_Sync
             //FIRST LETS CHECK THE EXPIRATION DATE!
             DateTime expirationDate = DateTime.Parse(reportInfo.ExpiresOn);
             ReportGenerator.YearGroupMappingExpiration = reportInfo.ExpiresOn;
-            System.Windows.Forms.MessageBox.Show($"MattMIS is unable to continue as your student allocation file has expired. This is a failsafe to ensure new students are created correctly at the start of new academic years. Please update this file now - and modify the expiration date to resolve this error.\n\nFile location: {Config.AppConfig.AccountProvisioning.StudentSettingsPath}\nExpiration date:{ReportGenerator.YearGroupMappingExpiration}\n\n === APPLICATION WILL NOW EXIT ===");
+            
 
             //expiration date is less than current date.. AKA file has expired
-            if (expirationDate > DateTime.Now)
+            if (expirationDate < DateTime.Now)
             {
+               
                 SharedMethods.CriticalError("STUDENTALLOCATIONEXPIRED");
+
             }
 
             //Iterate through all students in this report

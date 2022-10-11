@@ -80,7 +80,9 @@ namespace MattMIS_Sync
             private string validateWorkEmailEndsWith;
 
             private string fallbackStaffRoleName;
-           
+
+            private bool stripSpecialCharacters;
+
 
             /// <remarks/>
             public bool UseFirstNameInitial
@@ -131,6 +133,19 @@ namespace MattMIS_Sync
                 set
                 {
                     this.validateWorkEmailEndsWith = value;
+                }
+            }
+
+            /// <remarks/>
+            public bool StripSpecialCharacters
+            {
+                get
+                {
+                    return this.stripSpecialCharacters;
+                }
+                set
+                {
+                    this.stripSpecialCharacters = value;
                 }
             }
         }

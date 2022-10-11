@@ -19,6 +19,7 @@ namespace MattMIS_Sync
         {
 
             private string expiresOnField;
+            
             private StudentProvisoningSettings settingsField;
 
             private YearGroupRecord[] yearsField;
@@ -72,7 +73,7 @@ namespace MattMIS_Sync
         {
 
             private bool useFirstNameInitialField;
-
+            private bool stripSpecialCharacters;
             private string defaultPasswordField;
 
 
@@ -99,6 +100,19 @@ namespace MattMIS_Sync
                 set
                 {
                     this.defaultPasswordField = value;
+                }
+            }
+
+            /// <remarks/>
+            public bool StripSpecialCharacters
+            {
+                get
+                {
+                    return this.stripSpecialCharacters;
+                }
+                set
+                {
+                    this.stripSpecialCharacters = value;
                 }
             }
 
