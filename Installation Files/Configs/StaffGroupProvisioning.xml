@@ -3,6 +3,7 @@
 <UseFirstNameInitial>false</UseFirstNameInitial> <!-- Only enter first name initials for staff. Eg: John Doe would become J Doe in the directory. -->
 <DefaultPassword>Apples543%</DefaultPassword> <!-- Password for newly made accounts. Must be changed on first login. -->
 <ValidateWorkEmailEndsWith></ValidateWorkEmailEndsWith> <!-- Validate SIMS work email contains the correct domain. Can be left blank for most schools. -->
+<StripSpecialCharacters>false</StripSpecialCharacters> <!-- Will strip non alphanumeric charcaters (spaces, apostrophes, hyphens, etc) when generating usernames. -->
 </Settings>
 
 <!-- ADMIN STAFF-->
