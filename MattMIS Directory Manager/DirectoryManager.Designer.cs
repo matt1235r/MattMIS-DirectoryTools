@@ -62,13 +62,6 @@
             treeNode14,
             treeNode15});
             System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Active Directory");
-            this.mainListView = new ComponentOwl.BetterListView.BetterListView();
-            this.betterListViewColumnHeader5 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader1 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader6 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader3 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader2 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader4 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.directoryTreeView = new System.Windows.Forms.TreeView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -84,14 +77,13 @@
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button1 = new System.Windows.Forms.Button();
+            this.hideUnmatchedCheckBox = new System.Windows.Forms.CheckBox();
             this.fastObjectListView1 = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.hideUnmatchedCheckBox = new System.Windows.Forms.CheckBox();
             this.hideDisabledCheckBox = new System.Windows.Forms.CheckBox();
             this.searchButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -111,7 +103,13 @@
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.backgroundCommandQueuer = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker = new MattMIS_Directory_Manager.AbortableBackgroundWorker();
-            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).BeginInit();
+            this.mainListView = new ComponentOwl.BetterListView.BetterListView();
+            this.betterListViewColumnHeader5 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
+            this.betterListViewColumnHeader1 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
+            this.betterListViewColumnHeader6 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
+            this.betterListViewColumnHeader3 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
+            this.betterListViewColumnHeader2 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
+            this.betterListViewColumnHeader4 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
             this.toolStrip1.SuspendLayout();
             this.userMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -120,65 +118,8 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).BeginInit();
             this.toolStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // mainListView
-            // 
-            this.mainListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainListView.ColumnReorderMode = ComponentOwl.BetterListView.BetterListViewColumnReorderMode.Enabled;
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader5);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader1);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader6);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader3);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader2);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader4);
-            this.mainListView.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mainListView.ImageList = this.imageList1;
-            this.mainListView.ImageListColumns = this.imageList1;
-            this.mainListView.Location = new System.Drawing.Point(6, 66);
-            this.mainListView.Name = "mainListView";
-            this.mainListView.Size = new System.Drawing.Size(931, 432);
-            this.mainListView.TabIndex = 0;
-            this.mainListView.SelectedIndexChanged += new System.EventHandler(this.mainListView_SelectedIndexChanged);
-            this.mainListView.DoubleClick += new System.EventHandler(this.mainListView_DoubleClick);
-            this.mainListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainListView_MouseClick);
-            // 
-            // betterListViewColumnHeader5
-            // 
-            this.betterListViewColumnHeader5.Name = "betterListViewColumnHeader5";
-            this.betterListViewColumnHeader5.Text = "ID";
-            this.betterListViewColumnHeader5.Width = 98;
-            // 
-            // betterListViewColumnHeader1
-            // 
-            this.betterListViewColumnHeader1.Name = "betterListViewColumnHeader1";
-            this.betterListViewColumnHeader1.Text = "Full Name";
-            this.betterListViewColumnHeader1.Width = 215;
-            // 
-            // betterListViewColumnHeader6
-            // 
-            this.betterListViewColumnHeader6.Name = "betterListViewColumnHeader6";
-            this.betterListViewColumnHeader6.Text = "Department";
-            this.betterListViewColumnHeader6.Width = 214;
-            // 
-            // betterListViewColumnHeader3
-            // 
-            this.betterListViewColumnHeader3.Name = "betterListViewColumnHeader3";
-            this.betterListViewColumnHeader3.Text = "Username";
-            this.betterListViewColumnHeader3.Width = 309;
-            // 
-            // betterListViewColumnHeader2
-            // 
-            this.betterListViewColumnHeader2.Name = "betterListViewColumnHeader2";
-            this.betterListViewColumnHeader2.Text = "Status";
-            this.betterListViewColumnHeader2.Width = 169;
-            // 
-            // betterListViewColumnHeader4
-            // 
-            this.betterListViewColumnHeader4.Name = "betterListViewColumnHeader4";
-            this.betterListViewColumnHeader4.Text = "Role";
             // 
             // imageList1
             // 
@@ -337,6 +278,7 @@
             this.enableAccountToolStripMenuItem});
             this.userMenuStrip.Name = "userMenuStrip";
             this.userMenuStrip.Size = new System.Drawing.Size(169, 104);
+            this.userMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.userMenuStrip_Opening);
             // 
             // viewDetailsToolStripMenuItem
             // 
@@ -384,13 +326,12 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
-            this.splitContainer1.Panel1.Controls.Add(this.fastObjectListView1);
             this.splitContainer1.Panel1.Controls.Add(this.directoryTreeView);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.hideUnmatchedCheckBox);
+            this.splitContainer1.Panel2.Controls.Add(this.fastObjectListView1);
             this.splitContainer1.Panel2.Controls.Add(this.hideDisabledCheckBox);
             this.splitContainer1.Panel2.Controls.Add(this.searchButton);
             this.splitContainer1.Panel2.Controls.Add(this.label1);
@@ -403,68 +344,6 @@
             this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 3;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(142, 246);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // fastObjectListView1
-            // 
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn1);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn2);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn3);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn5);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn4);
-            this.fastObjectListView1.CellEditUseWholeCell = false;
-            this.fastObjectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1,
-            this.olvColumn2,
-            this.olvColumn3,
-            this.olvColumn5,
-            this.olvColumn4});
-            this.fastObjectListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.fastObjectListView1.HideSelection = false;
-            this.fastObjectListView1.Location = new System.Drawing.Point(12, 66);
-            this.fastObjectListView1.Name = "fastObjectListView1";
-            this.fastObjectListView1.ShowGroups = false;
-            this.fastObjectListView1.Size = new System.Drawing.Size(251, 174);
-            this.fastObjectListView1.TabIndex = 2;
-            this.fastObjectListView1.UseCompatibleStateImageBehavior = false;
-            this.fastObjectListView1.View = System.Windows.Forms.View.Details;
-            this.fastObjectListView1.VirtualMode = true;
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "ID";
-            this.olvColumn1.Text = "ID";
-            // 
-            // olvColumn2
-            // 
-            this.olvColumn2.AspectName = "FullName";
-            this.olvColumn2.Text = "Full Name";
-            // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "Department";
-            this.olvColumn3.Text = "Department";
-            // 
-            // olvColumn5
-            // 
-            this.olvColumn5.AspectName = "Username";
-            this.olvColumn5.DisplayIndex = 4;
-            this.olvColumn5.Text = "Username";
-            // 
-            // olvColumn4
-            // 
-            this.olvColumn4.AspectName = "Status";
-            this.olvColumn4.DisplayIndex = 3;
-            this.olvColumn4.Text = "Status";
-            // 
             // hideUnmatchedCheckBox
             // 
             this.hideUnmatchedCheckBox.AutoSize = true;
@@ -475,6 +354,74 @@
             this.hideUnmatchedCheckBox.TabIndex = 11;
             this.hideUnmatchedCheckBox.Text = "Hide unmatched accounts from search results.";
             this.hideUnmatchedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // fastObjectListView1
+            // 
+            this.fastObjectListView1.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.fastObjectListView1.AllColumns.Add(this.olvColumn1);
+            this.fastObjectListView1.AllColumns.Add(this.olvColumn2);
+            this.fastObjectListView1.AllColumns.Add(this.olvColumn3);
+            this.fastObjectListView1.AllColumns.Add(this.olvColumn5);
+            this.fastObjectListView1.AllColumns.Add(this.olvColumn4);
+            this.fastObjectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.fastObjectListView1.CellEditUseWholeCell = false;
+            this.fastObjectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn2,
+            this.olvColumn3,
+            this.olvColumn5,
+            this.olvColumn4});
+            this.fastObjectListView1.ContextMenuStrip = this.userMenuStrip;
+            this.fastObjectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.fastObjectListView1.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fastObjectListView1.FullRowSelect = true;
+            this.fastObjectListView1.HideSelection = false;
+            this.fastObjectListView1.Location = new System.Drawing.Point(7, 164);
+            this.fastObjectListView1.Name = "fastObjectListView1";
+            this.fastObjectListView1.RowHeight = 30;
+            this.fastObjectListView1.SelectedBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.fastObjectListView1.SelectedForeColor = System.Drawing.Color.Black;
+            this.fastObjectListView1.ShowGroups = false;
+            this.fastObjectListView1.Size = new System.Drawing.Size(930, 334);
+            this.fastObjectListView1.SmallImageList = this.imageList1;
+            this.fastObjectListView1.TabIndex = 2;
+            this.fastObjectListView1.UseCompatibleStateImageBehavior = false;
+            this.fastObjectListView1.UseHotItem = true;
+            this.fastObjectListView1.View = System.Windows.Forms.View.Details;
+            this.fastObjectListView1.VirtualMode = true;
+            this.fastObjectListView1.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.fastObjectListView1_FormatRow);
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "ID";
+            this.olvColumn1.Text = "ID";
+            this.olvColumn1.Width = 74;
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "FullName";
+            this.olvColumn2.Text = "Full Name";
+            this.olvColumn2.Width = 231;
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "Department";
+            this.olvColumn3.Text = "Department";
+            this.olvColumn3.Width = 221;
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "Username";
+            this.olvColumn5.Text = "Username";
+            this.olvColumn5.Width = 315;
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.AspectName = "Status";
+            this.olvColumn4.Text = "Status";
+            this.olvColumn4.Width = 249;
             // 
             // hideDisabledCheckBox
             // 
@@ -647,6 +594,64 @@
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.abortableBackgroundWorker1_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.abortableBackgroundWorker1_RunWorkerCompleted);
             // 
+            // mainListView
+            // 
+            this.mainListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainListView.ColumnReorderMode = ComponentOwl.BetterListView.BetterListViewColumnReorderMode.Enabled;
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader5);
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader1);
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader6);
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader3);
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader2);
+            this.mainListView.Columns.Add(this.betterListViewColumnHeader4);
+            this.mainListView.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainListView.ImageList = this.imageList1;
+            this.mainListView.ImageListColumns = this.imageList1;
+            this.mainListView.Location = new System.Drawing.Point(6, 66);
+            this.mainListView.Name = "mainListView";
+            this.mainListView.Size = new System.Drawing.Size(931, 432);
+            this.mainListView.TabIndex = 0;
+            this.mainListView.SelectedIndexChanged += new System.EventHandler(this.mainListView_SelectedIndexChanged);
+            this.mainListView.DoubleClick += new System.EventHandler(this.mainListView_DoubleClick);
+            this.mainListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainListView_MouseClick);
+            // 
+            // betterListViewColumnHeader5
+            // 
+            this.betterListViewColumnHeader5.Name = "betterListViewColumnHeader5";
+            this.betterListViewColumnHeader5.Text = "ID";
+            this.betterListViewColumnHeader5.Width = 98;
+            // 
+            // betterListViewColumnHeader1
+            // 
+            this.betterListViewColumnHeader1.Name = "betterListViewColumnHeader1";
+            this.betterListViewColumnHeader1.Text = "Full Name";
+            this.betterListViewColumnHeader1.Width = 215;
+            // 
+            // betterListViewColumnHeader6
+            // 
+            this.betterListViewColumnHeader6.Name = "betterListViewColumnHeader6";
+            this.betterListViewColumnHeader6.Text = "Department";
+            this.betterListViewColumnHeader6.Width = 214;
+            // 
+            // betterListViewColumnHeader3
+            // 
+            this.betterListViewColumnHeader3.Name = "betterListViewColumnHeader3";
+            this.betterListViewColumnHeader3.Text = "Username";
+            this.betterListViewColumnHeader3.Width = 309;
+            // 
+            // betterListViewColumnHeader2
+            // 
+            this.betterListViewColumnHeader2.Name = "betterListViewColumnHeader2";
+            this.betterListViewColumnHeader2.Text = "Status";
+            this.betterListViewColumnHeader2.Width = 169;
+            // 
+            // betterListViewColumnHeader4
+            // 
+            this.betterListViewColumnHeader4.Name = "betterListViewColumnHeader4";
+            this.betterListViewColumnHeader4.Text = "Role";
+            // 
             // DirectoryManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -658,7 +663,6 @@
             this.Name = "DirectoryManager";
             this.Text = "MattMIS Directory Manager";
             this.Load += new System.EventHandler(this.DirectoryManager_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.userMenuStrip.ResumeLayout(false);
@@ -670,31 +674,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).EndInit();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private ComponentOwl.BetterListView.BetterListView mainListView;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader1;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader2;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader3;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.TreeView directoryTreeView;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader4;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader5;
         private System.Windows.Forms.ContextMenuStrip userMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem viewDetailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem changePasswordToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader6;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox searchTypeBox;
@@ -725,6 +722,12 @@
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn olvColumn5;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
-        private System.Windows.Forms.Button button1;
+        private ComponentOwl.BetterListView.BetterListView mainListView;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader5;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader1;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader6;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader3;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader2;
+        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader4;
     }
 }
