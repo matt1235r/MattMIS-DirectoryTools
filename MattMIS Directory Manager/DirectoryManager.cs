@@ -1,4 +1,5 @@
-﻿using ComponentOwl.BetterListView;
+﻿using BrightIdeasSoftware;
+using ComponentOwl.BetterListView;
 using MattMIS_Directory_Manager;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace MattMIS_Directory_Manager
             RefeshDirectoryTree();
             SendMessage(searchTextBox.Handle, EM_SETCUEBANNER, 0, "Filter by...");
 
+            olvColumn1.ImageGetter = new ImageGetterDelegate(UserHandler.UserImageGetter);
         }
 
         private void RefeshDirectoryTree()
@@ -53,7 +55,7 @@ namespace MattMIS_Directory_Manager
 
             AddSubOU(de, directoryTreeView.Nodes.Find("Active Directory", false)[0]);
 
-            directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find("SEARCHPAGE", true)[0] ;
+            directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find("SEARCHPAGE", true)[0];
             directoryTreeView.Nodes.Find("MIS", true)[0].ExpandAll();
 
         }
@@ -164,7 +166,7 @@ namespace MattMIS_Directory_Manager
                 else if (commandValue.StartsWith("BYTITLE"))
                 {
                     backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], OPERATION = "BYTITLE" });
-                }               
+                }
                 else if (commandValue.StartsWith("THISOU"))
                 {
                     backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], OPERATION = "THISOU" });
@@ -178,8 +180,8 @@ namespace MattMIS_Directory_Manager
                 }
 
             }
-        
-            
+
+
         }
 
         private void mainListView_DoubleClick(object sender, EventArgs e)
@@ -248,14 +250,15 @@ namespace MattMIS_Directory_Manager
         private void LoadPreRenderListView()
         {
             currentFolderLocation.Text = "Drawing.................";
+            fastObjectListView1.SetObjects(UserHandler.GetUsers());
             mainListView.BeginUpdate();
             mainListView.Items.Clear();
-            foreach(var s in preRender) { mainListView.Items.Add(s); }
+            foreach (var s in preRender) { mainListView.Items.Add(s); }
             mainListView.EndUpdate();
             amountOfItemsLabel.Text = $"{mainListView.Items.Count} users displayed";
-            
+
             StripProgressBar.Style = ProgressBarStyle.Continuous;
-            
+
             currentFolderLocation.Text = "";
             loadingSeperator.Visible = false;
             stopLoadingButton.Visible = false;
@@ -270,14 +273,14 @@ namespace MattMIS_Directory_Manager
             mainListView.Items.Clear();
             for (int i = cacheList.Count - 1; i >= 0; i--)
             {
-                
+
                 if (Convert.ToString(cacheList[i].Properties["cn"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["userPrincipalName"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["department"].Value ?? "").ToLower().Contains(filterString.ToLower()))
                 {
 
                     mainListView.Items.Add(CreateListViewItem(cacheList[i]));
 
                 }
-                
+
             }
             mainListView.EndUpdate();
             amountOfItemsLabel.Text = $"{mainListView.Items.Count} users displayed";
@@ -286,7 +289,7 @@ namespace MattMIS_Directory_Manager
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -310,15 +313,15 @@ namespace MattMIS_Directory_Manager
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            
-            
+
+
 
 
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            
+
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -398,7 +401,7 @@ namespace MattMIS_Directory_Manager
 
                 MessageBox.Show($"Unable to disable user account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
 
         private void enableAccountToolStripMenuItem_Click(object sender, EventArgs e)
@@ -436,7 +439,7 @@ namespace MattMIS_Directory_Manager
             if (searchTextBox.Text == "" && searchTypeBox.SelectedIndex == 0) { LoadFromCache(); }
             else if (searchTypeBox.SelectedIndex == 0)
             {
- 
+
                 LoadFromCache(true, searchTextBox.Text);
             }
             if (searchTextBox.Text == "" && searchTypeBox.SelectedIndex == 1) { mainListView.Items.Clear(); }
@@ -452,6 +455,7 @@ namespace MattMIS_Directory_Manager
                 DirectoryEntry ADObject = new DirectoryEntry(OU, SharedMethods.username, SharedMethods.password);
                 preRender.Clear();
                 cacheList.Clear();
+                UserHandler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
                 deSearch.SizeLimit = 3000;
@@ -463,6 +467,8 @@ namespace MattMIS_Directory_Manager
                 {
                     cacheList.Add(userResult.GetDirectoryEntry());
                     preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
+                    UserHandler.AddUser(userResult.GetDirectoryEntry());
+
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
@@ -473,6 +479,7 @@ namespace MattMIS_Directory_Manager
                 DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
                 preRender.Clear();
                 cacheList.Clear();
+                UserHandler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
@@ -485,11 +492,8 @@ namespace MattMIS_Directory_Manager
                 {
                     cacheList.Add(userResult.GetDirectoryEntry());
                     preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
-                    DirectoryEntry result = userResult.GetDirectoryEntry();
+                    UserHandler.AddUser(userResult.GetDirectoryEntry());
 
-                    var sidInBytes = (byte[])result.Properties["objectSid"].Value;
-                    var sid = new SecurityIdentifier(sidInBytes, 0);
-                    UserHandler.Users.Add(new UserHandler.UserModel($"{result.Properties["physicalDeliveryOfficeName"].Value ?? ""}",$"{result.Properties["cn"].Value ?? ""}", $"{result.Properties["department"].Value ?? ""}", $"{result.Properties["userPrincipleName"].Value ?? ""}", "Online", sid.ToString()));
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
 
                 }
@@ -501,6 +505,7 @@ namespace MattMIS_Directory_Manager
 
                 DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
                 preRender.Clear();
+                UserHandler.Clear();
                 //ARGUMENT = $"{searchTextBox.Text}#HIDEDISABLED{hideDisabledCheckBox.Checked}#HIDEUNMATCHED{hideUnmatchedCheckBox.Checked}"
                 string searchQuery = arguments.ARGUMENT.Split('#')[0];
                 bool hideDisabled = Boolean.Parse(arguments.ARGUMENT.Split('#')[1]);
@@ -511,13 +516,13 @@ namespace MattMIS_Directory_Manager
                 deSearch.PageSize = 3000;
 
                 if (hideDisabled) deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*))(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))";
-                else { deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))";  }
-                
+                else { deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; }
+
                 SearchResultCollection userResults = deSearch.FindAll();
 
                 foreach (SearchResult userResult in userResults)
                 {
-
+                    UserHandler.AddUser(userResult.GetDirectoryEntry());
                     preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
@@ -557,6 +562,7 @@ namespace MattMIS_Directory_Manager
                     cacheList.Add(userResult.GetDirectoryEntry());
                     preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
 
+                    UserHandler.AddUser(userResult.GetDirectoryEntry());
                 }
                 mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
             }
@@ -576,14 +582,14 @@ namespace MattMIS_Directory_Manager
 
                 StripProgressBar.Style = ProgressBarStyle.Continuous;
             }
-            
+
         }
 
         private void directoryTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if(e.Node.Tag != null)
+            if (e.Node.Tag != null)
             {
-                if(e.Node.Tag.ToString() == "SEARCHALL")
+                if (e.Node.Tag.ToString() == "SEARCHALL")
                 {
                     searchTypeBox.SelectedIndex = 1;
                     searchTextBox.Text = "";
@@ -594,7 +600,7 @@ namespace MattMIS_Directory_Manager
 
         private void hideDisabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void directoryTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -604,10 +610,10 @@ namespace MattMIS_Directory_Manager
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if(backgroundCommandQueuer.Tag != mainListView.Tag && backgroundCommandQueuer.Tag != null)
+            if (backgroundCommandQueuer.Tag != mainListView.Tag && backgroundCommandQueuer.Tag != null)
             {
                 mainListView.Items.Clear();
-                
+
                 backgroundCommandQueuer.Stop();
             }
             else
@@ -623,7 +629,7 @@ namespace MattMIS_Directory_Manager
 
         private void searchTypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(searchTypeBox.SelectedIndex == 0) { hideDisabledCheckBox.Visible = false;hideUnmatchedCheckBox.Visible = false; }
+            if (searchTypeBox.SelectedIndex == 0) { hideDisabledCheckBox.Visible = false; hideUnmatchedCheckBox.Visible = false; }
             else if (searchTypeBox.SelectedIndex == 1) { hideDisabledCheckBox.Visible = true; hideUnmatchedCheckBox.Visible = true; }
         }
 
@@ -632,18 +638,38 @@ namespace MattMIS_Directory_Manager
             MessageBox.Show("Test");
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void userMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            fastObjectListView1.SetObjects(UserHandler.GetUsers());
+            if (fastObjectListView1.SelectedIndices.Count == 0) { e.Cancel = true; }
+            else if (fastObjectListView1.SelectedIndices.Count == 0) 
+            { 
+                UserHandler.UserModel user = fastObjectListView1.SelectedObject as UserHandler.UserModel;
+                userMenuStrip.Tag = user.SID;
+                viewDetailsToolStripMenuItem.Enabled = true;
+                changePasswordToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                viewDetailsToolStripMenuItem.Enabled = false;
+                changePasswordToolStripMenuItem.Enabled = false;
+            }
+
+        }
+
+        private void fastObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            UserHandler.UserModel user = (UserHandler.UserModel)e.Model;
+            if(user.ImageKey == "disabled.png") { e.Item.ForeColor = Color.Red; }
+            else if (user.Status == "unlinked.png") { e.Item.ForeColor = Color.Blue; }
         }
     }
-}
 
-public class BackgroundArguments
-{
-    public string OPERATION;
-    public string ARGUMENT;
+    public class BackgroundArguments
+    {
+        public string OPERATION;
+        public string ARGUMENT;
 
+    }
 }
 
 
