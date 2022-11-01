@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -33,9 +34,7 @@ namespace MattMIS_Sync
         //STATS for Mailer
 
         static void Main(string[] args)
-        {
-            
-
+        {            
             try
             {
                 SharedMethods.CreateRequiredFolders(); // Creates required folders for logging.

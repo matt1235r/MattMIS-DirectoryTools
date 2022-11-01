@@ -16,6 +16,11 @@ namespace MattMIS_Sync
         private static readonly log4net.ILog staffLog = log4net.LogManager.GetLogger("StaffRollingLogFileAppender");
         private static readonly log4net.ILog studentLog = log4net.LogManager.GetLogger("StudentRollingLogFileAppender");
 
+        public static string username = @"tcs\a";
+        public static string password = @"DLDN/1164-la";
+        public static string connectionString = @"LDAP://10.120.112.100/";
+        public static string ADUserRoot = @"OU=User Accounts,DC=tcs,DC=local";
+
         public static void EnableADAccount(DirectoryEntry user)
         {
             int val = (int)user.Properties["userAccountControl"].Value;
