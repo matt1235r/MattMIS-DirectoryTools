@@ -25,37 +25,16 @@ namespace MattMIS_Directory_Manager
             InitializeComponent();
         }
 
-        public UserCard(DirectoryEntry directoryEntry)
+        public UserCard(DirectoryEntry directoryEntry, string jumpToPage = "")
         {
             InitializeComponent();
             PopulateOverview(directoryEntry);
+            if (jumpToPage == "changepw") { tabControl1.SelectedTab = passwordGroupsPage; passwordMaskedTextBox.Select(); }
         }
 
         DirectoryEntry ADObject;
         UserPrincipal user;
         PrincipalContext pc = new PrincipalContext(ContextType.Domain, Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
-
-        public UserCard(string SID, string jumpToPage)
-        {
-            InitializeComponent();
-            DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
-            ADObject.UsePropertyCache = false;
-            ADObject.AuthenticationType = AuthenticationTypes.ServerBind;
-
-            DirectorySearcher deSearch = new DirectorySearcher(ADObject);
-            deSearch.SearchScope = SearchScope.Subtree;
-            deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(objectSid={SID}))";
-
-            SearchResultCollection userResults = deSearch.FindAll();
-            if (userResults.Count == 1) //Just one  Member Exists with this ID -- All good. I will check if any updates are needed and if they have been disabled.                
-            {
-                PopulateOverview(userResults[0].GetDirectoryEntry());
-            }
-
-            if (jumpToPage == "changepw") { tabControl1.SelectedTab = passwordGroupsPage;passwordMaskedTextBox.Select(); }
-        }
-
-       
 
         private void PopulateOverview(DirectoryEntry entry)
         {
@@ -109,6 +88,8 @@ namespace MattMIS_Directory_Manager
                     groupsListView.Items.Add(ls);
                 }
             }
+
+
         }
 
         private void closeButton_Click(object sender, EventArgs e)

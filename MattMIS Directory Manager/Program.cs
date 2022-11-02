@@ -16,7 +16,8 @@ namespace MattMIS_Directory_Manager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DirectoryManager());
+
+            Application.Run(new ConnectionWindow());
         }
     }
 }

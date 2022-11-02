@@ -71,11 +71,14 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.userMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.viewDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openHomeFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.hideUnmatchedCheckBox = new System.Windows.Forms.CheckBox();
             this.fastObjectListView1 = new BrightIdeasSoftware.FastObjectListView();
@@ -263,52 +266,73 @@
             // 
             this.userMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewDetailsToolStripMenuItem,
+            this.openHomeFolderToolStripMenuItem,
             this.toolStripSeparator1,
             this.changePasswordToolStripMenuItem,
             this.toolStripSeparator2,
             this.disableToolStripMenuItem,
-            this.enableAccountToolStripMenuItem});
+            this.enableAccountToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.refreshToolStripMenuItem});
             this.userMenuStrip.Name = "userMenuStrip";
-            this.userMenuStrip.Size = new System.Drawing.Size(169, 104);
+            this.userMenuStrip.Size = new System.Drawing.Size(176, 154);
             this.userMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.userMenuStrip_Opening);
             // 
             // viewDetailsToolStripMenuItem
             // 
             this.viewDetailsToolStripMenuItem.Name = "viewDetailsToolStripMenuItem";
-            this.viewDetailsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.viewDetailsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.viewDetailsToolStripMenuItem.Text = "View Details";
             this.viewDetailsToolStripMenuItem.Click += new System.EventHandler(this.viewDetailsToolStripMenuItem_Click);
+            // 
+            // openHomeFolderToolStripMenuItem
+            // 
+            this.openHomeFolderToolStripMenuItem.Name = "openHomeFolderToolStripMenuItem";
+            this.openHomeFolderToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.openHomeFolderToolStripMenuItem.Text = "Open Home Folder";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(172, 6);
             // 
             // changePasswordToolStripMenuItem
             // 
             this.changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
-            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.changePasswordToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.changePasswordToolStripMenuItem.Text = "Change Password";
             this.changePasswordToolStripMenuItem.Click += new System.EventHandler(this.changePasswordToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(172, 6);
             // 
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.disableToolStripMenuItem.Text = "Disable Account";
             this.disableToolStripMenuItem.Click += new System.EventHandler(this.disableToolStripMenuItem_Click);
             // 
             // enableAccountToolStripMenuItem
             // 
             this.enableAccountToolStripMenuItem.Name = "enableAccountToolStripMenuItem";
-            this.enableAccountToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.enableAccountToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.enableAccountToolStripMenuItem.Text = "Enable Account";
             this.enableAccountToolStripMenuItem.Click += new System.EventHandler(this.enableAccountToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(172, 6);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -344,6 +368,7 @@
             this.hideUnmatchedCheckBox.TabIndex = 11;
             this.hideUnmatchedCheckBox.Text = "Hide unmatched accounts.";
             this.hideUnmatchedCheckBox.UseVisualStyleBackColor = true;
+            this.hideUnmatchedCheckBox.CheckedChanged += new System.EventHandler(this.hideUnmatchedCheckBox_CheckedChanged);
             // 
             // fastObjectListView1
             // 
@@ -596,6 +621,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DirectoryManager";
             this.Text = "MattMIS Directory Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DirectoryManager_FormClosing);
             this.Load += new System.EventHandler(this.DirectoryManager_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -655,5 +681,8 @@
         private BrightIdeasSoftware.OLVColumn departmentColumn;
         private BrightIdeasSoftware.OLVColumn usernameColumn;
         private BrightIdeasSoftware.OLVColumn statusColumn;
+        private System.Windows.Forms.ToolStripMenuItem openHomeFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
     }
 }
