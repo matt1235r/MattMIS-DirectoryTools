@@ -73,17 +73,17 @@ namespace MattMIS_Directory_Manager
                 imageKey = "disabled.png";
 
             }
-            else if (userActive)
-            {
-                userComment = $"Not Matched";
-                // betterListViewItem.ForeColor = Color.Blue;
-                imageKey = "unlinked.png";
-            }
             else if (!userActive)
             {
                 userComment = $"Manually Disabled";
                 // betterListViewItem.ForeColor = Color.Red;
                 imageKey = "disabled.png";
+            }
+            else 
+            {
+                userComment = $"Not Matched";
+                // betterListViewItem.ForeColor = Color.Blue;
+                imageKey = "unlinked.png";
             }
 
             Users.Add(new UserModel($"{userObject.Properties["physicalDeliveryOfficeName"].Value ?? ""}", $"{userObject.Properties["cn"].Value ?? ""}", $"{userObject.Properties["department"].Value ?? ""}", $"{userObject.Properties["userPrincipalName"].Value}", userComment, sid.ToString(), imageKey, userObject));
