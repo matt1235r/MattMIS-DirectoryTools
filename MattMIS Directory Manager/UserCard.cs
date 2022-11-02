@@ -1,7 +1,5 @@
 ﻿
 using ActiveDs;
-using ComponentOwl.BetterListView;
-using ComponentOwl.BetterListView.Collections;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,12 +33,12 @@ namespace MattMIS_Directory_Manager
 
         DirectoryEntry ADObject;
         UserPrincipal user;
-        PrincipalContext pc = new PrincipalContext(ContextType.Domain, "10.120.112.100", SharedMethods.username, SharedMethods.password);
+        PrincipalContext pc = new PrincipalContext(ContextType.Domain, Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
 
         public UserCard(string SID, string jumpToPage)
         {
             InitializeComponent();
-            DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
+            DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
             ADObject.UsePropertyCache = false;
             ADObject.AuthenticationType = AuthenticationTypes.ServerBind;
 

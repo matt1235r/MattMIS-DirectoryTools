@@ -1,5 +1,4 @@
 ﻿using BrightIdeasSoftware;
-using ComponentOwl.BetterListView;
 using MattMIS_Directory_Manager;
 using System;
 using System.Collections.Generic;
@@ -34,22 +33,20 @@ namespace MattMIS_Directory_Manager
             InitializeComponent();
         }
 
-
-
-        List<DirectoryEntry> cacheList = new List<DirectoryEntry>();
-        List<BetterListViewItem> preRender = new List<BetterListViewItem>();
         private void DirectoryManager_Load(object sender, EventArgs e)
         {
             searchTypeBox.SelectedIndex = 0;
+            Config.LoadConfig();
             RefeshDirectoryTree();
             SendMessage(searchTextBox.Handle, EM_SETCUEBANNER, 0, "Filter by...");
 
-            olvColumn1.ImageGetter = new ImageGetterDelegate(UserHandler.UserImageGetter);
+            idColumn.ImageGetter = new ImageGetterDelegate(UserHandler.UserImageGetter);
+            
         }
 
         private void RefeshDirectoryTree()
         {
-            DirectoryEntry de = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
+            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
 
             de.AuthenticationType = AuthenticationTypes.Secure;
 
@@ -57,7 +54,7 @@ namespace MattMIS_Directory_Manager
 
             directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find("SEARCHPAGE", true)[0];
             directoryTreeView.Nodes.Find("MIS", true)[0].ExpandAll();
-
+            
         }
 
         private void AddSubOU(DirectoryEntry thisOU, TreeNode parentnode)
@@ -66,7 +63,7 @@ namespace MattMIS_Directory_Manager
             newnode.Text = Convert.ToString(thisOU.Properties["name"].Value ?? "");
             newnode.Tag = "THISOU#" + thisOU.Path;
             parentnode.Nodes.Add(newnode);
-            newnode.ImageIndex = 0;
+            newnode.ImageIndex = 1;
             DirectorySearcher search = new DirectorySearcher(thisOU);
             search.SearchScope = SearchScope.OneLevel;
             search.Filter = "(&(objectclass=organizationalUnit))";
@@ -77,45 +74,7 @@ namespace MattMIS_Directory_Manager
                 AddSubOU(sub.GetDirectoryEntry(), newnode);
             }
         }
-
-        private void SetUserStatus(DirectoryEntry user, BetterListViewItem betterListViewItem)
-        {
-            string userComment = "";
-
-            userComment = Convert.ToString(user.Properties["comment"].Value ?? "");
-
-            if (userComment.StartsWith("CHECKED### by MattMIS") && IsActive(user))
-            {
-                userComment = userComment.Split(new[] { "###" }, StringSplitOptions.None)[2];
-                userComment = $"Healthy: ({userComment.Split(' ')[0]})";
-                betterListViewItem.ImageKey = "enabled.png";
-            }
-            else if (userComment.StartsWith("DISABLED### by MattMIS") && !IsActive(user))
-            {
-                userComment = userComment.Split(new[] { "###" }, StringSplitOptions.None)[2];
-                userComment = "Deprovisioned";
-                betterListViewItem.ForeColor = Color.Red;
-                betterListViewItem.ImageKey = "disabled.png";
-
-            }
-            else if (IsActive(user))
-            {
-                userComment = $"Not Matched";
-                betterListViewItem.ForeColor = Color.Blue;
-                betterListViewItem.ImageKey = "unlinked.png";
-            }
-            else if (!IsActive(user))
-            {
-                userComment = $"Manually Disabled";
-                betterListViewItem.ForeColor = Color.Red;
-                betterListViewItem.ImageKey = "disabled.png";
-            }
-
-
-
-            betterListViewItem.SubItems.Add(userComment);
-        }
-
+        
         private bool IsActive(DirectoryEntry de)
         {
             if (de.NativeGuid == null) return false;
@@ -133,7 +92,9 @@ namespace MattMIS_Directory_Manager
         private void directoryTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             directoryTreeView.SelectedImageIndex = e.Node.ImageIndex;
+            searchTextBox.Clear();
             SendBackgroundCommand(Convert.ToString(e.Node.Tag ?? ""));
+            
         }
 
         private void SendBackgroundCommand(string commandValue)
@@ -144,14 +105,13 @@ namespace MattMIS_Directory_Manager
                 if (commandValue.StartsWith("SEARCHALL"))
                 {
                     searchTypeBox.SelectedIndex = 1;
-                    mainListView.Items.Clear();
                     searchTextBox.Text = "";
                     this.ActiveControl = searchTextBox;
                     return;
                 }
                 else if (commandValue.StartsWith("SEARCHDIRBY"))
                 {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = $"{searchTextBox.Text}#{hideDisabledCheckBox.Checked}#{hideUnmatchedCheckBox.Checked}", OPERATION = "SEARCHDIRBY" });
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = $"{searchTextBox.Text}", HIDEDISABLED=hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "SEARCHDIRBY" });
                     return;
                 }
                 searchTypeBox.SelectedIndex = 0;
@@ -161,15 +121,15 @@ namespace MattMIS_Directory_Manager
                 StripProgressBar.Style = ProgressBarStyle.Marquee;
                 if (commandValue.StartsWith("BYDEPARTMENT"))
                 {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], OPERATION = "BYDEPARTMENT" });
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYDEPARTMENT" });
                 }
                 else if (commandValue.StartsWith("BYTITLE"))
                 {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], OPERATION = "BYTITLE" });
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYTITLE" });
                 }
                 else if (commandValue.StartsWith("THISOU"))
                 {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], OPERATION = "THISOU" });
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "THISOU" });
                 }
                 else
                 {
@@ -184,78 +144,21 @@ namespace MattMIS_Directory_Manager
 
         }
 
-        private void mainListView_DoubleClick(object sender, EventArgs e)
-        {
-            if (mainListView.SelectedItems.Count == 1)
-            {
-                new UserCard(mainListView.SelectedItems[0].Tag.ToString(), null).Show();
-            }
-        }
-
-        private void mainListView_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                var focusedItem = mainListView.SelectedItems[0];
-                if (focusedItem != null && focusedItem.Bounds.BoundsOuter.Contains(e.Location))
-                {
-                    userMenuStrip.Tag = focusedItem;
-                    viewDetailsToolStripMenuItem.Enabled = true;
-                    changePasswordToolStripMenuItem.Enabled = true;
-                    userMenuStrip.Show(Cursor.Position);
-                }
-                else
-                {
-                    viewDetailsToolStripMenuItem.Enabled = false;
-                    changePasswordToolStripMenuItem.Enabled = false;
-                    userMenuStrip.Show(Cursor.Position);
-                }
-            }
-        }
-
         private void viewDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard(((BetterListViewItem)userMenuStrip.Tag).Tag.ToString(), null).Show();
+            new UserCard(userMenuStrip.Tag.ToString(), null).Show();
         }
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard(((BetterListViewItem)userMenuStrip.Tag).Tag.ToString(), "changepw").Show();
-        }
-
-        private void mainListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private BetterListViewItem CreateListViewItem(DirectoryEntry directoryEntry)
-        {
-            BetterListViewItem betterListViewItem = new BetterListViewItem();
-            betterListViewItem.Text = Convert.ToString(directoryEntry.Properties["physicalDeliveryOfficeName"].Value) ?? "";
-            betterListViewItem.SubItems.Add(Convert.ToString(directoryEntry.Properties["cn"].Value) ?? "");
-            betterListViewItem.SubItems.Add(Convert.ToString(directoryEntry.Properties["department"].Value ?? ""));
-            betterListViewItem.SubItems.Add(Convert.ToString(directoryEntry.Properties["userPrincipalName"].Value) ?? "");
-
-            SetUserStatus(directoryEntry, betterListViewItem);
-            var sidInBytes = (byte[])directoryEntry.Properties["objectSid"].Value;
-            var sid = new SecurityIdentifier(sidInBytes, 0);
-            // This gives you what you want
-
-            betterListViewItem.Tag = sid.ToString();
-            betterListViewItem.SubItems.Add(Convert.ToString(directoryEntry.Properties["title"].Value) ?? "");
-
-            return betterListViewItem;
+            new UserCard(userMenuStrip.Tag.ToString(), "changepw").Show();
         }
 
         private void LoadPreRenderListView()
         {
             currentFolderLocation.Text = "Drawing.................";
             fastObjectListView1.SetObjects(UserHandler.GetUsers());
-            mainListView.BeginUpdate();
-            mainListView.Items.Clear();
-            foreach (var s in preRender) { mainListView.Items.Add(s); }
-            mainListView.EndUpdate();
-            amountOfItemsLabel.Text = $"{mainListView.Items.Count} users displayed";
+            amountOfItemsLabel.Text = $"{fastObjectListView1.Items.Count} users displayed";
 
             StripProgressBar.Style = ProgressBarStyle.Continuous;
 
@@ -265,27 +168,27 @@ namespace MattMIS_Directory_Manager
 
         }
 
-        private void LoadFromCache(bool filter = false, string filterString = "")
-        {
-            currentFolderLocation.Text = "Drawing.................";
+        //private void LoadFromCache(bool filter = false, string filterString = "")
+        //{
+        //    currentFolderLocation.Text = "Drawing.................";
 
-            mainListView.BeginUpdate();
-            mainListView.Items.Clear();
-            for (int i = cacheList.Count - 1; i >= 0; i--)
-            {
+        //    mainListView.BeginUpdate();
+        //    mainListView.Items.Clear();
+        //    for (int i = cacheList.Count - 1; i >= 0; i--)
+        //    {
 
-                if (Convert.ToString(cacheList[i].Properties["cn"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["userPrincipalName"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["department"].Value ?? "").ToLower().Contains(filterString.ToLower()))
-                {
+        //        if (Convert.ToString(cacheList[i].Properties["cn"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["userPrincipalName"].Value ?? "").ToLower().Contains(filterString.ToLower()) || Convert.ToString(cacheList[i].Properties["department"].Value ?? "").ToLower().Contains(filterString.ToLower()))
+        //        {
 
-                    mainListView.Items.Add(CreateListViewItem(cacheList[i]));
+        //            mainListView.Items.Add(CreateListViewItem(cacheList[i]));
 
-                }
+        //        }
 
-            }
-            mainListView.EndUpdate();
-            amountOfItemsLabel.Text = $"{mainListView.Items.Count} users displayed";
-            currentFolderLocation.Text = "";
-        }
+        //    }
+        //    mainListView.EndUpdate();
+        //    amountOfItemsLabel.Text = $"{mainListView.Items.Count} users displayed";
+        //    currentFolderLocation.Text = "";
+        //}
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -298,54 +201,17 @@ namespace MattMIS_Directory_Manager
             }
         }
 
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            LoadFromCache();
-        }
-
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             searchTextBox.Text = "";
-            LoadFromCache();
-
-        }
-
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-
-
-
-        }
-
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
+            LoadPreRenderListView();
 
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             searchTextBox.Text = "";
-            LoadFromCache();
-        }
-
-        delegate void UniversalVoidDelegate();
-
-        /// <summary>
-        /// Call form control action from different thread
-        /// </summary>
-        public static void ControlInvoke(Control control, Action function)
-        {
-            if (control.IsDisposed || control.Disposing)
-                return;
-
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new UniversalVoidDelegate(() => ControlInvoke(control, function)));
-                return;
-            }
-            function();
+            LoadPreRenderListView();
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -357,10 +223,22 @@ namespace MattMIS_Directory_Manager
 
         private void searchButton_Click(object sender, EventArgs e)
         {
-            if (searchTextBox.Text == "") { LoadFromCache(); }
+            if (searchTextBox.Text == "") { LoadPreRenderListView(); }
             else if (searchTypeBox.SelectedIndex == 0)
             {
-                LoadFromCache(true, searchTextBox.Text);
+                String filterString = searchTextBox.Text.ToLower();
+                this.fastObjectListView1.ModelFilter = new ModelFilter(delegate (object x) {
+                    UserHandler.UserModel userModel = (UserHandler.UserModel)x;
+                    
+                    if (userModel.FullName.ToLower().Contains(searchTextBox.Text.ToLower()) || 
+                    userModel.Username.ToLower().Contains(filterString.ToLower()) || 
+                    userModel.Department.ToLower().Contains(filterString))
+                    { return true; }
+                    else { return false; }
+                       
+
+                        
+                });
             }
             else if (searchTypeBox.SelectedIndex == 1)
             {
@@ -376,22 +254,9 @@ namespace MattMIS_Directory_Manager
         {
             try
             {
-                foreach (BetterListViewItem bs in mainListView.SelectedItems)
+                foreach (UserHandler.UserModel um in fastObjectListView1.SelectedObjects)
                 {
-
-                    DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
-                    ADObject.UsePropertyCache = false;
-                    ADObject.AuthenticationType = AuthenticationTypes.ServerBind;
-
-                    DirectorySearcher deSearch = new DirectorySearcher(ADObject);
-                    deSearch.SearchScope = SearchScope.Subtree;
-                    deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(objectSid={bs.Tag}))";
-
-                    SearchResultCollection userResults = deSearch.FindAll();
-                    if (userResults.Count == 1) //Just one  Member Exists with this ID -- All good. I will check if any updates are needed and if they have been disabled.                
-                    {
-                        SharedMethods.DisableADAccount(userResults[0].GetDirectoryEntry());
-                    }
+                    SharedMethods.DisableADAccount(um.directoryEntry);                   
                 }
                 MessageBox.Show($"Sucessfully disabled user accounts.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 refreshViewButton.PerformClick();
@@ -408,21 +273,9 @@ namespace MattMIS_Directory_Manager
         {
             try
             {
-                foreach (BetterListViewItem bs in mainListView.SelectedItems)
+                foreach (UserHandler.UserModel um in fastObjectListView1.SelectedObjects)
                 {
-                    DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
-                    ADObject.UsePropertyCache = false;
-                    ADObject.AuthenticationType = AuthenticationTypes.ServerBind;
-
-                    DirectorySearcher deSearch = new DirectorySearcher(ADObject);
-                    deSearch.SearchScope = SearchScope.Subtree;
-                    deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(objectSid={bs.Tag}))";
-
-                    SearchResultCollection userResults = deSearch.FindAll();
-                    if (userResults.Count == 1) //Just one  Member Exists with this ID -- All good. I will check if any updates are needed and if they have been disabled.                
-                    {
-                        SharedMethods.EnableADAccount(userResults[0].GetDirectoryEntry());
-                    }
+                    SharedMethods.EnableADAccount(um.directoryEntry);
                 }
                 MessageBox.Show($"Sucessfully enabled user accounts.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 refreshViewButton.PerformClick();
@@ -430,19 +283,29 @@ namespace MattMIS_Directory_Manager
             catch (Exception ex)
             {
 
-                MessageBox.Show($"Unable to disable user account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Unable to enable user account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (searchTextBox.Text == "" && searchTypeBox.SelectedIndex == 0) { LoadFromCache(); }
-            else if (searchTypeBox.SelectedIndex == 0)
+            if (searchTypeBox.SelectedIndex == 0)
             {
+                String filterString = searchTextBox.Text.ToLower();
+                this.fastObjectListView1.ModelFilter = new ModelFilter(delegate (object x) {
+                    UserHandler.UserModel userModel = (UserHandler.UserModel)x;
 
-                LoadFromCache(true, searchTextBox.Text);
+                    if (userModel.FullName.ToLower().Contains(searchTextBox.Text.ToLower()) ||
+                    userModel.Username.ToLower().Contains(filterString.ToLower()) ||
+                    userModel.Department.ToLower().Contains(filterString))
+                    { return true; }
+                    else { return false; }
+
+
+
+                });
             }
-            if (searchTextBox.Text == "" && searchTypeBox.SelectedIndex == 1) { mainListView.Items.Clear(); }
+            if (searchTextBox.Text == "" && searchTypeBox.SelectedIndex == 1) { fastObjectListView1.Items.Clear(); }
         }
 
         private void abortableBackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -451,120 +314,108 @@ namespace MattMIS_Directory_Manager
             if (arguments.OPERATION == "THISOU")
             {
                 string OU = arguments.ARGUMENT;
-
-                DirectoryEntry ADObject = new DirectoryEntry(OU, SharedMethods.username, SharedMethods.password);
-                preRender.Clear();
-                cacheList.Clear();
+                
+                DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Username, Config.Settings.Password);
                 UserHandler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
                 deSearch.SizeLimit = 3000;
                 deSearch.PageSize = 3000;
-                deSearch.Filter = $"(&(objectCategory=person)(objectClass=User))";
+                deSearch.Filter = $"(&";
+                if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                deSearch.Filter += $"(objectCategory=person)(objectClass=User))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
                 foreach (SearchResult userResult in userResults)
                 {
-                    cacheList.Add(userResult.GetDirectoryEntry());
-                    preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
                     UserHandler.AddUser(userResult.GetDirectoryEntry());
 
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
-                mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
             }
             else if (arguments.OPERATION == "BYDEPARTMENT")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
-                preRender.Clear();
-                cacheList.Clear();
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 UserHandler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
                 deSearch.PageSize = 3000;
-                deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(department=*{arguments.ARGUMENT}*))";
+                deSearch.Filter = $"(&";
+                if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                deSearch.Filter += $"(objectCategory=person)(objectClass=User)(department=*{arguments.ARGUMENT}*))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
 
                 foreach (SearchResult userResult in userResults)
                 {
-                    cacheList.Add(userResult.GetDirectoryEntry());
-                    preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
                     UserHandler.AddUser(userResult.GetDirectoryEntry());
 
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
 
                 }
-                mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
 
             }
             else if (arguments.OPERATION == "SEARCHDIRBY")
             {
-
-                DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
-                preRender.Clear();
+                
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 UserHandler.Clear();
                 //ARGUMENT = $"{searchTextBox.Text}#HIDEDISABLED{hideDisabledCheckBox.Checked}#HIDEUNMATCHED{hideUnmatchedCheckBox.Checked}"
                 string searchQuery = arguments.ARGUMENT.Split('#')[0];
-                bool hideDisabled = Boolean.Parse(arguments.ARGUMENT.Split('#')[1]);
-                bool hideUnmatched = Boolean.Parse(arguments.ARGUMENT.Split('#')[2]);
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
                 deSearch.PageSize = 3000;
 
-                if (hideDisabled) deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*))(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))";
-                else { deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; }
+                deSearch.Filter = $"(&";
+                if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                deSearch.Filter += $"(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; 
 
                 SearchResultCollection userResults = deSearch.FindAll();
 
                 foreach (SearchResult userResult in userResults)
                 {
                     UserHandler.AddUser(userResult.GetDirectoryEntry());
-                    preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
+
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
-                mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
             }
             else if (arguments.OPERATION == "SEARCHVIEWBY")
             {
-                preRender.Clear();
-                foreach (DirectoryEntry userResult in cacheList)
-                {
-                    if (Convert.ToString(userResult.Properties["cn"].Value ?? "").ToLower().Contains(arguments.ARGUMENT.ToLower()) || Convert.ToString(userResult.Properties["userPrincipalName"].Value ?? "").ToLower().Contains(arguments.ARGUMENT.ToLower()) || Convert.ToString(userResult.Properties["department"].Value ?? "").ToLower().Contains(arguments.ARGUMENT.ToLower()))
-                    {
-                        if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
-                        preRender.Add(CreateListViewItem(userResult));
-                    }
 
-
-                }
             }
 
             else if (arguments.OPERATION == "BYTITLE")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry(SharedMethods.connectionString + SharedMethods.ADUserRoot, SharedMethods.username, SharedMethods.password);
-                preRender.Clear();
-                cacheList.Clear();
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
+                UserHandler.Clear();
                 deSearch.PageSize = 3000;
-                deSearch.Filter = $"(&(objectCategory=person)(objectClass=User)(title=*{arguments.ARGUMENT}*))";
+                deSearch.Filter = $"(&";
+                if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                deSearch.Filter += $"(objectCategory=person)(objectClass=User)(title=*{arguments.ARGUMENT}*))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
-                ;
+                
                 foreach (SearchResult userResult in userResults)
                 {
-                    cacheList.Add(userResult.GetDirectoryEntry());
-                    preRender.Add(CreateListViewItem(userResult.GetDirectoryEntry()));
-
                     UserHandler.AddUser(userResult.GetDirectoryEntry());
+                    if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
-                mainListView.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
             }
 
         }
@@ -610,9 +461,9 @@ namespace MattMIS_Directory_Manager
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (backgroundCommandQueuer.Tag != mainListView.Tag && backgroundCommandQueuer.Tag != null)
+            if (backgroundCommandQueuer.Tag != fastObjectListView1.Tag && backgroundCommandQueuer.Tag != null)
             {
-                mainListView.Items.Clear();
+                fastObjectListView1.Items.Clear();
 
                 backgroundCommandQueuer.Stop();
             }
@@ -624,25 +475,24 @@ namespace MattMIS_Directory_Manager
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            SendBackgroundCommand(mainListView.Tag.ToString());
+            SendBackgroundCommand(fastObjectListView1.Tag.ToString());
         }
 
         private void searchTypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (searchTypeBox.SelectedIndex == 0) { hideDisabledCheckBox.Visible = false; hideUnmatchedCheckBox.Visible = false; }
-            else if (searchTypeBox.SelectedIndex == 1) { hideDisabledCheckBox.Visible = true; hideUnmatchedCheckBox.Visible = true; }
+           
         }
 
         private void directoryTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            MessageBox.Show("Test");
+            
         }
 
         private void userMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             if (fastObjectListView1.SelectedIndices.Count == 0) { e.Cancel = true; }
-            else if (fastObjectListView1.SelectedIndices.Count == 0) 
-            { 
+            else if (fastObjectListView1.SelectedIndices.Count == 1)
+            {
                 UserHandler.UserModel user = fastObjectListView1.SelectedObject as UserHandler.UserModel;
                 userMenuStrip.Tag = user.SID;
                 viewDetailsToolStripMenuItem.Enabled = true;
@@ -659,8 +509,13 @@ namespace MattMIS_Directory_Manager
         private void fastObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
         {
             UserHandler.UserModel user = (UserHandler.UserModel)e.Model;
-            if(user.ImageKey == "disabled.png") { e.Item.ForeColor = Color.Red; }
+            if (user.ImageKey == "disabled.png") { e.Item.ForeColor = Color.Red; }
             else if (user.Status == "unlinked.png") { e.Item.ForeColor = Color.Blue; }
+        }
+
+        private void fastObjectListView1_DoubleClick(object sender, EventArgs e)
+        {
+            new UserCard(((UserHandler.UserModel)fastObjectListView1.SelectedObjects[0]).directoryEntry).Show();
         }
     }
 
@@ -668,6 +523,8 @@ namespace MattMIS_Directory_Manager
     {
         public string OPERATION;
         public string ARGUMENT;
+        public bool HIDEDISABLED;
+        public bool HIDEUNMATCHED;
 
     }
 }
