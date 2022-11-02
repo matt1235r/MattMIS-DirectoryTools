@@ -1,5 +1,4 @@
-﻿using ComponentOwl.BetterListView;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Drawing;
@@ -26,7 +25,9 @@ namespace MattMIS_Directory_Manager
             public string SID { get; set; }
             public string ImageKey { get; set; }
 
-            public UserModel(string ID, string FullName, string Department, string Username, string Status , string SID, string ImageKey)
+            public DirectoryEntry directoryEntry { get; set; }
+
+            public UserModel(string ID, string FullName, string Department, string Username, string Status , string SID, string ImageKey, DirectoryEntry directoryEntry)
             {
                 this.ID = ID;
                 this.FullName = FullName;
@@ -35,6 +36,7 @@ namespace MattMIS_Directory_Manager
                 this.Username = Username;
                 this.SID = SID;
                 this.ImageKey = ImageKey;
+                this.directoryEntry = directoryEntry;
             }
         }
 
@@ -84,7 +86,7 @@ namespace MattMIS_Directory_Manager
                 imageKey = "disabled.png";
             }
 
-            Users.Add(new UserModel($"{userObject.Properties["physicalDeliveryOfficeName"].Value ?? ""}", $"{userObject.Properties["cn"].Value ?? ""}", $"{userObject.Properties["department"].Value ?? ""}", $"{userObject.Properties["userPrincipalName"].Value}", userComment, sid.ToString(), imageKey));
+            Users.Add(new UserModel($"{userObject.Properties["physicalDeliveryOfficeName"].Value ?? ""}", $"{userObject.Properties["cn"].Value ?? ""}", $"{userObject.Properties["department"].Value ?? ""}", $"{userObject.Properties["userPrincipalName"].Value}", userComment, sid.ToString(), imageKey, userObject));
 
         }
 

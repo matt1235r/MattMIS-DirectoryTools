@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectoryManager));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Whole Directory Search");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Search Entire Directory");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("7 Fisher");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("7 More");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("11 Fisher");
@@ -79,11 +79,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.hideUnmatchedCheckBox = new System.Windows.Forms.CheckBox();
             this.fastObjectListView1 = new BrightIdeasSoftware.FastObjectListView();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.idColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.fullNameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.departmentColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.usernameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.statusColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.hideDisabledCheckBox = new System.Windows.Forms.CheckBox();
             this.searchButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -103,13 +103,6 @@
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.backgroundCommandQueuer = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker = new MattMIS_Directory_Manager.AbortableBackgroundWorker();
-            this.mainListView = new ComponentOwl.BetterListView.BetterListView();
-            this.betterListViewColumnHeader5 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader1 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader6 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader3 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader2 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
-            this.betterListViewColumnHeader4 = new ComponentOwl.BetterListView.BetterListViewColumnHeader();
             this.toolStrip1.SuspendLayout();
             this.userMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -118,23 +111,22 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).BeginInit();
             this.toolStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "azure-active-directory-aad-icon-488x512-3d71nrtk.png");
-            this.imageList1.Images.SetKeyName(1, "user-folder-icon-29.jpg");
-            this.imageList1.Images.SetKeyName(2, "224641.png");
-            this.imageList1.Images.SetKeyName(3, "201556.png");
-            this.imageList1.Images.SetKeyName(4, "sims-logo.png");
-            this.imageList1.Images.SetKeyName(5, "149071.png");
-            this.imageList1.Images.SetKeyName(6, "disabled.png");
-            this.imageList1.Images.SetKeyName(7, "enabled.png");
-            this.imageList1.Images.SetKeyName(8, "unlinked.png");
-            this.imageList1.Images.SetKeyName(9, "advanced-search.png");
+            this.imageList1.Images.SetKeyName(0, "201556.png");
+            this.imageList1.Images.SetKeyName(1, "unlinked.png");
+            this.imageList1.Images.SetKeyName(2, "sims.jpg");
+            this.imageList1.Images.SetKeyName(3, "sims-logo.png");
+            this.imageList1.Images.SetKeyName(4, "149071.png");
+            this.imageList1.Images.SetKeyName(5, "disabled.png");
+            this.imageList1.Images.SetKeyName(6, "enabled.png");
+            this.imageList1.Images.SetKeyName(7, "161-1616455_search-search-icon-grey.png");
+            this.imageList1.Images.SetKeyName(8, "azure-active-directory-aad-icon-488x512-3d71nrtk.png");
+            this.imageList1.Images.SetKeyName(9, "224641.png");
             // 
             // directoryTreeView
             // 
@@ -146,10 +138,10 @@
             this.directoryTreeView.Location = new System.Drawing.Point(0, 0);
             this.directoryTreeView.Name = "directoryTreeView";
             treeNode1.Checked = true;
-            treeNode1.ImageIndex = 8;
+            treeNode1.ImageIndex = 7;
             treeNode1.Name = "SEARCHPAGE";
             treeNode1.Tag = "SEARCHALL";
-            treeNode1.Text = "Whole Directory Search";
+            treeNode1.Text = "Search Entire Directory";
             treeNode2.ImageIndex = 1;
             treeNode2.Name = "Node3";
             treeNode2.Tag = "BYDEPARTMENT#7 Fisher";
@@ -203,10 +195,10 @@
             treeNode15.Name = "Node0";
             treeNode15.Tag = "BYTITLE#Staff";
             treeNode15.Text = "All Staff";
-            treeNode16.ImageIndex = 1;
+            treeNode16.ImageIndex = 2;
             treeNode16.Name = "MIS";
             treeNode16.Text = "The Campion School (SIMS)";
-            treeNode17.ImageIndex = 0;
+            treeNode17.ImageIndex = 8;
             treeNode17.Name = "Active Directory";
             treeNode17.Tag = "ADROOT#";
             treeNode17.Text = "Active Directory";
@@ -339,7 +331,6 @@
             this.splitContainer1.Panel2.Controls.Add(this.label2);
             this.splitContainer1.Panel2.Controls.Add(this.searchTypeBox);
             this.splitContainer1.Panel2.Controls.Add(this.searchTextBox);
-            this.splitContainer1.Panel2.Controls.Add(this.mainListView);
             this.splitContainer1.Size = new System.Drawing.Size(1253, 526);
             this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 3;
@@ -347,90 +338,91 @@
             // hideUnmatchedCheckBox
             // 
             this.hideUnmatchedCheckBox.AutoSize = true;
-            this.hideUnmatchedCheckBox.Enabled = false;
-            this.hideUnmatchedCheckBox.Location = new System.Drawing.Point(244, 44);
+            this.hideUnmatchedCheckBox.Location = new System.Drawing.Point(153, 44);
             this.hideUnmatchedCheckBox.Name = "hideUnmatchedCheckBox";
-            this.hideUnmatchedCheckBox.Size = new System.Drawing.Size(245, 17);
+            this.hideUnmatchedCheckBox.Size = new System.Drawing.Size(154, 17);
             this.hideUnmatchedCheckBox.TabIndex = 11;
-            this.hideUnmatchedCheckBox.Text = "Hide unmatched accounts from search results.";
+            this.hideUnmatchedCheckBox.Text = "Hide unmatched accounts.";
             this.hideUnmatchedCheckBox.UseVisualStyleBackColor = true;
             // 
             // fastObjectListView1
             // 
             this.fastObjectListView1.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn1);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn2);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn3);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn5);
-            this.fastObjectListView1.AllColumns.Add(this.olvColumn4);
+            this.fastObjectListView1.AllColumns.Add(this.idColumn);
+            this.fastObjectListView1.AllColumns.Add(this.fullNameColumn);
+            this.fastObjectListView1.AllColumns.Add(this.departmentColumn);
+            this.fastObjectListView1.AllColumns.Add(this.usernameColumn);
+            this.fastObjectListView1.AllColumns.Add(this.statusColumn);
             this.fastObjectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fastObjectListView1.CellEditUseWholeCell = false;
             this.fastObjectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1,
-            this.olvColumn2,
-            this.olvColumn3,
-            this.olvColumn5,
-            this.olvColumn4});
+            this.idColumn,
+            this.fullNameColumn,
+            this.departmentColumn,
+            this.usernameColumn,
+            this.statusColumn});
             this.fastObjectListView1.ContextMenuStrip = this.userMenuStrip;
             this.fastObjectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.fastObjectListView1.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fastObjectListView1.FullRowSelect = true;
             this.fastObjectListView1.HideSelection = false;
-            this.fastObjectListView1.Location = new System.Drawing.Point(7, 164);
+            this.fastObjectListView1.Location = new System.Drawing.Point(7, 67);
             this.fastObjectListView1.Name = "fastObjectListView1";
             this.fastObjectListView1.RowHeight = 30;
-            this.fastObjectListView1.SelectedBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.fastObjectListView1.SelectedBackColor = System.Drawing.Color.LightBlue;
             this.fastObjectListView1.SelectedForeColor = System.Drawing.Color.Black;
             this.fastObjectListView1.ShowGroups = false;
-            this.fastObjectListView1.Size = new System.Drawing.Size(930, 334);
+            this.fastObjectListView1.Size = new System.Drawing.Size(930, 431);
             this.fastObjectListView1.SmallImageList = this.imageList1;
             this.fastObjectListView1.TabIndex = 2;
             this.fastObjectListView1.UseCompatibleStateImageBehavior = false;
+            this.fastObjectListView1.UseFiltering = true;
             this.fastObjectListView1.UseHotItem = true;
             this.fastObjectListView1.View = System.Windows.Forms.View.Details;
             this.fastObjectListView1.VirtualMode = true;
             this.fastObjectListView1.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.fastObjectListView1_FormatRow);
+            this.fastObjectListView1.DoubleClick += new System.EventHandler(this.fastObjectListView1_DoubleClick);
             // 
-            // olvColumn1
+            // idColumn
             // 
-            this.olvColumn1.AspectName = "ID";
-            this.olvColumn1.Text = "ID";
-            this.olvColumn1.Width = 74;
+            this.idColumn.AspectName = "ID";
+            this.idColumn.Text = "ID";
+            this.idColumn.Width = 74;
             // 
-            // olvColumn2
+            // fullNameColumn
             // 
-            this.olvColumn2.AspectName = "FullName";
-            this.olvColumn2.Text = "Full Name";
-            this.olvColumn2.Width = 231;
+            this.fullNameColumn.AspectName = "FullName";
+            this.fullNameColumn.Text = "Full Name";
+            this.fullNameColumn.Width = 231;
             // 
-            // olvColumn3
+            // departmentColumn
             // 
-            this.olvColumn3.AspectName = "Department";
-            this.olvColumn3.Text = "Department";
-            this.olvColumn3.Width = 221;
+            this.departmentColumn.AspectName = "Department";
+            this.departmentColumn.Text = "Department";
+            this.departmentColumn.Width = 221;
             // 
-            // olvColumn5
+            // usernameColumn
             // 
-            this.olvColumn5.AspectName = "Username";
-            this.olvColumn5.Text = "Username";
-            this.olvColumn5.Width = 315;
+            this.usernameColumn.AspectName = "Username";
+            this.usernameColumn.Text = "Username";
+            this.usernameColumn.Width = 315;
             // 
-            // olvColumn4
+            // statusColumn
             // 
-            this.olvColumn4.AspectName = "Status";
-            this.olvColumn4.Text = "Status";
-            this.olvColumn4.Width = 249;
+            this.statusColumn.AspectName = "Status";
+            this.statusColumn.Text = "Status";
+            this.statusColumn.Width = 249;
             // 
             // hideDisabledCheckBox
             // 
             this.hideDisabledCheckBox.AutoSize = true;
             this.hideDisabledCheckBox.Location = new System.Drawing.Point(7, 44);
             this.hideDisabledCheckBox.Name = "hideDisabledCheckBox";
-            this.hideDisabledCheckBox.Size = new System.Drawing.Size(231, 17);
+            this.hideDisabledCheckBox.Size = new System.Drawing.Size(140, 17);
             this.hideDisabledCheckBox.TabIndex = 9;
-            this.hideDisabledCheckBox.Text = "Hide disabled accounts from search results.";
+            this.hideDisabledCheckBox.Text = "Hide disabled accounts.";
             this.hideDisabledCheckBox.UseVisualStyleBackColor = true;
             this.hideDisabledCheckBox.CheckedChanged += new System.EventHandler(this.hideDisabledCheckBox_CheckedChanged);
             // 
@@ -580,7 +572,7 @@
             this.searchTextBox.Location = new System.Drawing.Point(294, 10);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(608, 26);
-            this.searchTextBox.TabIndex = 3;
+            this.searchTextBox.TabIndex = 1;
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
             this.searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyDown);
             // 
@@ -593,64 +585,6 @@
             this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.abortableBackgroundWorker1_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.abortableBackgroundWorker1_RunWorkerCompleted);
-            // 
-            // mainListView
-            // 
-            this.mainListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mainListView.ColumnReorderMode = ComponentOwl.BetterListView.BetterListViewColumnReorderMode.Enabled;
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader5);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader1);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader6);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader3);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader2);
-            this.mainListView.Columns.Add(this.betterListViewColumnHeader4);
-            this.mainListView.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mainListView.ImageList = this.imageList1;
-            this.mainListView.ImageListColumns = this.imageList1;
-            this.mainListView.Location = new System.Drawing.Point(6, 66);
-            this.mainListView.Name = "mainListView";
-            this.mainListView.Size = new System.Drawing.Size(931, 432);
-            this.mainListView.TabIndex = 0;
-            this.mainListView.SelectedIndexChanged += new System.EventHandler(this.mainListView_SelectedIndexChanged);
-            this.mainListView.DoubleClick += new System.EventHandler(this.mainListView_DoubleClick);
-            this.mainListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainListView_MouseClick);
-            // 
-            // betterListViewColumnHeader5
-            // 
-            this.betterListViewColumnHeader5.Name = "betterListViewColumnHeader5";
-            this.betterListViewColumnHeader5.Text = "ID";
-            this.betterListViewColumnHeader5.Width = 98;
-            // 
-            // betterListViewColumnHeader1
-            // 
-            this.betterListViewColumnHeader1.Name = "betterListViewColumnHeader1";
-            this.betterListViewColumnHeader1.Text = "Full Name";
-            this.betterListViewColumnHeader1.Width = 215;
-            // 
-            // betterListViewColumnHeader6
-            // 
-            this.betterListViewColumnHeader6.Name = "betterListViewColumnHeader6";
-            this.betterListViewColumnHeader6.Text = "Department";
-            this.betterListViewColumnHeader6.Width = 214;
-            // 
-            // betterListViewColumnHeader3
-            // 
-            this.betterListViewColumnHeader3.Name = "betterListViewColumnHeader3";
-            this.betterListViewColumnHeader3.Text = "Username";
-            this.betterListViewColumnHeader3.Width = 309;
-            // 
-            // betterListViewColumnHeader2
-            // 
-            this.betterListViewColumnHeader2.Name = "betterListViewColumnHeader2";
-            this.betterListViewColumnHeader2.Text = "Status";
-            this.betterListViewColumnHeader2.Width = 169;
-            // 
-            // betterListViewColumnHeader4
-            // 
-            this.betterListViewColumnHeader4.Name = "betterListViewColumnHeader4";
-            this.betterListViewColumnHeader4.Text = "Role";
             // 
             // DirectoryManager
             // 
@@ -674,7 +608,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).EndInit();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mainListView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -717,17 +650,10 @@
         private System.Windows.Forms.Timer backgroundCommandQueuer;
         private System.Windows.Forms.ToolStripButton refreshViewButton;
         private BrightIdeasSoftware.FastObjectListView fastObjectListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
-        private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn5;
-        private BrightIdeasSoftware.OLVColumn olvColumn4;
-        private ComponentOwl.BetterListView.BetterListView mainListView;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader5;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader1;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader6;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader3;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader2;
-        private ComponentOwl.BetterListView.BetterListViewColumnHeader betterListViewColumnHeader4;
+        private BrightIdeasSoftware.OLVColumn idColumn;
+        private BrightIdeasSoftware.OLVColumn fullNameColumn;
+        private BrightIdeasSoftware.OLVColumn departmentColumn;
+        private BrightIdeasSoftware.OLVColumn usernameColumn;
+        private BrightIdeasSoftware.OLVColumn statusColumn;
     }
 }

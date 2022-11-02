@@ -14,11 +14,6 @@ namespace MattMIS_Directory_Manager
     public static class SharedMethods
     {
 
-        public static string username = @"***REMOVED***";
-        public static string password = @"***REMOVED***";
-        public static string connectionString = @"LDAP://***REMOVED***/";
-        public static string ADUserRoot = @"***REMOVED***";
-
         public static void EnableADAccount(DirectoryEntry user)
         {
             int val = (int)user.Properties["userAccountControl"].Value;
