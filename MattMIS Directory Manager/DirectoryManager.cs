@@ -36,7 +36,6 @@ namespace MattMIS_Directory_Manager
         private void DirectoryManager_Load(object sender, EventArgs e)
         {
             searchTypeBox.SelectedIndex = 0;
-            Config.LoadConfig();
             RefeshDirectoryTree();
             SendMessage(searchTextBox.Handle, EM_SETCUEBANNER, 0, "Filter by...");
 
@@ -46,9 +45,9 @@ namespace MattMIS_Directory_Manager
 
         private void RefeshDirectoryTree()
         {
-            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password);
 
-            de.AuthenticationType = AuthenticationTypes.Secure;
+            de.AuthenticationType = AuthenticationTypes.ServerBind;
 
             AddSubOU(de, directoryTreeView.Nodes.Find("Active Directory", false)[0]);
 
@@ -146,12 +145,12 @@ namespace MattMIS_Directory_Manager
 
         private void viewDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard(userMenuStrip.Tag.ToString(), null).Show();
+            new UserCard((fastObjectListView1.SelectedObjects[0] as UserHandler.UserModel).directoryEntry).Show();
         }
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard(userMenuStrip.Tag.ToString(), "changepw").Show();
+            new UserCard((fastObjectListView1.SelectedObjects[0] as UserHandler.UserModel).directoryEntry, "changepw").Show();
         }
 
         private void LoadPreRenderListView()
@@ -323,7 +322,7 @@ namespace MattMIS_Directory_Manager
                 deSearch.PageSize = 3000;
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
-                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
                 deSearch.Filter += $"(objectCategory=person)(objectClass=User))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
@@ -346,7 +345,7 @@ namespace MattMIS_Directory_Manager
                 deSearch.PageSize = 3000;
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
-                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
                 deSearch.Filter += $"(objectCategory=person)(objectClass=User)(department=*{arguments.ARGUMENT}*))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
@@ -375,7 +374,7 @@ namespace MattMIS_Directory_Manager
 
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
-                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
                 deSearch.Filter += $"(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; 
 
                 SearchResultCollection userResults = deSearch.FindAll();
@@ -405,7 +404,7 @@ namespace MattMIS_Directory_Manager
                 deSearch.PageSize = 3000;
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
-                if (arguments.HIDEUNMATCHED) deSearch.Filter += "(!(comment=* by MattMIS*))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
                 deSearch.Filter += $"(objectCategory=person)(objectClass=User)(title=*{arguments.ARGUMENT}*))";
                 SearchResultCollection userResults = deSearch.FindAll();
 
@@ -451,7 +450,7 @@ namespace MattMIS_Directory_Manager
 
         private void hideDisabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
+            refreshViewButton.PerformClick();
         }
 
         private void directoryTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -510,12 +509,27 @@ namespace MattMIS_Directory_Manager
         {
             UserHandler.UserModel user = (UserHandler.UserModel)e.Model;
             if (user.ImageKey == "disabled.png") { e.Item.ForeColor = Color.Red; }
-            else if (user.Status == "unlinked.png") { e.Item.ForeColor = Color.Blue; }
+            else if (user.ImageKey == "unlinked.png") { e.Item.ForeColor = Color.Blue; }
         }
 
         private void fastObjectListView1_DoubleClick(object sender, EventArgs e)
         {
             new UserCard(((UserHandler.UserModel)fastObjectListView1.SelectedObjects[0]).directoryEntry).Show();
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            refreshViewButton.PerformClick();
+        }
+
+        private void hideUnmatchedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            refreshViewButton.PerformClick();
+        }
+
+        private void DirectoryManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
         }
     }
 

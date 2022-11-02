@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Windows.Forms;
 
 namespace MattMIS_Directory_Manager
 {
@@ -23,11 +24,15 @@ namespace MattMIS_Directory_Manager
 
             private string aDUserRootField;
 
+            private string aDTreeRootField;
+
             private string serverAddressField;
 
             private string usernameField;
 
             private string passwordField;
+
+            private bool skipConnectionWizard;
 
             /// <remarks/>
             public string ADUserRoot
@@ -39,6 +44,18 @@ namespace MattMIS_Directory_Manager
                 set
                 {
                     this.aDUserRootField = value;
+                }
+            }
+
+            public string ADTreeRoot
+            {
+                get
+                {
+                    return this.aDTreeRootField;
+                }
+                set
+                {
+                    this.aDTreeRootField = value;
                 }
             }
 
@@ -80,22 +97,46 @@ namespace MattMIS_Directory_Manager
                     this.passwordField = value;
                 }
             }
+
+            /// <remarks/>
+            public bool SkipConnectionWizard
+            {
+                get
+                {
+                    return this.skipConnectionWizard;
+                }
+                set
+                {
+                    this.skipConnectionWizard = value;
+                }
+            }
         }
 
 
 
         public static ConfigurationModel Settings;
 
-        public static void LoadConfig(string path = "Config.xml")
+        public static int LoadConfig(string path)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
-
-            XmlSerializer serializer2 = new XmlSerializer(typeof(ConfigurationModel));
-            using (StringReader reader = new StringReader(doc.InnerXml))
+            int failed = 0;
+            try
             {
-                Settings = (ConfigurationModel)serializer2.Deserialize(reader);
+                XmlDocument doc = new XmlDocument();
+                doc.Load(path);
+
+                XmlSerializer serializer2 = new XmlSerializer(typeof(ConfigurationModel));
+                using (StringReader reader = new StringReader(doc.InnerXml))
+                {
+                    Settings = (ConfigurationModel)serializer2.Deserialize(reader);
+                }
+                
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to load configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                failed = 1;
+            }
+            return failed;
         }
 
 
