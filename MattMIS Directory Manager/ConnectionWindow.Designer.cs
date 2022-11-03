@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectionWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.serverAddressTextBox = new System.Windows.Forms.ComboBox();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.machineDomainJoined = new System.Windows.Forms.CheckBox();
@@ -47,7 +48,6 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.serverAddressTextBox = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -79,8 +79,20 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Connection Settings";
             // 
+            // serverAddressTextBox
+            // 
+            this.serverAddressTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.serverAddressTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+            this.serverAddressTextBox.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serverAddressTextBox.FormattingEnabled = true;
+            this.serverAddressTextBox.Location = new System.Drawing.Point(175, 75);
+            this.serverAddressTextBox.Name = "serverAddressTextBox";
+            this.serverAddressTextBox.Size = new System.Drawing.Size(261, 25);
+            this.serverAddressTextBox.TabIndex = 7;
+            // 
             // passwordTextBox
             // 
+            this.passwordTextBox.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.passwordTextBox.Location = new System.Drawing.Point(175, 154);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
@@ -99,9 +111,9 @@
             this.machineDomainJoined.AutoSize = true;
             this.machineDomainJoined.Location = new System.Drawing.Point(12, 22);
             this.machineDomainJoined.Name = "machineDomainJoined";
-            this.machineDomainJoined.Size = new System.Drawing.Size(424, 38);
+            this.machineDomainJoined.Size = new System.Drawing.Size(426, 38);
             this.machineDomainJoined.TabIndex = 3;
-            this.machineDomainJoined.Text = "This computer is already connected to the domain, connect with my \r\ncurrent crede" +
+            this.machineDomainJoined.Text = "This computer is already connected to the domain. Connect with my \r\ncurrent crede" +
     "ntials.\r\n";
             this.machineDomainJoined.UseVisualStyleBackColor = true;
             this.machineDomainJoined.CheckedChanged += new System.EventHandler(this.machineDomainJoined_CheckedChanged);
@@ -223,17 +235,6 @@
             // 
             this.openFileDialog1.Filter = ".XML files (.xml)|*.xml";
             this.openFileDialog1.Title = "Open Connection File";
-            // 
-            // serverAddressTextBox
-            // 
-            this.serverAddressTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.serverAddressTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
-            this.serverAddressTextBox.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.serverAddressTextBox.FormattingEnabled = true;
-            this.serverAddressTextBox.Location = new System.Drawing.Point(175, 75);
-            this.serverAddressTextBox.Name = "serverAddressTextBox";
-            this.serverAddressTextBox.Size = new System.Drawing.Size(261, 24);
-            this.serverAddressTextBox.TabIndex = 7;
             // 
             // ConnectionWindow
             // 

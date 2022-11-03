@@ -223,7 +223,7 @@
     <Compile Include="UserCard.Designer.cs">
       <DependentUpon>UserCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserHandler.cs" />
+    <Compile Include="Handler.cs" />
     <EmbeddedResource Include="ConnectionWindow.resx">
       <DependentUpon>ConnectionWindow.cs</DependentUpon>
     </EmbeddedResource>

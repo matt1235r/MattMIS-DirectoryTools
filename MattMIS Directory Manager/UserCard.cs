@@ -127,16 +127,16 @@ namespace MattMIS_Directory_Manager
                     if (changePWAtLogin.Checked) { user.ExpirePasswordNow(); }
 
                     user.Save();
-                    MessageBox.Show($"Sucessfully changed users password.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Sucessfully changed password.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Unable to change users password: \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Unable to change password: \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Unable to change users password: \n\nThe new password and confirm password field do not match.", "Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Unable to change password: \n\nThe new password and confirm password field do not match.", "Error", MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
  
         }

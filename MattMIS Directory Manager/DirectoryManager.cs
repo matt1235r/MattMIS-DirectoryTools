@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
@@ -39,31 +40,41 @@ namespace MattMIS_Directory_Manager
             RefeshDirectoryTree();
             SendMessage(searchTextBox.Handle, EM_SETCUEBANNER, 0, "Filter by...");
 
-            idColumn.ImageGetter = new ImageGetterDelegate(UserHandler.UserImageGetter);
-            
+            idColumn.IsEditable = false;
+
+            idColumn.ImageGetter = new ImageGetterDelegate(Handler.UserImageGetter);
+            idColumn.AspectToStringConverter = value => String.Empty;
         }
 
         private void RefeshDirectoryTree()
         {
-            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password);
-
+            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password) ;
             de.AuthenticationType = AuthenticationTypes.ServerBind;
 
-            AddSubOU(de, directoryTreeView.Nodes.Find("Active Directory", false)[0]);
+            AddSubOU(de, directoryTreeView.Nodes.Find("Active Directory", false)[0], true);
 
             directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find("SEARCHPAGE", true)[0];
             directoryTreeView.Nodes.Find("MIS", true)[0].ExpandAll();
             
         }
 
-        private void AddSubOU(DirectoryEntry thisOU, TreeNode parentnode)
+        private void AddSubOU(DirectoryEntry thisOU, TreeNode parentnode, bool hideNode = false)
         {
             TreeNode newnode = new TreeNode();
-            newnode.Text = Convert.ToString(thisOU.Properties["name"].Value ?? "");
-            newnode.Tag = "THISOU#" + thisOU.Path;
-            parentnode.Nodes.Add(newnode);
-            newnode.ImageIndex = 1;
-            DirectorySearcher search = new DirectorySearcher(thisOU);
+
+            if (!hideNode)
+            {
+                newnode = new TreeNode();
+                newnode.Text = Convert.ToString(thisOU.Properties["name"].Value ?? "");
+                newnode.Name = thisOU.Path;
+                newnode.Tag = "THISOU#" + thisOU.Path;
+                newnode.ImageKey = "OU.png";
+                parentnode.Nodes.Add(newnode);
+                
+            }
+            else newnode = parentnode;
+
+            DirectorySearcher search = new DirectorySearcher(thisOU);            
             search.SearchScope = SearchScope.OneLevel;
             search.Filter = "(&(objectclass=organizationalUnit))";
             SearchResultCollection userResults = search.FindAll();
@@ -90,15 +101,16 @@ namespace MattMIS_Directory_Manager
 
         private void directoryTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            directoryTreeView.SelectedImageIndex = e.Node.ImageIndex;
+            directoryTreeView.SelectedImageKey = e.Node.ImageKey;
             searchTextBox.Clear();
             SendBackgroundCommand(Convert.ToString(e.Node.Tag ?? ""));
+            e.Node.Expand();
             
         }
 
         private void SendBackgroundCommand(string commandValue)
         {
-            if (commandValue != null)
+            if (commandValue != null && commandValue != "")
             {
                 if (backgroundWorker.IsBusy) { backgroundWorker.CancelAsync(); backgroundWorker.Abort(); backgroundCommandQueuer.Tag = commandValue; backgroundCommandQueuer.Start(); return; }
                 if (commandValue.StartsWith("SEARCHALL"))
@@ -145,19 +157,19 @@ namespace MattMIS_Directory_Manager
 
         private void viewDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard((fastObjectListView1.SelectedObjects[0] as UserHandler.UserModel).directoryEntry).Show();
+            new UserCard((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).directoryEntry).Show();
         }
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard((fastObjectListView1.SelectedObjects[0] as UserHandler.UserModel).directoryEntry, "changepw").Show();
+            new UserCard((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).directoryEntry, "changepw").Show();
         }
 
         private void LoadPreRenderListView()
         {
             currentFolderLocation.Text = "Drawing.................";
-            fastObjectListView1.SetObjects(UserHandler.GetUsers());
-            amountOfItemsLabel.Text = $"{fastObjectListView1.Items.Count} users displayed";
+            fastObjectListView1.SetObjects(Handler.GetObjects());
+            amountOfItemsLabel.Text = $"{fastObjectListView1.Items.Count} items displayed";
 
             StripProgressBar.Style = ProgressBarStyle.Continuous;
 
@@ -227,7 +239,7 @@ namespace MattMIS_Directory_Manager
             {
                 String filterString = searchTextBox.Text.ToLower();
                 this.fastObjectListView1.ModelFilter = new ModelFilter(delegate (object x) {
-                    UserHandler.UserModel userModel = (UserHandler.UserModel)x;
+                    Handler.UserModel userModel = (Handler.UserModel)x;
                     
                     if (userModel.FullName.ToLower().Contains(searchTextBox.Text.ToLower()) || 
                     userModel.Username.ToLower().Contains(filterString.ToLower()) || 
@@ -253,17 +265,18 @@ namespace MattMIS_Directory_Manager
         {
             try
             {
-                foreach (UserHandler.UserModel um in fastObjectListView1.SelectedObjects)
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
                 {
                     SharedMethods.DisableADAccount(um.directoryEntry);                   
                 }
-                MessageBox.Show($"Sucessfully disabled user accounts.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Sucessfully disabled account(s).", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
             }
             catch (Exception ex)
             {
 
-                MessageBox.Show($"Unable to disable user account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Unable to disable account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -272,17 +285,18 @@ namespace MattMIS_Directory_Manager
         {
             try
             {
-                foreach (UserHandler.UserModel um in fastObjectListView1.SelectedObjects)
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
                 {
                     SharedMethods.EnableADAccount(um.directoryEntry);
                 }
-                MessageBox.Show($"Sucessfully enabled user accounts.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Sucessfully enabled account(s).", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
             }
             catch (Exception ex)
             {
 
-                MessageBox.Show($"Unable to enable user account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Unable to enable account(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -292,7 +306,7 @@ namespace MattMIS_Directory_Manager
             {
                 String filterString = searchTextBox.Text.ToLower();
                 this.fastObjectListView1.ModelFilter = new ModelFilter(delegate (object x) {
-                    UserHandler.UserModel userModel = (UserHandler.UserModel)x;
+                    Handler.UserModel userModel = (Handler.UserModel)x;
 
                     if (userModel.FullName.ToLower().Contains(searchTextBox.Text.ToLower()) ||
                     userModel.Username.ToLower().Contains(filterString.ToLower()) ||
@@ -315,20 +329,21 @@ namespace MattMIS_Directory_Manager
                 string OU = arguments.ARGUMENT;
                 
                 DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Username, Config.Settings.Password);
-                UserHandler.Clear();
+                Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
                 deSearch.SizeLimit = 3000;
                 deSearch.PageSize = 3000;
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
-                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
-                deSearch.Filter += $"(objectCategory=person)(objectClass=User))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";               
+                if (showMoreObjects.Checked) { deSearch.Filter += $"(|(objectCategory=person)(objectCategory=printQueue)(objectCategory=volume)(objectCategory=group)(objectClass=User)(objectClass=OrganizationalUnit)(objectClass=Computer)))"; }
+                else { deSearch.Filter += "(objectCategory=person)(objectClass=User))"; }
                 SearchResultCollection userResults = deSearch.FindAll();
 
                 foreach (SearchResult userResult in userResults)
                 {
-                    UserHandler.AddUser(userResult.GetDirectoryEntry());
+                    Handler.AddItem(userResult.GetDirectoryEntry());
 
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
@@ -338,7 +353,7 @@ namespace MattMIS_Directory_Manager
             {
 
                 DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
-                UserHandler.Clear();
+                Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
@@ -352,7 +367,7 @@ namespace MattMIS_Directory_Manager
 
                 foreach (SearchResult userResult in userResults)
                 {
-                    UserHandler.AddUser(userResult.GetDirectoryEntry());
+                    Handler.AddItem(userResult.GetDirectoryEntry());
 
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
 
@@ -364,7 +379,7 @@ namespace MattMIS_Directory_Manager
             {
                 
                 DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
-                UserHandler.Clear();
+                Handler.Clear();
                 //ARGUMENT = $"{searchTextBox.Text}#HIDEDISABLED{hideDisabledCheckBox.Checked}#HIDEUNMATCHED{hideUnmatchedCheckBox.Checked}"
                 string searchQuery = arguments.ARGUMENT.Split('#')[0];
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
@@ -375,13 +390,14 @@ namespace MattMIS_Directory_Manager
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
                 if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
-                deSearch.Filter += $"(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; 
+                if (showMoreObjects.Checked) { deSearch.Filter += $"(|(objectCategory=person)(objectCategory=printQueue)(objectCategory=volume)(objectCategory=group)(objectClass=User)(objectClass=OrganizationalUnit)(objectClass=Computer))(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)(distinguishedName=*{searchQuery}*)))"; }
+                else { deSearch.Filter += "(objectCategory=person)(objectClass=User)(|(cn=*{searchQuery}*)(userPrincipalName=*{searchQuery}*)(department=*{searchQuery}*)))"; }
 
                 SearchResultCollection userResults = deSearch.FindAll();
 
                 foreach (SearchResult userResult in userResults)
                 {
-                    UserHandler.AddUser(userResult.GetDirectoryEntry());
+                    Handler.AddItem(userResult.GetDirectoryEntry());
 
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
@@ -400,7 +416,7 @@ namespace MattMIS_Directory_Manager
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
-                UserHandler.Clear();
+                Handler.Clear();
                 deSearch.PageSize = 3000;
                 deSearch.Filter = $"(&";
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
@@ -411,7 +427,7 @@ namespace MattMIS_Directory_Manager
                 
                 foreach (SearchResult userResult in userResults)
                 {
-                    UserHandler.AddUser(userResult.GetDirectoryEntry());
+                    Handler.AddItem(userResult.GetDirectoryEntry());
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
@@ -474,7 +490,7 @@ namespace MattMIS_Directory_Manager
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            SendBackgroundCommand(fastObjectListView1.Tag.ToString());
+            SendBackgroundCommand(Convert.ToString(fastObjectListView1.Tag ?? ""));
         }
 
         private void searchTypeBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -489,32 +505,47 @@ namespace MattMIS_Directory_Manager
 
         private void userMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            if (fastObjectListView1.SelectedIndices.Count == 0) { e.Cancel = true; }
+            if (fastObjectListView1.SelectedIndices.Count == 0) { e.Cancel = true; return; }
             else if (fastObjectListView1.SelectedIndices.Count == 1)
             {
-                UserHandler.UserModel user = fastObjectListView1.SelectedObject as UserHandler.UserModel;
-                userMenuStrip.Tag = user.SID;
-                viewDetailsToolStripMenuItem.Enabled = true;
-                changePasswordToolStripMenuItem.Enabled = true;
+                if ((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).ObjectType == "user")
+                {
+                    viewDetailsToolStripMenuItem.Visible = true;
+                    changePasswordToolStripMenuItem.Visible = true;
+                    openHomeFolderToolStripMenuItem.Visible = true;
+                    userStripSeparator.Visible = true;
+                    return;
+                }
+                else if ((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).ObjectType == "computer") { }
+                else
+                {
+                    e.Cancel = true;
+                }
+
             }
-            else
-            {
-                viewDetailsToolStripMenuItem.Enabled = false;
-                changePasswordToolStripMenuItem.Enabled = false;
-            }
+            viewDetailsToolStripMenuItem.Visible = false;
+            changePasswordToolStripMenuItem.Visible = false;
+            openHomeFolderToolStripMenuItem.Visible = false;
+            userStripSeparator.Visible = false;
 
         }
 
         private void fastObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
         {
-            UserHandler.UserModel user = (UserHandler.UserModel)e.Model;
-            if (user.ImageKey == "disabled.png") { e.Item.ForeColor = Color.Red; }
-            else if (user.ImageKey == "unlinked.png") { e.Item.ForeColor = Color.Blue; }
+            Handler.UserModel user = (Handler.UserModel)e.Model;
+            if (user.ImageKey == "user_disabled.ico" || user.ImageKey == "computer_disabled.ico") { e.Item.ForeColor = Color.Red; }
+            else if (user.ImageKey == "user_normal.ico") { e.Item.ForeColor = Color.Blue; }
+            else  e.Item.ForeColor = Color.Black; 
         }
 
         private void fastObjectListView1_DoubleClick(object sender, EventArgs e)
         {
-            new UserCard(((UserHandler.UserModel)fastObjectListView1.SelectedObjects[0]).directoryEntry).Show();
+            Handler.UserModel obj = fastObjectListView1.SelectedObjects[0] as Handler.UserModel;
+            if(obj.ObjectType == "user") new UserCard(obj.directoryEntry).Show();
+            else if (obj.ObjectType == "organizationalUnit")
+            {
+                directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find(obj.Extras, true)[0];
+            }
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -530,6 +561,85 @@ namespace MattMIS_Directory_Manager
         private void DirectoryManager_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void openHomeFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach(Handler.UserModel userModel in fastObjectListView1.SelectedObjects)
+            {
+                Process.Start("explorer.exe", $"/open, {userModel.directoryEntry.Properties["homeDirectory"].Value}");
+            }
+            
+        }
+
+        private void fastObjectListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void navigateUpButton_Click(object sender, EventArgs e)
+        {
+            directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
+        }
+
+        private void DirectoryManager_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.F5)
+            {
+                refreshViewButton.PerformClick();
+            }
+        }
+
+        private void nvaigateUpButton2_Click(object sender, EventArgs e)
+        {
+            navigateUpButton.PerformClick();
+        }
+
+        private void refreshButton2_Click(object sender, EventArgs e)
+        {
+            refreshViewButton.PerformClick();
+        }
+
+        private void deleteObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void generalMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            List<String> objectTypes = new List<string>();
+            for (int i = 0; i < fastObjectListView1.SelectedObjects.Count; i++) objectTypes.Add(((Handler.UserModel)fastObjectListView1.SelectedObjects[i]).ObjectType);
+
+            //HIDE ALL FROM VIEW FIRST
+            userOptionsToolStripMenuItem.Visible = false;
+            computerOptionsToolStripMenuItem.Visible = false;
+
+
+            //CHECK WHAT ELEMENTS ARE IN
+            if (objectTypes.Where(x => x == "user").Count() == fastObjectListView1.SelectedObjects.Count) userOptionsToolStripMenuItem.Visible = true;
+
+            //CHECK WHAT ELEMENTS ARE IN
+            if (objectTypes.Where(x => x == "computer").Count() == fastObjectListView1.SelectedObjects.Count) computerOptionsToolStripMenuItem.Visible = true;
+
+        }
+
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DialogResult.Yes != MessageBox.Show($"Are you sure you wish to delete {fastObjectListView1.SelectedObjects.Count} object(s)?\n\nThese items will not be able to be retrieved.", "Delete Object(s)", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning)) return;
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
+                {
+                    um.directoryEntry.DeleteTree();
+                }
+                refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"Unable to delete objects(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 

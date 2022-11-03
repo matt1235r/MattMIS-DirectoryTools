@@ -55,7 +55,7 @@ namespace MattMIS_Directory_Manager
         //    }
         //}
 
-        //public static void AddUserToGroup(string UPN, string groupName, string role)
+        //public static void AddItemToGroup(string UPN, string groupName, string role)
         //{
         //    try
         //    {

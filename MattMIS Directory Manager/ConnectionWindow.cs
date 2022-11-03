@@ -67,6 +67,10 @@ namespace MattMIS_Directory_Manager
                 PopulateSettings("Config.xml");
 
             }
+            else if (Domain.GetCurrentDomain() != null)
+            {                
+                machineDomainJoined.Checked = true;
+            }
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -75,21 +79,15 @@ namespace MattMIS_Directory_Manager
             {
                 if (e.Argument.ToString() == "TEST")
                 {
-                    DirectoryEntry de;
-                    if (machineDomainJoined.Checked)
+
+                    if (usernameTextBox.Text == "" || usernameTextBox.Text.EndsWith("(Current User)"))
                     {
-                        if (usernameTextBox.Text == "" || passwordTextBox.Text == "")
-                        {
-                            de = new DirectoryEntry("LDAP://" + Config.Settings.ADUserRoot);
-                        }
-                        de = new DirectoryEntry("LDAP://" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
-                    }
-                    else
-                    {
-                        de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
-                        de.AuthenticationType = AuthenticationTypes.ServerBind;
+                        Config.Settings.Username = null;
+                        Config.Settings.Password = null;
                     }
 
+                    DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                    de.AuthenticationType = AuthenticationTypes.ServerBind;
 
                     string value = de.Properties["Name"].Value.ToString();
                     connected = 1;
@@ -97,14 +95,17 @@ namespace MattMIS_Directory_Manager
                 else if (e.Argument.ToString() == "TRYLOAD")
                 {
                     var domain = Domain.GetCurrentDomain();
+
                     DirectoryEntry rootDSE = new DirectoryEntry("LDAP://RootDSE");
 
+                    string defaultOU = rootDSE.Properties["defaultNamingContext"].Value.ToString();
 
-                    Config.Settings.ADUserRoot = rootDSE.Properties["defaultNamingContext"].Value.ToString();
-                    Config.Settings.ADTreeRoot = rootDSE.Properties["defaultNamingContext"].Value.ToString();
-                    Config.Settings.ServerAddress = rootDSE.Path;
-                    Config.Settings.Username = rootDSE.Username;
-                    Config.Settings.Password = "SKIP";
+
+                    Config.Settings.ADUserRoot = defaultOU;
+                    Config.Settings.ADTreeRoot = defaultOU;
+                    Config.Settings.ServerAddress = domain.DomainControllers[0].Name;
+                    Config.Settings.Username = $"{Environment.UserDomainName}/{Environment.UserName} (Current User)";
+                    Config.Settings.Password = "LOGGED IN!";
                     connected = 2;
 
 
@@ -113,14 +114,14 @@ namespace MattMIS_Directory_Manager
             catch (Exception ex)
             {
                 connected = 5;
-                errorMessage = ex.Message + "\n\n" + ex.InnerException;
+                errorMessage = ex.Message;
             }
 
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            
+
             if (connected == 1)
             {
                 progressBar.Style = ProgressBarStyle.Continuous;
@@ -151,7 +152,9 @@ namespace MattMIS_Directory_Manager
 
         private void machineDomainJoined_CheckedChanged(object sender, EventArgs e)
         {
-            backgroundWorker.RunWorkerAsync(argument: "TRYLOAD");
+            if (machineDomainJoined.Checked) backgroundWorker.RunWorkerAsync(argument: "TRYLOAD");
+            else { usernameTextBox.Clear();passwordTextBox.Clear(); }
+            
         }
     }
 }

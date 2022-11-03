@@ -114,7 +114,7 @@ namespace MattMIS_Directory_Manager
 
 
 
-        public static ConfigurationModel Settings;
+        public static ConfigurationModel Settings = new ConfigurationModel();
 
         public static int LoadConfig(string path)
         {
