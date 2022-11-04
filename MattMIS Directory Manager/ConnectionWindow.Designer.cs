@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectionWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -48,6 +49,9 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveOptionsButton = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -159,7 +163,7 @@
             this.groupBox2.Size = new System.Drawing.Size(442, 100);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Domain Settings";
+            this.groupBox2.Text = "Extra Settings (Optional)";
             // 
             // userRootTextBox
             // 
@@ -197,20 +201,22 @@
             // 
             // loadFromFile
             // 
+            this.loadFromFile.ImageKey = "disk.png";
+            this.loadFromFile.ImageList = this.imageList1;
             this.loadFromFile.Location = new System.Drawing.Point(12, 405);
             this.loadFromFile.Name = "loadFromFile";
-            this.loadFromFile.Size = new System.Drawing.Size(140, 33);
+            this.loadFromFile.Size = new System.Drawing.Size(36, 33);
             this.loadFromFile.TabIndex = 0;
-            this.loadFromFile.Text = "Load From File...";
             this.loadFromFile.UseVisualStyleBackColor = true;
             this.loadFromFile.Click += new System.EventHandler(this.loadFromFile_Click);
             // 
             // connectButton
             // 
             this.connectButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.connectButton.Location = new System.Drawing.Point(277, 405);
+            this.connectButton.ImageKey = "Start_37108.ico";
+            this.connectButton.Location = new System.Drawing.Point(355, 405);
             this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(177, 33);
+            this.connectButton.Size = new System.Drawing.Size(99, 33);
             this.connectButton.TabIndex = 3;
             this.connectButton.Text = "Connect";
             this.connectButton.UseVisualStyleBackColor = true;
@@ -236,12 +242,31 @@
             this.openFileDialog1.Filter = ".XML files (.xml)|*.xml";
             this.openFileDialog1.Title = "Open Connection File";
             // 
+            // saveOptionsButton
+            // 
+            this.saveOptionsButton.ImageKey = "Custom-Icon-Design-Flatastic-9-Save.ico";
+            this.saveOptionsButton.ImageList = this.imageList1;
+            this.saveOptionsButton.Location = new System.Drawing.Point(53, 405);
+            this.saveOptionsButton.Name = "saveOptionsButton";
+            this.saveOptionsButton.Size = new System.Drawing.Size(35, 33);
+            this.saveOptionsButton.TabIndex = 5;
+            this.saveOptionsButton.UseVisualStyleBackColor = true;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "disk.png");
+            this.imageList1.Images.SetKeyName(1, "Custom-Icon-Design-Flatastic-9-Save.ico");
+            this.imageList1.Images.SetKeyName(2, "Start_37108.ico");
+            // 
             // ConnectionWindow
             // 
             this.AcceptButton = this.connectButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(466, 450);
+            this.Controls.Add(this.saveOptionsButton);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.loadFromFile);
@@ -287,5 +312,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox serverAddressTextBox;
+        private System.Windows.Forms.Button saveOptionsButton;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

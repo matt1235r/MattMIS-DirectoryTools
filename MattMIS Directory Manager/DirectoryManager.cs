@@ -641,6 +641,20 @@ namespace MattMIS_Directory_Manager
                 MessageBox.Show($"Unable to delete objects(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void commandPromptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
+                Process.Start("PSEXEC.EXE", $"\\\\{us.FullName} -u {Config.Settings.Username} -p {Config.Settings.Password} -i cmd.exe -e");
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Error starting PSEXEC. Please make sure you have downloaded PSEXEC and it is in the same folder as this program.", "ERROR");
+            }
+        }
     }
 
     public class BackgroundArguments

@@ -28,7 +28,8 @@ namespace MattMIS_Directory_Manager
             Config.Settings.ServerAddress = serverAddressTextBox.Text;
             Config.Settings.Username = usernameTextBox.Text;
             Config.Settings.Password = passwordTextBox.Text;
-            Config.Settings.ADTreeRoot = domainRootTextBox.Text;
+            if (domainRootTextBox.Text != String.Empty) Config.Settings.ADTreeRoot = domainRootTextBox.Text; else Config.Settings.ADTreeRoot = null;
+            if (userRootTextBox.Text != String.Empty) Config.Settings.ADUserRoot = userRootTextBox.Text; else Config.Settings.ADUserRoot = null;
             Config.Settings.ADUserRoot = userRootTextBox.Text;
 
             connectButton.Enabled = false;
@@ -62,14 +63,21 @@ namespace MattMIS_Directory_Manager
 
         private void ConnectionWindow_Load(object sender, EventArgs e)
         {
+            toolTip1.SetToolTip(saveOptionsButton, "Save Current Settings to File");
+            toolTip1.SetToolTip(loadFromFile, "Load Settings from File");
+            toolTip1.SetToolTip(connectButton, "Attempt Connection to SPecified Domain");
             if (File.Exists("Config.xml"))
             {
                 PopulateSettings("Config.xml");
 
             }
-            else if (Domain.GetCurrentDomain() != null)
-            {                
+            else if (IPGlobalProperties.GetIPGlobalProperties().DomainName != String.Empty)
+            {
                 machineDomainJoined.Checked = true;
+            }
+            else
+            {
+                machineDomainJoined.Enabled = false;
             }
         }
 
@@ -86,10 +94,11 @@ namespace MattMIS_Directory_Manager
                         Config.Settings.Password = null;
                     }
 
-                    DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                    DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
-                    string value = de.Properties["Name"].Value.ToString();
+                    if (Config.Settings.ADUserRoot != null) Config.Settings.ADUserRoot = de.Properties["defaultNamingContext"].Value.ToString();
+                    if (Config.Settings.ADTreeRoot != null) Config.Settings.ADTreeRoot = de.Properties["defaultNamingContext"].Value.ToString();
                     connected = 1;
                 }
                 else if (e.Argument.ToString() == "TRYLOAD")
