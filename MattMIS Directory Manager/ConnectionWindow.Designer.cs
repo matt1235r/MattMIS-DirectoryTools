@@ -45,13 +45,14 @@
             this.domainRootTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.loadFromFile = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.connectButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveOptionsButton = new System.Windows.Forms.Button();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -115,10 +116,10 @@
             this.machineDomainJoined.AutoSize = true;
             this.machineDomainJoined.Location = new System.Drawing.Point(12, 22);
             this.machineDomainJoined.Name = "machineDomainJoined";
-            this.machineDomainJoined.Size = new System.Drawing.Size(426, 38);
+            this.machineDomainJoined.Size = new System.Drawing.Size(400, 38);
             this.machineDomainJoined.TabIndex = 3;
-            this.machineDomainJoined.Text = "This computer is already connected to the domain. Connect with my \r\ncurrent crede" +
-    "ntials.\r\n";
+            this.machineDomainJoined.Text = "This computer is joined to the domain. Connect with my current \r\nlogon credential" +
+    "s.\r\n";
             this.machineDomainJoined.UseVisualStyleBackColor = true;
             this.machineDomainJoined.CheckedChanged += new System.EventHandler(this.machineDomainJoined_CheckedChanged);
             // 
@@ -210,6 +211,14 @@
             this.loadFromFile.UseVisualStyleBackColor = true;
             this.loadFromFile.Click += new System.EventHandler(this.loadFromFile_Click);
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "disk.png");
+            this.imageList1.Images.SetKeyName(1, "Custom-Icon-Design-Flatastic-9-Save.ico");
+            this.imageList1.Images.SetKeyName(2, "Start_37108.ico");
+            // 
             // connectButton
             // 
             this.connectButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -251,14 +260,11 @@
             this.saveOptionsButton.Size = new System.Drawing.Size(35, 33);
             this.saveOptionsButton.TabIndex = 5;
             this.saveOptionsButton.UseVisualStyleBackColor = true;
+            this.saveOptionsButton.Click += new System.EventHandler(this.saveOptionsButton_Click);
             // 
-            // imageList1
+            // saveFileDialog1
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "disk.png");
-            this.imageList1.Images.SetKeyName(1, "Custom-Icon-Design-Flatastic-9-Save.ico");
-            this.imageList1.Images.SetKeyName(2, "Start_37108.ico");
+            this.saveFileDialog1.Filter = ".XML files (.xml)|*.xml";
             // 
             // ConnectionWindow
             // 
@@ -315,5 +321,6 @@
         private System.Windows.Forms.Button saveOptionsButton;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

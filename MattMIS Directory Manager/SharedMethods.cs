@@ -1,13 +1,16 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MattMIS_Directory_Manager
 {
@@ -90,6 +93,19 @@ namespace MattMIS_Directory_Manager
             user.CommitChanges();
 
         }
+
+        public static class ColorModes
+        {
+            public static bool darkMode = false;
+            public static Color foreColor = SystemColors.WindowText;
+            public static Color backColor = SystemColors.Control;
+            public static Color controlColor = SystemColors.Window;
+            public static Color itemHoverColor = Color.FromKnownColor(KnownColor.GradientInactiveCaption);
+            public static Color itemSelectedColor = Color.FromKnownColor(KnownColor.GradientActiveCaption);
+            public static FlatStyle themeFlatStyle = FlatStyle.Flat;
+            public static HeaderFormatStyle headerFormatStyle = null;
+        }
+
 
         public static bool IsADAccountDisabled(DirectoryEntry de)
         {

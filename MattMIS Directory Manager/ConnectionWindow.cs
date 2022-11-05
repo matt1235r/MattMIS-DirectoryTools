@@ -11,6 +11,8 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace MattMIS_Directory_Manager
 {
@@ -97,8 +99,8 @@ namespace MattMIS_Directory_Manager
                     DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
-                    if (Config.Settings.ADUserRoot != null) Config.Settings.ADUserRoot = de.Properties["defaultNamingContext"].Value.ToString();
-                    if (Config.Settings.ADTreeRoot != null) Config.Settings.ADTreeRoot = de.Properties["defaultNamingContext"].Value.ToString();
+                    if (Config.Settings.ADUserRoot == null) Config.Settings.ADUserRoot = de.Properties["defaultNamingContext"].Value.ToString();
+                    if (Config.Settings.ADTreeRoot == null) Config.Settings.ADTreeRoot = de.Properties["defaultNamingContext"].Value.ToString();
                     connected = 1;
                 }
                 else if (e.Argument.ToString() == "TRYLOAD")
@@ -114,7 +116,7 @@ namespace MattMIS_Directory_Manager
                     Config.Settings.ADTreeRoot = defaultOU;
                     Config.Settings.ServerAddress = domain.DomainControllers[0].Name;
                     Config.Settings.Username = $"{Environment.UserDomainName}/{Environment.UserName} (Current User)";
-                    Config.Settings.Password = "LOGGED IN!";
+                    Config.Settings.Password = "Skip Logon Authentication";
                     connected = 2;
 
 
@@ -164,6 +166,32 @@ namespace MattMIS_Directory_Manager
             if (machineDomainJoined.Checked) backgroundWorker.RunWorkerAsync(argument: "TRYLOAD");
             else { usernameTextBox.Clear();passwordTextBox.Clear(); }
             
+        }
+
+        private void saveOptionsButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
+                    Config.ConfigurationModel config = new Config.ConfigurationModel();
+                    config.ADTreeRoot = domainRootTextBox.Text;
+                    config.ADUserRoot = userRootTextBox.Text;
+                    config.ServerAddress = serverAddressTextBox.Text;
+                    config.Username = usernameTextBox.Text;
+                    config.Password = passwordTextBox.Text;
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(Config.ConfigurationModel));
+                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
+                    serializer.Serialize(txtWriter, config);
+                    txtWriter.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
