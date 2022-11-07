@@ -217,9 +217,16 @@
     <Compile Include="DirectoryManager.Designer.cs">
       <DependentUpon>DirectoryManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Handler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedMethods.cs" />
+    <Compile Include="StringDialogBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StringDialogBox.Designer.cs">
+      <DependentUpon>StringDialogBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolStripCustomRenderer.cs" />
     <Compile Include="UserCard.cs">
       <SubType>Form</SubType>
@@ -227,7 +234,6 @@
     <Compile Include="UserCard.Designer.cs">
       <DependentUpon>UserCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Handler.cs" />
     <EmbeddedResource Include="ConnectionWindow.resx">
       <DependentUpon>ConnectionWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,6 +249,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="StringDialogBox.resx">
+      <DependentUpon>StringDialogBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserCard.resx">
       <DependentUpon>UserCard.cs</DependentUpon>
     </EmbeddedResource>

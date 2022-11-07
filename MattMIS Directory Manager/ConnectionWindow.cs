@@ -30,9 +30,8 @@ namespace MattMIS_Directory_Manager
             Config.Settings.ServerAddress = serverAddressTextBox.Text;
             Config.Settings.Username = usernameTextBox.Text;
             Config.Settings.Password = passwordTextBox.Text;
-            if (domainRootTextBox.Text != String.Empty) Config.Settings.ADTreeRoot = domainRootTextBox.Text; else Config.Settings.ADTreeRoot = null;
-            if (userRootTextBox.Text != String.Empty) Config.Settings.ADUserRoot = userRootTextBox.Text; else Config.Settings.ADUserRoot = null;
-            Config.Settings.ADUserRoot = userRootTextBox.Text;
+            if (domainRootTextBox.Text != String.Empty) Config.Settings.ADTreeRoot = "/" + domainRootTextBox.Text; else Config.Settings.ADTreeRoot = null;
+            if (userRootTextBox.Text != String.Empty) Config.Settings.ADUserRoot = "/" + userRootTextBox.Text; else Config.Settings.ADUserRoot = null;
 
             connectButton.Enabled = false;
             connectButton.Text = "Attempting connection...";
@@ -80,6 +79,7 @@ namespace MattMIS_Directory_Manager
             else
             {
                 machineDomainJoined.Enabled = false;
+                this.ActiveControl = serverAddressTextBox;
             }
         }
 
@@ -99,8 +99,6 @@ namespace MattMIS_Directory_Manager
                     DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
-                    if (Config.Settings.ADUserRoot == null) Config.Settings.ADUserRoot = de.Properties["defaultNamingContext"].Value.ToString();
-                    if (Config.Settings.ADTreeRoot == null) Config.Settings.ADTreeRoot = de.Properties["defaultNamingContext"].Value.ToString();
                     connected = 1;
                 }
                 else if (e.Argument.ToString() == "TRYLOAD")
@@ -164,8 +162,8 @@ namespace MattMIS_Directory_Manager
         private void machineDomainJoined_CheckedChanged(object sender, EventArgs e)
         {
             if (machineDomainJoined.Checked) backgroundWorker.RunWorkerAsync(argument: "TRYLOAD");
-            else { usernameTextBox.Clear();passwordTextBox.Clear(); }
-            
+            else { usernameTextBox.Clear(); passwordTextBox.Clear(); }
+
         }
 
         private void saveOptionsButton_Click(object sender, EventArgs e)

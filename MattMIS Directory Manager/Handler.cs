@@ -11,6 +11,12 @@ namespace MattMIS_Directory_Manager
 {
     public static class Handler
     {
+
+        private static List<UserModel> Objects = new List<UserModel>();
+
+        private static List<TreeModel> TreeObjects = new List<TreeModel>();
+
+
         public class UserModel
         {
             public string ID { get; set; }
@@ -29,7 +35,7 @@ namespace MattMIS_Directory_Manager
 
             public DirectoryEntry directoryEntry { get; set; }
 
-            public UserModel(string ID, string FullName, string Department, string Username, string Status, string ImageKey, string objectType, DirectoryEntry directoryEntry, string extras= "")
+            public UserModel(string ID, string FullName, string Department, string Username, string Status, string ImageKey, string objectType, DirectoryEntry directoryEntry, string extras = "")
             {
                 this.ID = ID;
                 this.FullName = FullName;
@@ -39,11 +45,11 @@ namespace MattMIS_Directory_Manager
                 this.ImageKey = ImageKey;
                 this.directoryEntry = directoryEntry;
                 ObjectType = objectType;
-                Extras = extras;    
+                Extras = extras;
             }
         }
 
-        private static List<UserModel> Objects = new List<UserModel>();
+
 
         private static bool IsActive(DirectoryEntry de)
         {
@@ -58,7 +64,7 @@ namespace MattMIS_Directory_Manager
         {
             string objectComment = Convert.ToString(dirObject.Properties["comment"].Value ?? "");
             string imageKey = "";
-            
+
             string objectType = dirObject.SchemaEntry.Name;
 
             if (objectType == "user")
@@ -76,7 +82,7 @@ namespace MattMIS_Directory_Manager
                     objectComment = "Deprovisioned";
                     // betterListViewItem.ForeColor = Color.Red;
                     imageKey = "user_disabled.ico";
-                    
+
 
                 }
                 else if (!isActive)
@@ -114,7 +120,7 @@ namespace MattMIS_Directory_Manager
                     // betterListViewItem.ForeColor = Color.Blue;
                     imageKey = "computer_disabled.png";
                 }
-                
+
             }
 
 
@@ -124,11 +130,11 @@ namespace MattMIS_Directory_Manager
             else if (objectType == "group") { Objects.Add(new UserModel("", $"{dirObject.Properties["name"].Value ?? ""}", "Security Group", "", "", "group.ico", $"{objectType}", dirObject, dirObject.Path)); }
             else if (objectType == "volume") { Objects.Add(new UserModel("", $"{dirObject.Properties["name"].Value ?? ""}", "Shared Folder", "", "", "netShare.ico", $"{objectType}", dirObject, dirObject.Path)); }
             else if (objectType == "printQueue") { Objects.Add(new UserModel("", $"{dirObject.Properties["name"].Value ?? ""}", "Network Printer", "", "", "printer.ico", $"{objectType}", dirObject, dirObject.Path)); }
-            else { System.Windows.Forms.MessageBox.Show(objectType);}
+            else { System.Windows.Forms.MessageBox.Show(objectType); }
         }
 
         public static List<UserModel> GetObjects()
-        {      
+        {
             return Objects;
         }
 
@@ -137,12 +143,53 @@ namespace MattMIS_Directory_Manager
             Objects.Clear();
         }
 
-        public static object UserImageGetter(object rowObject)
+        public static object ObjImageGetter(object rowObject)
         {
-             return ((UserModel)rowObject).ImageKey;
-            
+            return ((UserModel)rowObject).ImageKey;
+        }
+
+        public static object TreeImageGetter(object rowObject)
+        {
+            return ((TreeModel)rowObject).ImageKey;
+
+        }
+
+        public class TreeModel
+        {
+            public List<TreeModel> Children { get; set; }
+            public string Name { get; set; }
+
+            public string Command { get; set; }
+
+            public string Argument { get; set; }
+
+            public string ImageKey { get; set; }
+            public TreeModel Parent { get; set; }
+            public string ParentLabel { get; set; }
+            public int ChildCount { get; }
+
+            public DirectoryEntry directoryEntry { get; set; }
+
+            public TreeModel()
+            {
+                this.Children = new List<TreeModel>();
+            }
+        }
+
+        public static List<TreeModel> GetTreeObjects()
+        {
+            return TreeObjects;
+        }
+
+        public static void ClearTree()
+        {
+            TreeObjects.Clear();
+        }
+
+        public static void AddTree(TreeModel t)
+        {
+            TreeObjects.Add(t);
         }
     }
-
 }
 

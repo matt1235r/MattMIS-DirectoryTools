@@ -30,43 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectoryManager));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("7 Fisher");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("7 More");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("11 Fisher");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Registration Groups", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3});
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Year 7");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Year 8");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Year 9");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Year 10");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Year 11");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Year 12");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Year 13 ");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Year Groups", new System.Windows.Forms.TreeNode[] {
-            treeNode5,
-            treeNode6,
-            treeNode7,
-            treeNode8,
-            treeNode9,
-            treeNode10,
-            treeNode11});
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("All Pupils", new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode12});
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("All Staff");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("SIMS: The Campion School", new System.Windows.Forms.TreeNode[] {
-            treeNode13,
-            treeNode14});
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Search Entire Directory");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Active Directory", new System.Windows.Forms.TreeNode[] {
-            treeNode16});
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle1 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle2 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle3 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle4 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle5 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle6 = new BrightIdeasSoftware.HeaderStateStyle();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.directoryTreeView = new System.Windows.Forms.TreeView();
             this.treeViewMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
@@ -91,6 +58,8 @@
             this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.directoryTreeView = new BrightIdeasSoftware.TreeListView();
+            this.treeColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.showMoreObjects = new System.Windows.Forms.CheckBox();
             this.hideUnmatchedCheckBox = new System.Windows.Forms.CheckBox();
             this.fastObjectListView1 = new BrightIdeasSoftware.FastObjectListView();
@@ -155,6 +124,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.directoryTreeView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).BeginInit();
             this.generalMenuStrip.SuspendLayout();
             this.computerMenuStrip.SuspendLayout();
@@ -186,98 +156,9 @@
             this.imageList1.Images.SetKeyName(18, "printer.ico");
             this.imageList1.Images.SetKeyName(19, "search_book_open_search_locate_6178.ico");
             // 
-            // directoryTreeView
-            // 
-            this.directoryTreeView.BackColor = System.Drawing.SystemColors.Window;
-            this.directoryTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.directoryTreeView.ContextMenuStrip = this.treeViewMenuStrip;
-            this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.directoryTreeView.Font = new System.Drawing.Font("Microsoft Tai Le", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.directoryTreeView.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.directoryTreeView.FullRowSelect = true;
-            this.directoryTreeView.HideSelection = false;
-            this.directoryTreeView.ImageIndex = 8;
-            this.directoryTreeView.ImageList = this.imageList1;
-            this.directoryTreeView.Location = new System.Drawing.Point(0, 0);
-            this.directoryTreeView.Name = "directoryTreeView";
-            treeNode1.ImageKey = "Database";
-            treeNode1.Name = "Node3";
-            treeNode1.Tag = "BYDEPARTMENT#7 Fisher";
-            treeNode1.Text = "7 Fisher";
-            treeNode2.ImageKey = "Database";
-            treeNode2.Name = "Node5";
-            treeNode2.Text = "7 More";
-            treeNode3.ImageKey = "Database";
-            treeNode3.Name = "Node1";
-            treeNode3.Tag = "BYDEPARTMENT#11 Fisher";
-            treeNode3.Text = "11 Fisher";
-            treeNode4.ImageKey = "Database";
-            treeNode4.Name = "Node2";
-            treeNode4.Text = "Registration Groups";
-            treeNode5.ImageKey = "Database";
-            treeNode5.Name = "Year 7";
-            treeNode5.Tag = "BYDEPARTMENT#7 ";
-            treeNode5.Text = "Year 7";
-            treeNode6.ImageKey = "Database";
-            treeNode6.Name = "Node1";
-            treeNode6.Tag = "BYDEPARTMENT#8 ";
-            treeNode6.Text = "Year 8";
-            treeNode7.ImageKey = "Database";
-            treeNode7.Name = "Node1";
-            treeNode7.Tag = "BYDEPARTMENT#9 ";
-            treeNode7.Text = "Year 9";
-            treeNode8.ImageKey = "Database";
-            treeNode8.Name = "Node4";
-            treeNode8.Tag = "BYDEPARTMENT#10 ";
-            treeNode8.Text = "Year 10";
-            treeNode9.ImageKey = "Database";
-            treeNode9.Name = "Node5";
-            treeNode9.Tag = "BYDEPARTMENT#11 ";
-            treeNode9.Text = "Year 11";
-            treeNode10.ImageKey = "Database";
-            treeNode10.Name = "Node6";
-            treeNode10.Tag = "BYDEPARTMENT#12";
-            treeNode10.Text = "Year 12";
-            treeNode11.ImageKey = "Database";
-            treeNode11.Name = "Node7";
-            treeNode11.Tag = "BYDEPARTMENT#13";
-            treeNode11.Text = "Year 13 ";
-            treeNode12.ImageKey = "Database";
-            treeNode12.Name = "Node0";
-            treeNode12.Text = "Year Groups";
-            treeNode13.ImageKey = "Person";
-            treeNode13.Name = "Node1";
-            treeNode13.Tag = "BYTITLE#Student";
-            treeNode13.Text = "All Pupils";
-            treeNode14.ImageKey = "Person";
-            treeNode14.Name = "Node0";
-            treeNode14.Tag = "BYTITLE#Staff";
-            treeNode14.Text = "All Staff";
-            treeNode15.ImageKey = "Database";
-            treeNode15.Name = "MIS";
-            treeNode15.Text = "SIMS: The Campion School";
-            treeNode16.Checked = true;
-            treeNode16.ImageKey = "GlobalSearch";
-            treeNode16.Name = "SEARCHPAGE";
-            treeNode16.Tag = "SEARCHALL";
-            treeNode16.Text = "Search Entire Directory";
-            treeNode17.ImageKey = "OU.png";
-            treeNode17.Name = "Active Directory";
-            treeNode17.Tag = "ADROOT#";
-            treeNode17.Text = "Active Directory";
-            this.directoryTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode15,
-            treeNode17});
-            this.directoryTreeView.SelectedImageIndex = 0;
-            this.directoryTreeView.Size = new System.Drawing.Size(296, 582);
-            this.directoryTreeView.TabIndex = 1;
-            this.directoryTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.directoryTreeView_BeforeCollapse);
-            this.directoryTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.directoryTreeView_BeforeSelect);
-            this.directoryTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.directoryTreeView_AfterSelect);
-            this.directoryTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.directoryTreeView_NodeMouseClick);
-            // 
             // treeViewMenuStrip
             // 
+            this.treeViewMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.treeViewMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
             this.toolStripSeparator16,
@@ -326,7 +207,7 @@
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(1241, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(1005, 31);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -492,9 +373,48 @@
             this.splitContainer1.Panel2.Controls.Add(this.searchTypeBox);
             this.splitContainer1.Panel2.Controls.Add(this.searchTextBox);
             this.splitContainer1.Panel2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.splitContainer1.Size = new System.Drawing.Size(1241, 582);
-            this.splitContainer1.SplitterDistance = 296;
+            this.splitContainer1.Size = new System.Drawing.Size(1005, 582);
+            this.splitContainer1.SplitterDistance = 238;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // directoryTreeView
+            // 
+            this.directoryTreeView.AllColumns.Add(this.treeColumn);
+            this.directoryTreeView.CellEditUseWholeCell = false;
+            this.directoryTreeView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.treeColumn});
+            this.directoryTreeView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.directoryTreeView.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.directoryTreeView.FullRowSelect = true;
+            this.directoryTreeView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.directoryTreeView.HideSelection = false;
+            this.directoryTreeView.Location = new System.Drawing.Point(0, 0);
+            this.directoryTreeView.MultiSelect = false;
+            this.directoryTreeView.Name = "directoryTreeView";
+            this.directoryTreeView.OwnerDrawnHeader = true;
+            this.directoryTreeView.ShowCommandMenuOnRightClick = true;
+            this.directoryTreeView.ShowGroups = false;
+            this.directoryTreeView.Size = new System.Drawing.Size(238, 582);
+            this.directoryTreeView.SmallImageList = this.imageList1;
+            this.directoryTreeView.TabIndex = 14;
+            this.directoryTreeView.UseCellFormatEvents = true;
+            this.directoryTreeView.UseCompatibleStateImageBehavior = false;
+            this.directoryTreeView.UseExplorerTheme = true;
+            this.directoryTreeView.View = System.Windows.Forms.View.Details;
+            this.directoryTreeView.VirtualMode = true;
+            this.directoryTreeView.SelectionChanged += new System.EventHandler(this.directoryTreeView_SelectionChanged);
+            // 
+            // treeColumn
+            // 
+            this.treeColumn.AspectName = "Name";
+            this.treeColumn.CellVerticalAlignment = System.Drawing.StringAlignment.Center;
+            this.treeColumn.FillsFreeSpace = true;
+            this.treeColumn.Groupable = false;
+            this.treeColumn.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.treeColumn.Text = "Directory View";
+            this.treeColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.treeColumn.Width = 200;
             // 
             // showMoreObjects
             // 
@@ -554,7 +474,7 @@
             this.fastObjectListView1.SelectedBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.fastObjectListView1.SelectedForeColor = System.Drawing.Color.Black;
             this.fastObjectListView1.ShowGroups = false;
-            this.fastObjectListView1.Size = new System.Drawing.Size(923, 483);
+            this.fastObjectListView1.Size = new System.Drawing.Size(737, 481);
             this.fastObjectListView1.SmallImageList = this.imageList1;
             this.fastObjectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.fastObjectListView1.TabIndex = 2;
@@ -802,7 +722,7 @@
             this.searchButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.searchButton.ImageKey = "(none)";
             this.searchButton.ImageList = this.imageList1;
-            this.searchButton.Location = new System.Drawing.Point(897, 5);
+            this.searchButton.Location = new System.Drawing.Point(711, 5);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(38, 38);
             this.searchButton.TabIndex = 8;
@@ -843,7 +763,7 @@
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip2.Size = new System.Drawing.Size(941, 31);
+            this.toolStrip2.Size = new System.Drawing.Size(763, 31);
             this.toolStrip2.TabIndex = 6;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -979,25 +899,25 @@
             this.searchTextBox.ForeColor = System.Drawing.Color.Black;
             this.searchTextBox.Location = new System.Drawing.Point(294, 10);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(597, 26);
+            this.searchTextBox.Size = new System.Drawing.Size(410, 26);
             this.searchTextBox.TabIndex = 1;
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
             this.searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyDown);
             // 
             // darkHeaderFormatStyle
             // 
-            headerStateStyle1.BackColor = System.Drawing.Color.DarkGray;
-            headerStateStyle1.ForeColor = System.Drawing.Color.White;
-            headerStateStyle1.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Hot = headerStateStyle1;
-            headerStateStyle2.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle2.ForeColor = System.Drawing.Color.White;
-            headerStateStyle2.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Normal = headerStateStyle2;
-            headerStateStyle3.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle3.ForeColor = System.Drawing.Color.White;
-            headerStateStyle3.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Pressed = headerStateStyle3;
+            headerStateStyle4.BackColor = System.Drawing.Color.DarkGray;
+            headerStateStyle4.ForeColor = System.Drawing.Color.White;
+            headerStateStyle4.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Hot = headerStateStyle4;
+            headerStateStyle5.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle5.ForeColor = System.Drawing.Color.White;
+            headerStateStyle5.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Normal = headerStateStyle5;
+            headerStateStyle6.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle6.ForeColor = System.Drawing.Color.White;
+            headerStateStyle6.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Pressed = headerStateStyle6;
             // 
             // backgroundCommandQueuer
             // 
@@ -1014,13 +934,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1241, 613);
+            this.ClientSize = new System.Drawing.Size(1005, 613);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(717, 412);
+            this.MinimumSize = new System.Drawing.Size(713, 400);
             this.Name = "DirectoryManager";
             this.Text = "MattMIS Directory Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DirectoryManager_FormClosing);
@@ -1035,6 +955,7 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.directoryTreeView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).EndInit();
             this.generalMenuStrip.ResumeLayout(false);
             this.computerMenuStrip.ResumeLayout(false);
@@ -1047,7 +968,6 @@
 
         #endregion
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.TreeView directoryTreeView;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ContextMenuStrip UserMenuStrip;
@@ -1129,5 +1049,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripMenuItem addNewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private BrightIdeasSoftware.TreeListView directoryTreeView;
+        private BrightIdeasSoftware.OLVColumn treeColumn;
     }
 }

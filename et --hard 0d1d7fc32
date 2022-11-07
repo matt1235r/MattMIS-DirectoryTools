@@ -1,0 +1,92 @@
+[33mcommit 3df9301c302a5509b6f3d75b942773d19a554e88[m[33m ([m[1;36mHEAD -> [m[1;32mpublic[m[33m, [m[1;31morigin/public[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Mon Nov 7 17:44:18 2022 +0000
+
+    swapped tree view to model based
+
+[33mcommit 523aa80f2df20fb03f60d4e9336d1ce413d4ca2b[m[33m ([m[1;31morigin/merge[m[33m)[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Sat Nov 5 00:14:51 2022 +0000
+
+    Dark Mode!
+
+[33mcommit 37ec5966894ebc716b3caf8af84b6fd137efd8fa[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Fri Nov 4 17:18:16 2022 +0000
+
+    Non Domain work
+
+[33mcommit bf57138d6b4a45257b6994dd1c10d1e36a744f07[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Thu Nov 3 00:53:16 2022 +0000
+
+    Added support for most AD objects not just Users.
+
+[33mcommit 1e32c08e5209774d324713cc1c7c680580628f88[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Wed Nov 2 18:33:26 2022 +0000
+
+    started work on domain auto detector
+
+[33mcommit dc4faa1c6e4b78bf52f2dd780b4cdcd8fb0cd1fc[m
+Merge: a74f1f6 7d0feb2
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Wed Nov 2 17:11:48 2022 +0000
+
+    Merge pull request #1 from matt1235r/DirManager1.0
+    
+    Dir manager1.0
+
+[33mcommit 7d0feb2024138b280541156a9791f7aadbaa0dbd[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Wed Nov 2 13:35:53 2022 +0000
+
+    merge
+
+[33mcommit a567c161291c132b356548a2ab5afcd7dd641e51[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Wed Nov 2 13:27:02 2022 +0000
+
+    Embedded directory manager into single exe. Added connectionwizard front end.
+
+[33mcommit a74f1f689208eef842faef444feeab3dfdb099ab[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Wed Nov 2 01:11:23 2022 +0000
+
+    work on directory manager
+
+[33mcommit f76bd8300f148d6b0b6b0778088750414ce8bbf3[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Tue Nov 1 23:12:00 2022 +0000
+
+    before removing old.
+
+[33mcommit 5040e9d50c91d42814ac98a99a462b6f10f9c453[m
+Author: Matt <ringrose.matthew@gmail.com>
+Date:   Tue Nov 1 21:41:40 2022 +0000
+
+    swapping to object listview
+
+[33mcommit 00de661b3c3d9a8521eaaf118a0a5b574e083ccf[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Tue Oct 11 13:41:33 2022 +0100
+
+    Added option to strip non alpha numeric characters when generating usernames.
+
+[33mcommit e1fe732708f8730d1c61ab04aab2406beaaaf6a8[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Fri Sep 30 15:17:28 2022 +0100
+
+    Initial commit
+
+[33mcommit c9be7af8620b145a5a50c461529de1056446b2cd[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Mon Sep 5 22:59:00 2022 +0100
+
+    Update README.md
+
+[33mcommit ce1bc37dbf5dd8ca8cd6216024cd403bd27cd695[m
+Author: matt1235r <ringrose.matthew@gmail.com>
+Date:   Mon Sep 5 22:56:52 2022 +0100
+
+    Initial commit

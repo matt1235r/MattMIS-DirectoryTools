@@ -67,68 +67,54 @@ namespace MattMIS_Directory_Manager
             SendMessage(searchTextBox.Handle, EM_SETCUEBANNER, 0, "Filter by...");
 
             idColumn.IsEditable = false;
-
-            idColumn.ImageGetter = new ImageGetterDelegate(Handler.UserImageGetter);
-            idColumn.AspectToStringConverter = value => String.Empty;
+            idColumn.ImageGetter = new ImageGetterDelegate(Handler.ObjImageGetter);
             fastObjectListView1.HotItemStyle = new HotItemStyle();
-            
-            //HOT ITEM TRACKING
-            // Set styling
-            
+            // Configure the first tree
+            directoryTreeView.OwnerDraw = true;
+            treeColumn.ImageGetter = new ImageGetterDelegate(Handler.TreeImageGetter);
+            treeColumn.HeaderTextAlign = HorizontalAlignment.Center;
+            treeColumn.TextAlign = HorizontalAlignment.Center;
+            directoryTreeView.CanExpandGetter = delegate (object x) { return ((Handler.TreeModel)x).Children.Count > 0; };
+            directoryTreeView.ChildrenGetter = delegate (object x) { return ((Handler.TreeModel)x).Children; };
+
+            RefeshDirectoryTree();
+
 
         }
 
         private void RefeshDirectoryTree()
         {
-            DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password);
-            de.AuthenticationType = AuthenticationTypes.ServerBind;
+            Handler.ClearTree();
+            Handler.TreeModel treeItem = new Handler.TreeModel();
+            SendBackgroundCommand("ADTREEVIEW");
 
-            directoryTreeView.Nodes.Clear();
-            TreeNode adNode = new TreeNode();
-            adNode.Text = "Active Directory";
-            adNode.Name = "Active Directory";
-            adNode.Tag = "ADROOT#";
-            adNode.ImageKey = "OU.png";
-            directoryTreeView.Nodes.Add(adNode);
-            
-            TreeNode adSearch = new TreeNode();
-            adSearch.Text = "Search Entire Directory";
-            adSearch.Name = "SEARCHPAGE";
-            adSearch.ImageKey = "GlobalSearch";
-            adSearch.Tag = "SEARCHALL";
-            adNode.Nodes.Add(adSearch);
-
-            AddSubOU(de, adNode, true);
-
-            directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find("SEARCHPAGE", true)[0];
-            //directoryTreeView.Nodes.Find("MIS", true)[0].ExpandAll();
 
         }
 
-        private void AddSubOU(DirectoryEntry thisOU, TreeNode parentnode, bool hideNode = false)
+        private void AddSubOU(DirectoryEntry DISPLAYOU, Handler.TreeModel parent, bool hideNode = false)
         {
-            TreeNode newnode = new TreeNode();
+            Handler.TreeModel newChild;
 
             if (!hideNode)
             {
-                newnode = new TreeNode();
-                newnode.Text = Convert.ToString(thisOU.Properties["name"].Value ?? "");
-                newnode.Name = thisOU.Path;
-                newnode.Tag = "THISOU#" + thisOU.Path;
-                newnode.ImageKey = "OU.png";
-                parentnode.Nodes.Add(newnode);
+                newChild = new Handler.TreeModel();
+                newChild.Name = Convert.ToString(DISPLAYOU.Properties["name"].Value ?? "");
+                newChild.Argument = DISPLAYOU.Path;
+                newChild.Command = "DISPLAYOU";
+                newChild.ImageKey = "OU.png";
+                parent.Children.Add(newChild);
 
             }
-            else newnode = parentnode;
+            else newChild = parent;
 
-            DirectorySearcher search = new DirectorySearcher(thisOU);
+            DirectorySearcher search = new DirectorySearcher(DISPLAYOU);
             search.SearchScope = SearchScope.OneLevel;
             search.Filter = "(&(objectclass=organizationalUnit))";
             SearchResultCollection userResults = search.FindAll();
 
             foreach (SearchResult sub in userResults)
             {
-                AddSubOU(sub.GetDirectoryEntry(), newnode);
+                AddSubOU(sub.GetDirectoryEntry(), newChild);
             }
         }
 
@@ -146,61 +132,7 @@ namespace MattMIS_Directory_Manager
 
         }
 
-        private void directoryTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            directoryTreeView.SelectedImageKey = e.Node.ImageKey;
-            searchTextBox.Clear();
-            SendBackgroundCommand(Convert.ToString(e.Node.Tag ?? ""));
-            e.Node.Expand();
-
-        }
-
-        private void SendBackgroundCommand(string commandValue)
-        {
-            if (commandValue != null && commandValue != "")
-            {
-                if (backgroundWorker.IsBusy) { backgroundWorker.CancelAsync(); backgroundWorker.Abort(); backgroundCommandQueuer.Tag = commandValue; backgroundCommandQueuer.Start(); return; }
-                if (commandValue.StartsWith("SEARCHALL"))
-                {
-                    searchTypeBox.SelectedIndex = 1;
-                    searchTextBox.Text = "";
-                    this.ActiveControl = searchTextBox;
-                    return;
-                }
-                else if (commandValue.StartsWith("SEARCHDIRBY"))
-                {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = $"{searchTextBox.Text}", HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "SEARCHDIRBY" });
-                    return;
-                }
-                searchTypeBox.SelectedIndex = 0;
-                currentFolderLocation.Text = "Reading from directory....";
-                loadingSeperator.Visible = true;
-                stopLoadingButton.Visible = true;
-                StripProgressBar.Style = ProgressBarStyle.Marquee;
-                if (commandValue.StartsWith("BYDEPARTMENT"))
-                {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYDEPARTMENT" });
-                }
-                else if (commandValue.StartsWith("BYTITLE"))
-                {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYTITLE" });
-                }
-                else if (commandValue.StartsWith("THISOU"))
-                {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = commandValue.Split('#')[1], HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "THISOU" });
-                }
-                else
-                {
-                    currentFolderLocation.Text = "";
-                    loadingSeperator.Visible = false;
-                    stopLoadingButton.Visible = false;
-                    StripProgressBar.Style = ProgressBarStyle.Continuous;
-                }
-
-            }
-
-
-        }
+       
 
         private void viewDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -373,10 +305,9 @@ namespace MattMIS_Directory_Manager
         private void abortableBackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundArguments arguments = (BackgroundArguments)e.Argument;
-            if (arguments.OPERATION == "THISOU")
+            if (arguments.OPERATION == "DISPLAYOU")
             {
                 string OU = arguments.ARGUMENT;
-
                 DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Username, Config.Settings.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
@@ -397,11 +328,27 @@ namespace MattMIS_Directory_Manager
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 6;
+            }
+            else if (arguments.OPERATION == "ADTREEVIEW")
+            {
+                DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password);
+                de.AuthenticationType = AuthenticationTypes.ServerBind;
+
+                Handler.ClearTree();
+                Handler.TreeModel adRoot = new Handler.TreeModel();
+                adRoot.Name = "Active Directory";
+                adRoot.ImageKey = "OU.png";
+
+                Handler.AddTree(adRoot);
+                AddSubOU(de, adRoot, true);
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 5;
             }
             else if (arguments.OPERATION == "BYDEPARTMENT")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
@@ -422,12 +369,13 @@ namespace MattMIS_Directory_Manager
 
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 4;
 
             }
             else if (arguments.OPERATION == "SEARCHDIRBY")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 Handler.Clear();
                 //ARGUMENT = $"{searchTextBox.Text}#HIDEDISABLED{hideDisabledCheckBox.Checked}#HIDEUNMATCHED{hideUnmatchedCheckBox.Checked}"
                 string searchQuery = arguments.ARGUMENT.Split('#')[0];
@@ -452,6 +400,7 @@ namespace MattMIS_Directory_Manager
                 }
 
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 3;
             }
             else if (arguments.OPERATION == "SEARCHVIEWBY")
             {
@@ -461,7 +410,7 @@ namespace MattMIS_Directory_Manager
             else if (arguments.OPERATION == "BYTITLE")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + "/" + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
@@ -480,23 +429,100 @@ namespace MattMIS_Directory_Manager
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 1;
+            }
+            else
+            {
+                e.Result = -1;
             }
 
         }
 
         private void abortableBackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            StripProgressBar.Style = ProgressBarStyle.Continuous;
+
+            currentFolderLocation.Text = "";
+            loadingSeperator.Visible = false;
+            stopLoadingButton.Visible = false;
             if (e.Cancelled)
             {
-                SendBackgroundCommand(backgroundCommandQueuer.Tag.ToString());
+                SendBackgroundCommand(Convert.ToString(directoryTreeView.Tag ?? ""));
+            }
+            else if ((int)e.Result == 5)
+            {
+                directoryTreeView.SetObjects(Handler.GetTreeObjects());
             }
             else
             {
                 currentFolderLocation.Text = "Finished Thread...";
                 LoadPreRenderListView();
-
-                StripProgressBar.Style = ProgressBarStyle.Continuous;
             }
+
+        }
+
+
+        private void SendBackgroundCommand(BackgroundArguments ba)
+        {
+            searchTypeBox.SelectedIndex = 0;
+            currentFolderLocation.Text = "Reading from directory....";
+            loadingSeperator.Visible = true;
+            stopLoadingButton.Visible = true;
+            StripProgressBar.Style = ProgressBarStyle.Marquee;
+            backgroundWorker.RunWorkerAsync(argument: ba);
+        }
+
+        private void SendBackgroundCommand(string commandValue, string argument = null)
+        {
+            if (commandValue != null && commandValue != "")
+            {
+                if (argument == null && commandValue.Contains('#')) argument = commandValue.Split('#')[1];
+                if (backgroundWorker.IsBusy) { backgroundWorker.CancelAsync(); backgroundWorker.Abort(); directoryTreeView.Tag = commandValue + "#" + argument; return; }
+                if (commandValue.StartsWith("SEARCHALL"))
+                {
+                    searchTypeBox.SelectedIndex = 1;
+                    searchTextBox.Text = "";
+                    this.ActiveControl = searchTextBox;
+                    return;
+                }
+                else if (commandValue.StartsWith("SEARCHDIRBY"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "SEARCHDIRBY" });
+                    return;
+                }
+
+                searchTypeBox.SelectedIndex = 0;
+                currentFolderLocation.Text = "Reading from directory....";
+                loadingSeperator.Visible = true;
+                stopLoadingButton.Visible = true;
+                StripProgressBar.Style = ProgressBarStyle.Marquee;
+                if (commandValue.StartsWith("ADTREEVIEW"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { OPERATION = "ADTREEVIEW" });
+                    return;
+                }
+                else if (commandValue.StartsWith("BYDEPARTMENT"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYDEPARTMENT" });
+                }
+                else if (commandValue.StartsWith("BYTITLE"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYTITLE" });
+                }
+                else if (commandValue.StartsWith("DISPLAYOU"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "DISPLAYOU" });
+                }
+                else
+                {
+                    currentFolderLocation.Text = "";
+                    loadingSeperator.Visible = false;
+                    stopLoadingButton.Visible = false;
+                    StripProgressBar.Style = ProgressBarStyle.Continuous;
+                }
+
+            }
+
 
         }
 
@@ -585,7 +611,7 @@ namespace MattMIS_Directory_Manager
             Handler.UserModel user = (Handler.UserModel)e.Model;
             if (user.ImageKey == "user_disabled.ico" || user.ImageKey == "computer_disabled.ico") { e.Item.ForeColor = Color.Red; }
             else if (user.ImageKey == "user_normal.ico") { e.Item.ForeColor = Color.Blue; }
-
+            else e.Item.ForeColor = Color.Black;
         }
 
         private void fastObjectListView1_DoubleClick(object sender, EventArgs e)
@@ -594,7 +620,7 @@ namespace MattMIS_Directory_Manager
             if (obj.ObjectType == "user") new UserCard(obj.directoryEntry).Show();
             else if (obj.ObjectType == "organizationalUnit")
             {
-                directoryTreeView.SelectedNode = directoryTreeView.Nodes.Find(obj.Extras, true)[0];
+                directoryTreeView.SelectedObject = obj;
             }
         }
 
@@ -630,7 +656,7 @@ namespace MattMIS_Directory_Manager
 
         private void navigateUpButton_Click(object sender, EventArgs e)
         {
-            directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
+           // directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
         }
 
         private void DirectoryManager_KeyDown(object sender, KeyEventArgs e)
@@ -761,6 +787,18 @@ namespace MattMIS_Directory_Manager
         private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             RefeshDirectoryTree();
+        }
+
+        private void directoryTreeView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (directoryTreeView.SelectedItem == null) return;
+
+            Handler.TreeModel obj = directoryTreeView.SelectedItem.RowObject as Handler.TreeModel;
+
+            directoryTreeView.Expand(obj);
+
+            SendBackgroundCommand(obj.Command, obj.Argument);
+            directoryTreeView.Expand(directoryTreeView.SelectedItem);
         }
     }
 

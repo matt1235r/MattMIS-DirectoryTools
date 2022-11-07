@@ -93,7 +93,7 @@
             this.serverAddressTextBox.Location = new System.Drawing.Point(175, 75);
             this.serverAddressTextBox.Name = "serverAddressTextBox";
             this.serverAddressTextBox.Size = new System.Drawing.Size(261, 25);
-            this.serverAddressTextBox.TabIndex = 7;
+            this.serverAddressTextBox.TabIndex = 1;
             // 
             // passwordTextBox
             // 
@@ -102,14 +102,14 @@
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(261, 23);
-            this.passwordTextBox.TabIndex = 6;
+            this.passwordTextBox.TabIndex = 3;
             // 
             // usernameTextBox
             // 
             this.usernameTextBox.Location = new System.Drawing.Point(175, 115);
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(261, 23);
-            this.usernameTextBox.TabIndex = 5;
+            this.usernameTextBox.TabIndex = 2;
             // 
             // machineDomainJoined
             // 
@@ -171,7 +171,7 @@
             this.userRootTextBox.Location = new System.Drawing.Point(175, 60);
             this.userRootTextBox.Name = "userRootTextBox";
             this.userRootTextBox.Size = new System.Drawing.Size(261, 23);
-            this.userRootTextBox.TabIndex = 10;
+            this.userRootTextBox.TabIndex = 5;
             // 
             // label6
             // 
@@ -188,7 +188,7 @@
             this.domainRootTextBox.Location = new System.Drawing.Point(175, 24);
             this.domainRootTextBox.Name = "domainRootTextBox";
             this.domainRootTextBox.Size = new System.Drawing.Size(261, 23);
-            this.domainRootTextBox.TabIndex = 8;
+            this.domainRootTextBox.TabIndex = 4;
             // 
             // label5
             // 
