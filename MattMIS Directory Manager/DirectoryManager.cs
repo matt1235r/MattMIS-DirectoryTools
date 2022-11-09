@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
@@ -17,6 +18,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MattMIS_Directory_Manager
@@ -307,8 +309,8 @@ namespace MattMIS_Directory_Manager
             BackgroundArguments arguments = (BackgroundArguments)e.Argument;
             if (arguments.OPERATION == "DISPLAYOU")
             {
-                string OU = arguments.ARGUMENT;
-                DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Username, Config.Settings.Password);
+                string OU = arguments.ARGUMENT;              
+                DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
@@ -332,13 +334,24 @@ namespace MattMIS_Directory_Manager
             }
             else if (arguments.OPERATION == "ADTREEVIEW")
             {
-                DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADTreeRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + Config.Settings.Connection.ADTreeRoot, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 de.AuthenticationType = AuthenticationTypes.ServerBind;
 
                 Handler.ClearTree();
+
+                addCustomNode(Config.Settings.PinnedViews.TreeItem);
+
                 Handler.TreeModel adRoot = new Handler.TreeModel();
                 adRoot.Name = "Active Directory";
                 adRoot.ImageKey = "OU.png";
+                adRoot.Argument = de.Path;
+                adRoot.Command = "DISPLAYOU";
+                Handler.TreeModel searchRoot = new Handler.TreeModel();
+
+                searchRoot.Name = "Directory Search";
+                searchRoot.ImageKey = "android-search_icon-icons.com_50501.ico";
+                searchRoot.Command = "SEARCHALL";
+                adRoot.Children.Add(searchRoot);
 
                 Handler.AddTree(adRoot);
                 AddSubOU(de, adRoot, true);
@@ -348,7 +361,7 @@ namespace MattMIS_Directory_Manager
             else if (arguments.OPERATION == "BYDEPARTMENT")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + Config.Settings.Connection.ADUserRoot, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
@@ -375,7 +388,7 @@ namespace MattMIS_Directory_Manager
             else if (arguments.OPERATION == "SEARCHDIRBY")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + Config.Settings.Connection.ADUserRoot, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 Handler.Clear();
                 //ARGUMENT = $"{searchTextBox.Text}#HIDEDISABLED{hideDisabledCheckBox.Checked}#HIDEUNMATCHED{hideUnmatchedCheckBox.Checked}"
                 string searchQuery = arguments.ARGUMENT.Split('#')[0];
@@ -410,7 +423,7 @@ namespace MattMIS_Directory_Manager
             else if (arguments.OPERATION == "BYTITLE")
             {
 
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress + Config.Settings.ADUserRoot, Config.Settings.Username, Config.Settings.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + Config.Settings.Connection.ADUserRoot, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.Subtree;
                 deSearch.SizeLimit = 3000;
@@ -461,7 +474,22 @@ namespace MattMIS_Directory_Manager
 
         }
 
+        private void addCustomNode(Config.Model.TreeItem item, Handler.TreeModel parent = null)
+        {
+            Handler.TreeModel newChild = new Handler.TreeModel();
+            newChild.Name = item.Name;
+            newChild.Argument = item.Argument;
+            newChild.Command = item.Command;
+            newChild.ImageKey = item.ImageKey;
+            if (parent != null) parent.Children.Add(newChild);
+            else Handler.AddTree(newChild);
+                
 
+            foreach (Config.Model.TreeItem newTree in item.Children)
+            {
+                addCustomNode(newTree, newChild);
+            }
+        }
         private void SendBackgroundCommand(BackgroundArguments ba)
         {
             searchTypeBox.SelectedIndex = 0;
@@ -522,6 +550,7 @@ namespace MattMIS_Directory_Manager
                 }
 
             }
+            
 
 
         }
@@ -541,6 +570,23 @@ namespace MattMIS_Directory_Manager
 
         private void hideDisabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+
+            try
+            {
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
+
+                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
+                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
+                    serializer.Serialize(txtWriter, Config.Settings);
+                    txtWriter.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             refreshViewButton.PerformClick();
             
         }
@@ -620,8 +666,17 @@ namespace MattMIS_Directory_Manager
             if (obj.ObjectType == "user") new UserCard(obj.directoryEntry).Show();
             else if (obj.ObjectType == "organizationalUnit")
             {
-                directoryTreeView.SelectedObject = obj;
+                Handler.TreeModel parent = directoryTreeView.SelectedObject as Handler.TreeModel;
+
+                Handler.TreeModel s = (from c in parent.Children
+                 where c.Argument == obj.directoryEntry.Path
+                 select c).FirstOrDefault();
+
+                directoryTreeView.SelectedObject = s;
+                directoryTreeView.Focus();
+
             }
+
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -724,7 +779,7 @@ namespace MattMIS_Directory_Manager
             try
             {
                 Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
-                Process.Start("PSEXEC.EXE", $"\\\\{us.FullName} -u {Config.Settings.Username} -p {Config.Settings.Password} -i cmd.exe -e");
+                Process.Start("PSEXEC.EXE", $"\\\\{us.FullName} -u {Config.Settings.Connection.Username} -p {Config.Settings.Connection.Password} -i cmd.exe -e");
             }
             catch (Exception)
             {
@@ -775,13 +830,12 @@ namespace MattMIS_Directory_Manager
 
         private void connectionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"Domain: {Config.Settings.ADTreeRoot}\nServer: {Config.Settings.ServerAddress}\nConnected As: {Config.Settings.Username ?? Environment.UserDomainName + "/" + Environment.UserName}", "Connection Information");
+            
         }
 
         private void disconnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new ConnectionWindow().Show();
-            this.Close();
+            
         }
 
         private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -799,6 +853,22 @@ namespace MattMIS_Directory_Manager
 
             SendBackgroundCommand(obj.Command, obj.Argument);
             directoryTreeView.Expand(directoryTreeView.SelectedItem);
+        }
+
+        private void disconnectToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            new ConnectionWindow().Show();
+            this.Close();
+        }
+
+        private void connectionInfoToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show($"Domain: {Config.Settings.Connection.ADTreeRoot}\nServer: {Config.Settings.Connection.ServerAddress}\nConnected As: {Config.Settings.Connection.Username ?? Environment.UserDomainName + "/" + Environment.UserName}", "Connection Information");
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 

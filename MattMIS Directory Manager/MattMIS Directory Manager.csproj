@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>activeDirectory_3221.ico</ApplicationIcon>
+    <ApplicationIcon>foldersearchfilelocatefinddocument-115838_115791.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MattMIS_Directory_Manager.Program</StartupObject>
@@ -228,11 +228,11 @@
       <DependentUpon>StringDialogBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolStripCustomRenderer.cs" />
-    <Compile Include="UserCard.cs">
+    <Compile Include="Object Views\User_Details.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserCard.Designer.cs">
-      <DependentUpon>UserCard.cs</DependentUpon>
+    <Compile Include="Object Views\User_Details.Designer.cs">
+      <DependentUpon>User_Details.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="ConnectionWindow.resx">
       <DependentUpon>ConnectionWindow.cs</DependentUpon>
@@ -252,10 +252,11 @@
     <EmbeddedResource Include="StringDialogBox.resx">
       <DependentUpon>StringDialogBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserCard.resx">
-      <DependentUpon>UserCard.cs</DependentUpon>
+    <EmbeddedResource Include="Object Views\User_Details.resx">
+      <DependentUpon>User_Details.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <Compile Include="Dump.cs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -283,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="activeDirectory_3221.ico" />
+    <Content Include="foldersearchfilelocatefinddocument-115838_115791.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.5.5\build\Fody.targets" Condition="Exists('..\packages\Fody.6.5.5\build\Fody.targets')" />

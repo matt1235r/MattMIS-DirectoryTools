@@ -34,8 +34,7 @@ namespace MattMIS_Directory_Manager
 
         DirectoryEntry ADObject;
         UserPrincipal user;
-        PrincipalContext pc = new PrincipalContext(ContextType.Domain, Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
-
+        PrincipalContext pc = new PrincipalContext(ContextType.Domain, Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
         private void PopulateOverview(DirectoryEntry entry)
         {
             ADObject = entry;
@@ -53,7 +52,7 @@ namespace MattMIS_Directory_Manager
             firstNameTextBox.Text = Convert.ToString(entry.Properties["givenName"].Value ?? "");
             lastNameTextBox.Text = Convert.ToString(entry.Properties["sn"].Value ?? "");
 
-            profileLetterTextBox.Text = Convert.ToString(entry.Properties["homeDrive"].Value ?? "");
+            driveComboBox.Text = Convert.ToString(entry.Properties["homeDrive"].Value ?? "");
             profilePathTextBox.Text = Convert.ToString(entry.Properties["homeDirectory"].Value ?? "");
 
             OUTextBox.Text = Convert.ToString(entry.Parent.Properties["distinguishedName"].Value ?? "");
@@ -79,7 +78,7 @@ namespace MattMIS_Directory_Manager
             {
                 // get the user's groups
                 var groups = user.GetGroups(pc);
-
+                groupsListView.Items.Clear();
                 foreach (GroupPrincipal group in groups)
                 {
                     ListViewItem ls = new ListViewItem();
@@ -89,12 +88,17 @@ namespace MattMIS_Directory_Manager
                 }
             }
 
+            //EMAIL View
+            proxyListBox.Items.Clear();
+            foreach (String address in (ADObject.Properties["proxyaddresses"]))
+            {
+                proxyListBox.Items.Add(address);
 
-        }
+            }
 
-        private void closeButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            showAddressBook.Checked = !Convert.ToBoolean(ADObject.Properties["msExchHideFromAddressLists"].Value ?? false);
+            emailTextBox.Text = Convert.ToString(ADObject.Properties["mail"].Value ?? "");
+
         }
 
         private void refreshButton_Click(object sender, EventArgs e)
@@ -202,6 +206,65 @@ namespace MattMIS_Directory_Manager
                 addToGroup.Enabled = false;
             }
             else { addToGroup.Enabled = true; }
+        }
+
+        private void saveEmailSettings_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void UserCard_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ADObject.Properties["proxyaddresses"].Add(textBox2.Text);
+            textBox2.Clear();
+            ADObject.CommitChanges();
+            PopulateOverview(ADObject);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (proxyListBox.SelectedItem == null) return;
+            ADObject.Properties["proxyaddresses"].Remove(proxyListBox.SelectedItem.ToString());
+            ADObject.CommitChanges();
+            PopulateOverview(ADObject);
+        }
+
+        private void proxyListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (proxyListBox.SelectedItem == null) button2.Enabled = false ;
+            else button2.Enabled = true;
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox2.Text == "") button1.Enabled = false;
+            else button1.Enabled = true;
+        }
+
+        private void saveOverviewButton_Click(object sender, EventArgs e)
+        {
+            //OVERVIEW
+            user.DisplayName = fullNameLabel.Text;
+           user.DisplayName = fullNameTextBox.Text;
+            ADObject.Properties["department"].Value = registrationLabel.Text;
+            ADObject.Properties["userPrincipalName"].Value = emailLabel.Text;
+
+            ADObject.Properties["givenName"].Value = firstNameTextBox.Text;
+            ADObject.Properties["sn"].Value = lastNameTextBox.Text;
+
+            ADObject.Properties["homeDrive"].Value = driveComboBox.Text;
+            ADObject.Properties["homeDirectory"].Value = profilePathTextBox.Text;
+
+            //EMAIL
+            ADObject.Properties["msExchHideFromAddressLists"].Value = !showAddressBook.Checked;
+            ADObject.Properties["mail"].Value = emailTextBox;
+            ADObject.CommitChanges();
         }
     }
 }

@@ -25,19 +25,6 @@ namespace MattMIS_Directory_Manager
 
         int connected = 0;
         string errorMessage = "";
-        private void connectButton_Click(object sender, EventArgs e)
-        {
-            Config.Settings.ServerAddress = serverAddressTextBox.Text;
-            Config.Settings.Username = usernameTextBox.Text;
-            Config.Settings.Password = passwordTextBox.Text;
-            if (domainRootTextBox.Text != String.Empty) Config.Settings.ADTreeRoot = "/" + domainRootTextBox.Text; else Config.Settings.ADTreeRoot = null;
-            if (userRootTextBox.Text != String.Empty) Config.Settings.ADUserRoot = "/" + userRootTextBox.Text; else Config.Settings.ADUserRoot = null;
-
-            connectButton.Enabled = false;
-            connectButton.Text = "Attempting connection...";
-            progressBar.Visible = true;
-            backgroundWorker.RunWorkerAsync(argument: "TEST");
-        }
 
         private void loadFromFile_Click(object sender, EventArgs e)
         {
@@ -52,18 +39,20 @@ namespace MattMIS_Directory_Manager
             }
             if (Config.LoadConfig(path) == 1) return;
 
-            serverAddressTextBox.Text = Config.Settings.ServerAddress;
-            usernameTextBox.Text = Config.Settings.Username;
-            passwordTextBox.Text = Config.Settings.Password;
-            domainRootTextBox.Text = Config.Settings.ADTreeRoot;
-            userRootTextBox.Text = Config.Settings.ADUserRoot;
+            serverAddressTextBox.Text = Config.Settings.Connection.ServerAddress;
+            usernameTextBox.Text = Config.Settings.Connection.Username;
+            passwordTextBox.Text = Config.Settings.Connection.Password;
+            domainRootTextBox.Text = Config.Settings.Connection.ADTreeRoot;
+            userRootTextBox.Text = Config.Settings.Connection.ADUserRoot;
 
-            if (Config.Settings.SkipConnectionWizard) { connectButton.PerformClick(); }
+            if (Config.Settings.Connection.SkipConnectionWizard) { connectButton.PerformClick(); }
             if (passwordTextBox.Text == "") { this.ActiveControl = passwordTextBox; }
         }
 
         private void ConnectionWindow_Load(object sender, EventArgs e)
         {
+            Config.Settings = new Config.Model.RootModel();
+
             toolTip1.SetToolTip(saveOptionsButton, "Save Current Settings to File");
             toolTip1.SetToolTip(loadFromFile, "Load Settings from File");
             toolTip1.SetToolTip(connectButton, "Attempt Connection to SPecified Domain");
@@ -92,11 +81,11 @@ namespace MattMIS_Directory_Manager
 
                     if (usernameTextBox.Text == "" || usernameTextBox.Text.EndsWith("(Current User)"))
                     {
-                        Config.Settings.Username = null;
-                        Config.Settings.Password = null;
+                        Config.Settings.Connection.Username = null;
+                        Config.Settings.Connection.Password = null;
                     }
 
-                    DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.ServerAddress, Config.Settings.Username, Config.Settings.Password);
+                    DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
                     connected = 1;
@@ -110,11 +99,11 @@ namespace MattMIS_Directory_Manager
                     string defaultOU = rootDSE.Properties["defaultNamingContext"].Value.ToString();
 
 
-                    Config.Settings.ADUserRoot = defaultOU;
-                    Config.Settings.ADTreeRoot = defaultOU;
-                    Config.Settings.ServerAddress = domain.DomainControllers[0].Name;
-                    Config.Settings.Username = $"{Environment.UserDomainName}/{Environment.UserName} (Current User)";
-                    Config.Settings.Password = "Skip Logon Authentication";
+                    Config.Settings.Connection.ADUserRoot = defaultOU;
+                    Config.Settings.Connection.ADTreeRoot = defaultOU;
+                    Config.Settings.Connection.ServerAddress = domain.DomainControllers[0].Name;
+                    Config.Settings.Connection.Username = $"{Environment.UserDomainName}/{Environment.UserName} (Current User)";
+                    Config.Settings.Connection.Password = "Skip Logon Authentication";
                     connected = 2;
 
 
@@ -142,11 +131,11 @@ namespace MattMIS_Directory_Manager
             }
             else if (connected == 2)
             {
-                serverAddressTextBox.Text = Config.Settings.ServerAddress;
-                usernameTextBox.Text = Config.Settings.Username;
-                passwordTextBox.Text = Config.Settings.Password;
-                domainRootTextBox.Text = Config.Settings.ADTreeRoot;
-                userRootTextBox.Text = Config.Settings.ADUserRoot;
+                serverAddressTextBox.Text = Config.Settings.Connection.ServerAddress;
+                usernameTextBox.Text = Config.Settings.Connection.Username;
+                passwordTextBox.Text = Config.Settings.Connection.Password;
+                domainRootTextBox.Text = Config.Settings.Connection.ADTreeRoot;
+                userRootTextBox.Text = Config.Settings.Connection.ADUserRoot;
 
             }
             else if (connected == 5)
@@ -165,21 +154,47 @@ namespace MattMIS_Directory_Manager
             else { usernameTextBox.Clear(); passwordTextBox.Clear(); }
 
         }
+        private void extraButton_Click(object sender, EventArgs e)
+        {
+            this.Size = new Size(482, 492);
+            extraButton.Visible = false;
+        }
 
-        private void saveOptionsButton_Click(object sender, EventArgs e)
+        private void connectButton_Click_1(object sender, EventArgs e)
+        {
+            Config.Settings.Connection = new Config.Model.ConnectionModel();
+            Config.Settings.Connection.ServerAddress = serverAddressTextBox.Text;
+            Config.Settings.Connection.Username = usernameTextBox.Text;
+            Config.Settings.Connection.Password = passwordTextBox.Text;
+            if (domainRootTextBox.Text != String.Empty) Config.Settings.Connection.ADTreeRoot = "/" + domainRootTextBox.Text; else Config.Settings.Connection.ADTreeRoot = null;
+            if (userRootTextBox.Text != String.Empty) Config.Settings.Connection.ADUserRoot = "/" + userRootTextBox.Text; else Config.Settings.Connection.ADUserRoot = null;
+
+            connectButton.Enabled = false;
+            connectButton.Text = "Attempting connection...";
+            progressBar.Visible = true;
+            backgroundWorker.RunWorkerAsync(argument: "TEST");
+        }
+
+        private void loadFromFile_Click_1(object sender, EventArgs e)
+        {
+            PopulateSettings();
+        }
+
+        private void saveOptionsButton_Click_1(object sender, EventArgs e)
         {
             try
             {
                 if (DialogResult.OK == saveFileDialog1.ShowDialog())
                 {
-                    Config.ConfigurationModel config = new Config.ConfigurationModel();
-                    config.ADTreeRoot = domainRootTextBox.Text;
-                    config.ADUserRoot = userRootTextBox.Text;
-                    config.ServerAddress = serverAddressTextBox.Text;
-                    config.Username = usernameTextBox.Text;
-                    config.Password = passwordTextBox.Text;
+                    Config.Model.RootModel config = new Config.Model.RootModel();
+                   
+                    config.Connection.ADTreeRoot = domainRootTextBox.Text;
+                    config.Connection.ADUserRoot = userRootTextBox.Text;
+                    config.Connection.ServerAddress = serverAddressTextBox.Text;
+                    config.Connection.Username = usernameTextBox.Text;
+                    config.Connection.Password = passwordTextBox.Text;
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(Config.ConfigurationModel));
+                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
                     TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
                     serializer.Serialize(txtWriter, config);
                     txtWriter.Close();

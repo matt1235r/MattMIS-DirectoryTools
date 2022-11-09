@@ -42,10 +42,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.driveComboBox = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.openHomeDirButton = new System.Windows.Forms.Button();
             this.profilePathTextBox = new System.Windows.Forms.TextBox();
-            this.profileLetterTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.fullNameTextBox = new System.Windows.Forms.TextBox();
             this.lastNameTextBox = new System.Windows.Forms.TextBox();
@@ -75,9 +75,22 @@
             this.pwChangedTextBox2 = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.proxyListBox = new System.Windows.Forms.ListBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.showAddressBook = new System.Windows.Forms.CheckBox();
+            this.emailTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.attributesView = new System.Windows.Forms.ListView();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.refreshButton = new System.Windows.Forms.Button();
-            this.closeButton = new System.Windows.Forms.Button();
+            this.saveOverviewButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.mainTabPage.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,12 +100,17 @@
             this.passwordGroupsPage.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.mainTabPage);
             this.tabControl1.Controls.Add(this.passwordGroupsPage);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -131,7 +149,7 @@
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Location = new System.Drawing.Point(8, 314);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(482, 143);
+            this.groupBox3.Size = new System.Drawing.Size(482, 107);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "More Details";
@@ -140,6 +158,7 @@
             // 
             this.statusTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.statusTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.statusTextBox.Enabled = false;
             this.statusTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusTextBox.Location = new System.Drawing.Point(88, 79);
             this.statusTextBox.Name = "statusTextBox";
@@ -150,6 +169,7 @@
             // 
             this.pwChangedTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.pwChangedTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.pwChangedTextBox.Enabled = false;
             this.pwChangedTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pwChangedTextBox.Location = new System.Drawing.Point(360, 23);
             this.pwChangedTextBox.Name = "pwChangedTextBox";
@@ -179,6 +199,7 @@
             // 
             this.lastLogonTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.lastLogonTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lastLogonTextBox.Enabled = false;
             this.lastLogonTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lastLogonTextBox.Location = new System.Drawing.Point(88, 23);
             this.lastLogonTextBox.Name = "lastLogonTextBox";
@@ -189,6 +210,7 @@
             // 
             this.OUTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.OUTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.OUTextBox.Enabled = false;
             this.OUTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OUTextBox.Location = new System.Drawing.Point(88, 51);
             this.OUTextBox.Name = "OUTextBox";
@@ -199,7 +221,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(8, 82);
+            this.label4.Location = new System.Drawing.Point(6, 82);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 16);
             this.label4.TabIndex = 7;
@@ -227,16 +249,53 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.driveComboBox);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.openHomeDirButton);
             this.groupBox2.Controls.Add(this.profilePathTextBox);
-            this.groupBox2.Controls.Add(this.profileLetterTextBox);
             this.groupBox2.Location = new System.Drawing.Point(8, 246);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(482, 62);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Home Directory";
+            // 
+            // driveComboBox
+            // 
+            this.driveComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.driveComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.driveComboBox.FormattingEnabled = true;
+            this.driveComboBox.Items.AddRange(new object[] {
+            "A:",
+            "B:",
+            "C:",
+            "D:",
+            "E:",
+            "F:",
+            "G:",
+            "H:",
+            "I:",
+            "J:",
+            "K:",
+            "L:",
+            "M:",
+            "N:",
+            "O:",
+            "P:",
+            "Q:",
+            "R:",
+            "S:",
+            "T:",
+            "U:",
+            "V:",
+            "W:",
+            "X:",
+            "Y:",
+            "Z:"});
+            this.driveComboBox.Location = new System.Drawing.Point(61, 24);
+            this.driveComboBox.Name = "driveComboBox";
+            this.driveComboBox.Size = new System.Drawing.Size(49, 26);
+            this.driveComboBox.TabIndex = 15;
             // 
             // label7
             // 
@@ -264,13 +323,6 @@
             this.profilePathTextBox.Name = "profilePathTextBox";
             this.profilePathTextBox.Size = new System.Drawing.Size(288, 24);
             this.profilePathTextBox.TabIndex = 9;
-            // 
-            // profileLetterTextBox
-            // 
-            this.profileLetterTextBox.Location = new System.Drawing.Point(57, 26);
-            this.profileLetterTextBox.Name = "profileLetterTextBox";
-            this.profileLetterTextBox.Size = new System.Drawing.Size(51, 24);
-            this.profileLetterTextBox.TabIndex = 8;
             // 
             // groupBox1
             // 
@@ -539,6 +591,7 @@
             // 
             this.pwChangedTextBox2.BackColor = System.Drawing.SystemColors.Control;
             this.pwChangedTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pwChangedTextBox2.Enabled = false;
             this.pwChangedTextBox2.Location = new System.Drawing.Point(160, 23);
             this.pwChangedTextBox2.Name = "pwChangedTextBox2";
             this.pwChangedTextBox2.Size = new System.Drawing.Size(316, 24);
@@ -564,15 +617,145 @@
             this.label11.TabIndex = 6;
             this.label11.Text = "New Password:";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.groupBox6);
+            this.tabPage1.Controls.Add(this.groupBox7);
+            this.tabPage1.Location = new System.Drawing.Point(4, 27);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(498, 463);
+            this.tabPage1.TabIndex = 3;
+            this.tabPage1.Text = "Email Access";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.proxyListBox);
+            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Controls.Add(this.button2);
+            this.groupBox6.Controls.Add(this.textBox2);
+            this.groupBox6.Location = new System.Drawing.Point(8, 110);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(482, 347);
+            this.groupBox6.TabIndex = 13;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Proxy Addresses";
+            // 
+            // proxyListBox
+            // 
+            this.proxyListBox.FormattingEnabled = true;
+            this.proxyListBox.ItemHeight = 18;
+            this.proxyListBox.Location = new System.Drawing.Point(10, 23);
+            this.proxyListBox.Name = "proxyListBox";
+            this.proxyListBox.Size = new System.Drawing.Size(465, 184);
+            this.proxyListBox.TabIndex = 22;
+            this.proxyListBox.SelectedIndexChanged += new System.EventHandler(this.proxyListBox_SelectedIndexChanged);
+            // 
+            // button1
+            // 
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(264, 213);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(86, 27);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "Add";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(356, 213);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(120, 27);
+            this.button2.TabIndex = 20;
+            this.button2.Text = "Remove";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(10, 216);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(248, 24);
+            this.textBox2.TabIndex = 10;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.showAddressBook);
+            this.groupBox7.Controls.Add(this.emailTextBox);
+            this.groupBox7.Controls.Add(this.label13);
+            this.groupBox7.Location = new System.Drawing.Point(8, 6);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(482, 98);
+            this.groupBox7.TabIndex = 12;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Email Settings";
+            // 
+            // showAddressBook
+            // 
+            this.showAddressBook.AutoSize = true;
+            this.showAddressBook.Checked = true;
+            this.showAddressBook.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showAddressBook.Location = new System.Drawing.Point(10, 23);
+            this.showAddressBook.Name = "showAddressBook";
+            this.showAddressBook.Size = new System.Drawing.Size(215, 22);
+            this.showAddressBook.TabIndex = 17;
+            this.showAddressBook.Text = "Show user in Address Book.";
+            this.showAddressBook.UseVisualStyleBackColor = true;
+            // 
+            // emailTextBox
+            // 
+            this.emailTextBox.Location = new System.Drawing.Point(130, 59);
+            this.emailTextBox.Name = "emailTextBox";
+            this.emailTextBox.Size = new System.Drawing.Size(345, 24);
+            this.emailTextBox.TabIndex = 15;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(6, 59);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(118, 21);
+            this.label13.TabIndex = 11;
+            this.label13.Text = "Primary Email:";
+            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.attributesView);
             this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(498, 463);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Advanced";
+            // 
+            // attributesView
+            // 
+            this.attributesView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3,
+            this.columnHeader4});
+            this.attributesView.HideSelection = false;
+            this.attributesView.Location = new System.Drawing.Point(8, 19);
+            this.attributesView.Name = "attributesView";
+            this.attributesView.Size = new System.Drawing.Size(314, 424);
+            this.attributesView.TabIndex = 0;
+            this.attributesView.UseCompatibleStateImageBehavior = false;
+            this.attributesView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Name";
+            this.columnHeader3.Width = 116;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Value";
+            this.columnHeader4.Width = 186;
             // 
             // refreshButton
             // 
@@ -584,29 +767,30 @@
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
-            // closeButton
+            // saveOverviewButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(397, 500);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(105, 30);
-            this.closeButton.TabIndex = 12;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            this.saveOverviewButton.Location = new System.Drawing.Point(380, 500);
+            this.saveOverviewButton.Name = "saveOverviewButton";
+            this.saveOverviewButton.Size = new System.Drawing.Size(122, 30);
+            this.saveOverviewButton.TabIndex = 14;
+            this.saveOverviewButton.Text = "Save && Exit";
+            this.saveOverviewButton.UseVisualStyleBackColor = true;
+            this.saveOverviewButton.Click += new System.EventHandler(this.saveOverviewButton_Click);
             // 
             // UserCard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 535);
+            this.Controls.Add(this.saveOverviewButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.refreshButton);
-            this.Controls.Add(this.closeButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "UserCard";
             this.Text = "User Details";
+            this.Load += new System.EventHandler(this.UserCard_Load);
             this.tabControl1.ResumeLayout(false);
             this.mainTabPage.ResumeLayout(false);
             this.mainTabPage.PerformLayout();
@@ -622,6 +806,12 @@
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -632,7 +822,6 @@
         private System.Windows.Forms.TabPage mainTabPage;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox profilePathTextBox;
-        private System.Windows.Forms.TextBox profileLetterTextBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox fullNameTextBox;
         private System.Windows.Forms.TextBox lastNameTextBox;
@@ -646,7 +835,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button refreshButton;
-        private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Button openHomeDirButton;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox1;
@@ -677,5 +865,20 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TextBox statusTextBox;
+        private System.Windows.Forms.ListView attributesView;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.ListBox proxyListBox;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.CheckBox showAddressBook;
+        private System.Windows.Forms.MaskedTextBox emailTextBox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button saveOverviewButton;
+        private System.Windows.Forms.ComboBox driveComboBox;
     }
 }

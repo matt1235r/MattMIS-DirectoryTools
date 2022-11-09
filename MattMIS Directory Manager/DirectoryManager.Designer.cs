@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectoryManager));
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle4 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle5 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle6 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle1 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle2 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle3 = new BrightIdeasSoftware.HeaderStateStyle();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,10 +40,10 @@
             this.addNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
-            this.connectionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.connectionInfoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-            this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disconnectToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.darkModeButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -117,6 +117,7 @@
             this.darkHeaderFormatStyle = new BrightIdeasSoftware.HeaderFormatStyle();
             this.backgroundCommandQueuer = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker = new MattMIS_Directory_Manager.AbortableBackgroundWorker();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.treeViewMenuStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.UserMenuStrip.SuspendLayout();
@@ -193,11 +194,11 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSplitButton1,
+            this.toolStripDropDownButton1,
             this.toolStripSeparator13,
             this.darkModeButton2,
             this.toolStripSeparator3,
@@ -206,43 +207,42 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip1.Size = new System.Drawing.Size(1005, 31);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSplitButton1
+            // toolStripDropDownButton1
             // 
-            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.connectionInfoToolStripMenuItem,
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.connectionInfoToolStripMenuItem1,
             this.toolStripSeparator15,
-            this.disconnectToolStripMenuItem});
-            this.toolStripSplitButton1.ForeColor = System.Drawing.Color.White;
-            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
-            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(40, 28);
-            this.toolStripSplitButton1.Text = "MattMIS Directory Manager";
+            this.disconnectToolStripMenuItem1});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(37, 28);
+            this.toolStripDropDownButton1.Text = "MattMIS Directory Manager";
             // 
-            // connectionInfoToolStripMenuItem
+            // connectionInfoToolStripMenuItem1
             // 
-            this.connectionInfoToolStripMenuItem.Name = "connectionInfoToolStripMenuItem";
-            this.connectionInfoToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.connectionInfoToolStripMenuItem.Text = "Connection Info";
-            this.connectionInfoToolStripMenuItem.Click += new System.EventHandler(this.connectionInfoToolStripMenuItem_Click);
+            this.connectionInfoToolStripMenuItem1.Name = "connectionInfoToolStripMenuItem1";
+            this.connectionInfoToolStripMenuItem1.Size = new System.Drawing.Size(160, 22);
+            this.connectionInfoToolStripMenuItem1.Text = "Connection Info";
+            this.connectionInfoToolStripMenuItem1.Click += new System.EventHandler(this.connectionInfoToolStripMenuItem1_Click);
             // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
             this.toolStripSeparator15.Size = new System.Drawing.Size(157, 6);
             // 
-            // disconnectToolStripMenuItem
+            // disconnectToolStripMenuItem1
             // 
-            this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.disconnectToolStripMenuItem.Text = "Disconnect";
-            this.disconnectToolStripMenuItem.Click += new System.EventHandler(this.disconnectToolStripMenuItem_Click);
+            this.disconnectToolStripMenuItem1.Name = "disconnectToolStripMenuItem1";
+            this.disconnectToolStripMenuItem1.Size = new System.Drawing.Size(160, 22);
+            this.disconnectToolStripMenuItem1.Text = "Disconnect";
+            this.disconnectToolStripMenuItem1.Click += new System.EventHandler(this.disconnectToolStripMenuItem1_Click);
             // 
             // toolStripSeparator13
             // 
@@ -373,6 +373,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.searchTypeBox);
             this.splitContainer1.Panel2.Controls.Add(this.searchTextBox);
             this.splitContainer1.Panel2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(1005, 582);
             this.splitContainer1.SplitterDistance = 238;
             this.splitContainer1.TabIndex = 3;
@@ -386,7 +387,6 @@
             this.directoryTreeView.Cursor = System.Windows.Forms.Cursors.Default;
             this.directoryTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.directoryTreeView.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.directoryTreeView.FullRowSelect = true;
             this.directoryTreeView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.directoryTreeView.HideSelection = false;
             this.directoryTreeView.Location = new System.Drawing.Point(0, 0);
@@ -452,7 +452,7 @@
             this.fastObjectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.fastObjectListView1.BackColor = System.Drawing.SystemColors.Control;
+            this.fastObjectListView1.BackColor = System.Drawing.SystemColors.Window;
             this.fastObjectListView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fastObjectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.F2Only;
             this.fastObjectListView1.CellEditUseWholeCell = false;
@@ -717,10 +717,9 @@
             // 
             this.searchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.searchButton.BackColor = System.Drawing.Color.Transparent;
-            this.searchButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("searchButton.BackgroundImage")));
             this.searchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.searchButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.searchButton.ImageKey = "(none)";
+            this.searchButton.ImageKey = "android-search_icon-icons.com_50501.ico";
             this.searchButton.ImageList = this.imageList1;
             this.searchButton.Location = new System.Drawing.Point(711, 5);
             this.searchButton.Name = "searchButton";
@@ -906,18 +905,18 @@
             // 
             // darkHeaderFormatStyle
             // 
-            headerStateStyle4.BackColor = System.Drawing.Color.DarkGray;
-            headerStateStyle4.ForeColor = System.Drawing.Color.White;
-            headerStateStyle4.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Hot = headerStateStyle4;
-            headerStateStyle5.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle5.ForeColor = System.Drawing.Color.White;
-            headerStateStyle5.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Normal = headerStateStyle5;
-            headerStateStyle6.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle6.ForeColor = System.Drawing.Color.White;
-            headerStateStyle6.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Pressed = headerStateStyle6;
+            headerStateStyle1.BackColor = System.Drawing.Color.DarkGray;
+            headerStateStyle1.ForeColor = System.Drawing.Color.White;
+            headerStateStyle1.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Hot = headerStateStyle1;
+            headerStateStyle2.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle2.ForeColor = System.Drawing.Color.White;
+            headerStateStyle2.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Normal = headerStateStyle2;
+            headerStateStyle3.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle3.ForeColor = System.Drawing.Color.White;
+            headerStateStyle3.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Pressed = headerStateStyle3;
             // 
             // backgroundCommandQueuer
             // 
@@ -928,6 +927,10 @@
             this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.abortableBackgroundWorker1_DoWork);
             this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.abortableBackgroundWorker1_RunWorkerCompleted);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = ".XML files (.xml)|*.xml";
             // 
             // DirectoryManager
             // 
@@ -969,7 +972,6 @@
         #endregion
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ContextMenuStrip UserMenuStrip;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label2;
@@ -1041,9 +1043,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
         private System.Windows.Forms.ToolStripButton darkModeButton2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
-        private System.Windows.Forms.ToolStripMenuItem connectionInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-        private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip treeViewMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
@@ -1051,5 +1050,10 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private BrightIdeasSoftware.TreeListView directoryTreeView;
         private BrightIdeasSoftware.OLVColumn treeColumn;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem connectionInfoToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

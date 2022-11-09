@@ -164,8 +164,7 @@ namespace MattMIS_Directory_Manager
             public string Argument { get; set; }
 
             public string ImageKey { get; set; }
-            public TreeModel Parent { get; set; }
-            public string ParentLabel { get; set; }
+
             public int ChildCount { get; }
 
             public DirectoryEntry directoryEntry { get; set; }

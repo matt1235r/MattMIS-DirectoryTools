@@ -13,108 +13,90 @@ namespace MattMIS_Directory_Manager
     public static class Config
     {
 
-        // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
-        /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-        public partial class ConfigurationModel
+       public class Model
         {
 
-            private string aDUserRootField;
+			private RootModel rootField;
 
-            private string aDTreeRootField;
-
-            private string serverAddressField;
-
-            private string usernameField;
-
-            private string passwordField;
-
-            private bool skipConnectionWizard;
-
-            /// <remarks/>
-            public string ADUserRoot
-            {
-                get
-                {
-                    return this.aDUserRootField;
-                }
-                set
-                {
-                    this.aDUserRootField = value;
-                }
-            }
-
-            public string ADTreeRoot
-            {
-                get
-                {
-                    return this.aDTreeRootField;
-                }
-                set
-                {
-                    this.aDTreeRootField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string ServerAddress
-            {
-                get
-                {
-                    return this.serverAddressField;
-                }
-                set
-                {
-                    this.serverAddressField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string Username
-            {
-                get
-                {
-                    return this.usernameField;
-                }
-                set
-                {
-                    this.usernameField = value;
-                }
-            }
-
-            /// <remarks/>
-            public string Password
-            {
-                get
-                {
-                    return this.passwordField;
-                }
-                set
-                {
-                    this.passwordField = value;
-                }
-            }
-
-            /// <remarks/>
-            public bool SkipConnectionWizard
-            {
-                get
-                {
-                    return this.skipConnectionWizard;
-                }
-                set
-                {
-                    this.skipConnectionWizard = value;
-                }
-            }
-        }
+			public RootModel Default
+			{
+				get
+				{
+					return this.rootField;
+				}
+				set
+				{
+					this.rootField = value;
+				}
+			}
 
 
+			[XmlRoot(ElementName = "Appearance")]
+			public class AppearanceModel
+			{
+				[XmlElement(ElementName = "DarkMode")]
+				public Boolean DarkMode { get; set; }
+			}
 
-        public static ConfigurationModel Settings = new ConfigurationModel();
+			[XmlRoot(ElementName = "Connection")]
+			public class ConnectionModel
+			{
+				[XmlElement(ElementName = "ADTreeRoot")]
+				public string ADTreeRoot { get; set; }
+				[XmlElement(ElementName = "ADUserRoot")]
+				public string ADUserRoot { get; set; }
+				[XmlElement(ElementName = "Password")]
+				public string Password { get; set; }
+				[XmlElement(ElementName = "ServerAddress")]
+				public string ServerAddress { get; set; }
+				[XmlElement(ElementName = "SkipConnectionWizard")]
+				public bool SkipConnectionWizard { get; set; }
+				[XmlElement(ElementName = "Username")]
+				public string Username { get; set; }
+			}
+
+			[XmlRoot(ElementName = "DirectoryManager")]
+			public class RootModel
+			{
+				[XmlElement(ElementName = "Appearance")]
+				public AppearanceModel Appearance { get; set; }
+				[XmlElement(ElementName = "Connection")]
+				public ConnectionModel Connection { get; set; }
+				[XmlElement(ElementName = "PinnedViews")]
+				public PinnedViews PinnedViews { get; set; }
+			}
+
+			[XmlRoot(ElementName = "PinnedViews")]
+			public class PinnedViews
+			{
+				[XmlElement(ElementName = "TreeItem")]
+				public TreeItem TreeItem { get; set; }
+			}
+
+			[XmlRoot(ElementName = "TreeItem")]
+			public class TreeItem
+			{
+				[XmlElement(ElementName = "Argument")]
+				public string Argument { get; set; }
+				
+				
+				[XmlArray("Children")]
+				[XmlArrayItem("TreeItem")]				
+				public List<TreeItem> Children { get; set; }
+				
+				[XmlElement(ElementName = "Command")]
+				public string Command { get; set; }
+				
+				[XmlElement(ElementName = "ImageKey")]
+				public string ImageKey { get; set; }
+				
+				[XmlElement(ElementName = "Name")]
+				public string Name { get; set; }
+			}
+			
+		}
+
+        public static Model.RootModel Settings = new Model.RootModel();
 
         public static int LoadConfig(string path)
         {
@@ -124,10 +106,11 @@ namespace MattMIS_Directory_Manager
                 XmlDocument doc = new XmlDocument();
                 doc.Load(path);
 
-                XmlSerializer serializer2 = new XmlSerializer(typeof(ConfigurationModel));
+                XmlSerializer serializer2 = new XmlSerializer(typeof(Model.RootModel));
                 using (StringReader reader = new StringReader(doc.InnerXml))
                 {
-                    Settings = (ConfigurationModel)serializer2.Deserialize(reader);
+                    Settings = (Model.RootModel)serializer2.Deserialize(reader);
+
                 }
                 
             }
@@ -139,6 +122,11 @@ namespace MattMIS_Directory_Manager
             return failed;
         }
 
+
+
+
+
+        
 
     }
 }

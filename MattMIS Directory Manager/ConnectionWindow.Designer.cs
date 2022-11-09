@@ -44,17 +44,20 @@
             this.label6 = new System.Windows.Forms.Label();
             this.domainRootTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.loadFromFile = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.connectButton = new System.Windows.Forms.Button();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveOptionsButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.saveOptionsButton = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.connectButton = new System.Windows.Forms.Button();
+            this.loadFromFile = new System.Windows.Forms.Button();
+            this.extraButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -200,17 +203,6 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "Domain Root:";
             // 
-            // loadFromFile
-            // 
-            this.loadFromFile.ImageKey = "disk.png";
-            this.loadFromFile.ImageList = this.imageList1;
-            this.loadFromFile.Location = new System.Drawing.Point(12, 405);
-            this.loadFromFile.Name = "loadFromFile";
-            this.loadFromFile.Size = new System.Drawing.Size(36, 33);
-            this.loadFromFile.TabIndex = 0;
-            this.loadFromFile.UseVisualStyleBackColor = true;
-            this.loadFromFile.Click += new System.EventHandler(this.loadFromFile_Click);
-            // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
@@ -218,28 +210,8 @@
             this.imageList1.Images.SetKeyName(0, "disk.png");
             this.imageList1.Images.SetKeyName(1, "Custom-Icon-Design-Flatastic-9-Save.ico");
             this.imageList1.Images.SetKeyName(2, "Start_37108.ico");
-            // 
-            // connectButton
-            // 
-            this.connectButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.connectButton.ImageKey = "Start_37108.ico";
-            this.connectButton.Location = new System.Drawing.Point(355, 405);
-            this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(99, 33);
-            this.connectButton.TabIndex = 3;
-            this.connectButton.Text = "Connect";
-            this.connectButton.UseVisualStyleBackColor = true;
-            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
-            // 
-            // progressBar
-            // 
-            this.progressBar.Location = new System.Drawing.Point(12, 375);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(442, 24);
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar.TabIndex = 4;
-            this.progressBar.Value = 100;
-            this.progressBar.Visible = false;
+            this.imageList1.Images.SetKeyName(3, "drop");
+            this.imageList1.Images.SetKeyName(4, "upload-folder-document-file-upload-upload-document-icon-27.png");
             // 
             // backgroundWorker
             // 
@@ -251,31 +223,85 @@
             this.openFileDialog1.Filter = ".XML files (.xml)|*.xml";
             this.openFileDialog1.Title = "Open Connection File";
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = ".XML files (.xml)|*.xml";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.extraButton);
+            this.panel1.Controls.Add(this.saveOptionsButton);
+            this.panel1.Controls.Add(this.progressBar);
+            this.panel1.Controls.Add(this.connectButton);
+            this.panel1.Controls.Add(this.loadFromFile);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 262);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(466, 75);
+            this.panel1.TabIndex = 10;
+            // 
             // saveOptionsButton
             // 
             this.saveOptionsButton.ImageKey = "Custom-Icon-Design-Flatastic-9-Save.ico";
             this.saveOptionsButton.ImageList = this.imageList1;
-            this.saveOptionsButton.Location = new System.Drawing.Point(53, 405);
+            this.saveOptionsButton.Location = new System.Drawing.Point(53, 36);
             this.saveOptionsButton.Name = "saveOptionsButton";
             this.saveOptionsButton.Size = new System.Drawing.Size(35, 33);
-            this.saveOptionsButton.TabIndex = 5;
+            this.saveOptionsButton.TabIndex = 9;
             this.saveOptionsButton.UseVisualStyleBackColor = true;
-            this.saveOptionsButton.Click += new System.EventHandler(this.saveOptionsButton_Click);
+            this.saveOptionsButton.Click += new System.EventHandler(this.saveOptionsButton_Click_1);
             // 
-            // saveFileDialog1
+            // progressBar
             // 
-            this.saveFileDialog1.Filter = ".XML files (.xml)|*.xml";
+            this.progressBar.Location = new System.Drawing.Point(12, 6);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(442, 24);
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar.TabIndex = 8;
+            this.progressBar.Value = 100;
+            this.progressBar.Visible = false;
+            // 
+            // connectButton
+            // 
+            this.connectButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.connectButton.ImageKey = "Start_37108.ico";
+            this.connectButton.Location = new System.Drawing.Point(355, 36);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(99, 33);
+            this.connectButton.TabIndex = 7;
+            this.connectButton.Text = "Connect";
+            this.connectButton.UseVisualStyleBackColor = true;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click_1);
+            // 
+            // loadFromFile
+            // 
+            this.loadFromFile.ImageKey = "disk.png";
+            this.loadFromFile.ImageList = this.imageList1;
+            this.loadFromFile.Location = new System.Drawing.Point(12, 36);
+            this.loadFromFile.Name = "loadFromFile";
+            this.loadFromFile.Size = new System.Drawing.Size(36, 33);
+            this.loadFromFile.TabIndex = 6;
+            this.loadFromFile.UseVisualStyleBackColor = true;
+            this.loadFromFile.Click += new System.EventHandler(this.loadFromFile_Click_1);
+            // 
+            // extraButton
+            // 
+            this.extraButton.ImageKey = "drop";
+            this.extraButton.ImageList = this.imageList1;
+            this.extraButton.Location = new System.Drawing.Point(94, 36);
+            this.extraButton.Name = "extraButton";
+            this.extraButton.Size = new System.Drawing.Size(35, 33);
+            this.extraButton.TabIndex = 10;
+            this.extraButton.UseVisualStyleBackColor = true;
+            this.extraButton.Click += new System.EventHandler(this.extraButton_Click);
             // 
             // ConnectionWindow
             // 
             this.AcceptButton = this.connectButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(466, 450);
-            this.Controls.Add(this.saveOptionsButton);
-            this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.connectButton);
-            this.Controls.Add(this.loadFromFile);
+            this.ClientSize = new System.Drawing.Size(466, 337);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -284,6 +310,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(482, 487);
+            this.MinimumSize = new System.Drawing.Size(482, 376);
             this.Name = "ConnectionWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MattMIS: Connection Wizard";
@@ -292,6 +320,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,19 +337,21 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button loadFromFile;
-        private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.TextBox userRootTextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox domainRootTextBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox serverAddressTextBox;
-        private System.Windows.Forms.Button saveOptionsButton;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button saveOptionsButton;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Button connectButton;
+        private System.Windows.Forms.Button loadFromFile;
+        private System.Windows.Forms.Button extraButton;
     }
 }
