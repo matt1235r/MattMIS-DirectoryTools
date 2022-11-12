@@ -67,10 +67,12 @@ namespace MattMIS_Directory_Manager
 			}
 
 			[XmlRoot(ElementName = "PinnedViews")]
+
 			public class PinnedViews
 			{
-				[XmlElement(ElementName = "TreeItem")]
-				public TreeItem TreeItem { get; set; }
+				[XmlArray("Items")]
+				[XmlArrayItem("TreeItem")]
+				public List<TreeItem> CustomNodes { get; set; }
 			}
 
 			[XmlRoot(ElementName = "TreeItem")]
@@ -92,6 +94,9 @@ namespace MattMIS_Directory_Manager
 				
 				[XmlElement(ElementName = "Name")]
 				public string Name { get; set; }
+				
+				//[XmlElement(ElementName = "Argument")]
+				//public bool Expand { get; set; }
 			}
 			
 		}

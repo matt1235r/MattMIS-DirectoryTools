@@ -26,6 +26,23 @@ namespace MattMIS_Directory_Manager
             user.CommitChanges();
         }
 
+        public static PrincipalContext PC;
+        public static void ChangePassword(DirectoryEntry de, string passwordToSet, bool changeAtLogin = false)
+        {
+            try
+            {
+                UserPrincipal pe = UserPrincipal.FindByIdentity(PC,Convert.ToString(de.Properties["distinguishedName"].Value ?? ""));
+                pe.SetPassword(passwordToSet);
+                
+                if (changeAtLogin) { pe.ExpirePasswordNow(); }
+                pe.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to change password: \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static void CreateRequiredFolders()
         {
             Directory.CreateDirectory("Reports");

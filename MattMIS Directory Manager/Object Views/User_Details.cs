@@ -39,8 +39,8 @@ namespace MattMIS_Directory_Manager
         {
             ADObject = entry;
             // find a user
-            user = UserPrincipal.FindByIdentity(pc, entry.Properties["userPrincipalName"].Value.ToString());
-            
+            user = UserPrincipal.FindByIdentity(pc, entry.Properties["distinguishedName"].Value.ToString());
+           
 
             groupsListView.Items.Clear();
 

@@ -36,7 +36,7 @@ namespace MattMIS_Directory_Manager
             InitializeComponent();
         }
 
-        string[] WhiteBackgroundControls = { "TextBox", "TreeView", "FastObjectListView", "ComboBox" };
+        string[] WhiteBackgroundControls = { "TextBox", "ObjectTreeListView", "FastObjectListView", "ComboBox" };
 
         public void UpdateColorControls(Control myControl, bool set = true)
         {
@@ -45,9 +45,9 @@ namespace MattMIS_Directory_Manager
             else { myControl.BackColor = SharedMethods.ColorModes.backColor; }
 
             if (type == "Button") { (myControl as System.Windows.Forms.Button).FlatStyle = SharedMethods.ColorModes.themeFlatStyle; }
-            if (type == "ComboBox") { (myControl as System.Windows.Forms.ComboBox).FlatStyle = SharedMethods.ColorModes.themeFlatStyle; }
-            if (type == "ToolStrip") { }
-            if (type == "FastObjectListView")
+            else if (type == "ComboBox") { (myControl as System.Windows.Forms.ComboBox).FlatStyle = SharedMethods.ColorModes.themeFlatStyle; }
+            else if (type == "ToolStrip") { }
+            else if (type == "FastObjectListView")
             {
                 (myControl as FastObjectListView).HeaderFormatStyle = SharedMethods.ColorModes.headerFormatStyle;
             }
@@ -87,8 +87,12 @@ namespace MattMIS_Directory_Manager
         private void RefeshDirectoryTree()
         {
             Handler.ClearTree();
+
+            SharedMethods.PC = new PrincipalContext(ContextType.Domain, Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
             Handler.TreeModel treeItem = new Handler.TreeModel();
             SendBackgroundCommand("ADTREEVIEW");
+
+
 
 
         }
@@ -134,7 +138,7 @@ namespace MattMIS_Directory_Manager
 
         }
 
-       
+
 
         private void viewDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -143,8 +147,22 @@ namespace MattMIS_Directory_Manager
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new UserCard((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).directoryEntry, "changepw").Show();
+            StringDialogBox dialogBox = new StringDialogBox("Please enter the new password for the user.", "Set", true);
+            DialogResult result = dialogBox.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string newPassword = dialogBox.GetValue().ToString();
+
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
+                {
+                    SharedMethods.ChangePassword(um.directoryEntry, newPassword, dialogBox.checkBox1.Checked);
+                }
+                refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
+            }
+
         }
+
 
         private void LoadPreRenderListView()
         {
@@ -306,10 +324,11 @@ namespace MattMIS_Directory_Manager
 
         private void abortableBackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+
             BackgroundArguments arguments = (BackgroundArguments)e.Argument;
             if (arguments.OPERATION == "DISPLAYOU")
             {
-                string OU = arguments.ARGUMENT;              
+                string OU = arguments.ARGUMENT;
                 DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
@@ -338,20 +357,26 @@ namespace MattMIS_Directory_Manager
                 de.AuthenticationType = AuthenticationTypes.ServerBind;
 
                 Handler.ClearTree();
+                Handler.TreeModel searchRoot = new Handler.TreeModel();
+                searchRoot.Name = "Directory Search";
+                searchRoot.ImageKey = "android-search_icon-icons.com_50501.ico";
+                searchRoot.Command = "SEARCHALL";
 
-                addCustomNode(Config.Settings.PinnedViews.TreeItem);
+                Handler.AddTree(searchRoot);
+
+                foreach (Config.Model.TreeItem node in Config.Settings.PinnedViews.CustomNodes) { addCustomNode(node); }
+
 
                 Handler.TreeModel adRoot = new Handler.TreeModel();
                 adRoot.Name = "Active Directory";
                 adRoot.ImageKey = "OU.png";
                 adRoot.Argument = de.Path;
                 adRoot.Command = "DISPLAYOU";
-                Handler.TreeModel searchRoot = new Handler.TreeModel();
+                adRoot.shouldExpand = true;
 
-                searchRoot.Name = "Directory Search";
-                searchRoot.ImageKey = "android-search_icon-icons.com_50501.ico";
-                searchRoot.Command = "SEARCHALL";
-                adRoot.Children.Add(searchRoot);
+                
+
+
 
                 Handler.AddTree(adRoot);
                 AddSubOU(de, adRoot, true);
@@ -371,6 +396,30 @@ namespace MattMIS_Directory_Manager
                 if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
                 if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
                 deSearch.Filter += $"(objectCategory=person)(objectClass=User)(department=*{arguments.ARGUMENT}*))";
+                SearchResultCollection userResults = deSearch.FindAll();
+
+
+                foreach (SearchResult userResult in userResults)
+                {
+                    Handler.AddItem(userResult.GetDirectoryEntry());
+
+                    if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
+
+                }
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = 4;
+
+            }
+            else if (arguments.OPERATION == "BYADFILTER")
+            {
+
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + Config.Settings.Connection.ADUserRoot, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
+                Handler.Clear();
+                DirectorySearcher deSearch = new DirectorySearcher(ADObject);
+                deSearch.SearchScope = SearchScope.Subtree;
+                deSearch.SizeLimit = 3000;
+                deSearch.PageSize = 3000;
+                deSearch.Filter = arguments.ARGUMENT;
                 SearchResultCollection userResults = deSearch.FindAll();
 
 
@@ -449,6 +498,7 @@ namespace MattMIS_Directory_Manager
                 e.Result = -1;
             }
 
+
         }
 
         private void abortableBackgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -456,6 +506,7 @@ namespace MattMIS_Directory_Manager
             StripProgressBar.Style = ProgressBarStyle.Continuous;
 
             currentFolderLocation.Text = "";
+
             loadingSeperator.Visible = false;
             stopLoadingButton.Visible = false;
             if (e.Cancelled)
@@ -465,6 +516,11 @@ namespace MattMIS_Directory_Manager
             else if ((int)e.Result == 5)
             {
                 directoryTreeView.SetObjects(Handler.GetTreeObjects());
+                foreach (Handler.TreeModel tm in directoryTreeView.Objects)
+                {
+                    if (tm.shouldExpand) { directoryTreeView.Expand(tm); }
+
+                }
             }
             else
             {
@@ -481,9 +537,9 @@ namespace MattMIS_Directory_Manager
             newChild.Argument = item.Argument;
             newChild.Command = item.Command;
             newChild.ImageKey = item.ImageKey;
-            if (parent != null) parent.Children.Add(newChild);
+            if (parent != null) { parent.Children.Add(newChild); parent.shouldExpand = true; }
             else Handler.AddTree(newChild);
-                
+
 
             foreach (Config.Model.TreeItem newTree in item.Children)
             {
@@ -494,6 +550,7 @@ namespace MattMIS_Directory_Manager
         {
             searchTypeBox.SelectedIndex = 0;
             currentFolderLocation.Text = "Reading from directory....";
+            currentFolderLocation.ToolTipText = ba.ARGUMENT;
             loadingSeperator.Visible = true;
             stopLoadingButton.Visible = true;
             StripProgressBar.Style = ProgressBarStyle.Marquee;
@@ -521,6 +578,7 @@ namespace MattMIS_Directory_Manager
 
                 searchTypeBox.SelectedIndex = 0;
                 currentFolderLocation.Text = "Reading from directory....";
+                currentFolderLocation.ToolTipText = argument;
                 loadingSeperator.Visible = true;
                 stopLoadingButton.Visible = true;
                 StripProgressBar.Style = ProgressBarStyle.Marquee;
@@ -532,6 +590,10 @@ namespace MattMIS_Directory_Manager
                 else if (commandValue.StartsWith("BYDEPARTMENT"))
                 {
                     backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "BYDEPARTMENT" });
+                }
+                else if (commandValue.StartsWith("BYADFILTER"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, OPERATION = "BYADFILTER" });
                 }
                 else if (commandValue.StartsWith("BYTITLE"))
                 {
@@ -550,7 +612,7 @@ namespace MattMIS_Directory_Manager
                 }
 
             }
-            
+
 
 
         }
@@ -588,7 +650,7 @@ namespace MattMIS_Directory_Manager
                 MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             refreshViewButton.PerformClick();
-            
+
         }
 
         private void directoryTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -627,28 +689,8 @@ namespace MattMIS_Directory_Manager
 
         private void userMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            if (fastObjectListView1.SelectedIndices.Count == 0) { e.Cancel = true; return; }
-            else if (fastObjectListView1.SelectedIndices.Count == 1)
-            {
-                if ((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).ObjectType == "user")
-                {
-                    viewDetailsToolStripMenuItem.Visible = true;
-                    changePasswordToolStripMenuItem.Visible = true;
-                    openHomeFolderToolStripMenuItem.Visible = true;
-                    userStripSeparator.Visible = true;
-                    return;
-                }
-                else if ((fastObjectListView1.SelectedObjects[0] as Handler.UserModel).ObjectType == "computer") { }
-                else
-                {
-                    e.Cancel = true;
-                }
 
-            }
-            viewDetailsToolStripMenuItem.Visible = false;
-            changePasswordToolStripMenuItem.Visible = false;
-            openHomeFolderToolStripMenuItem.Visible = false;
-            userStripSeparator.Visible = false;
+
 
         }
 
@@ -657,7 +699,7 @@ namespace MattMIS_Directory_Manager
             Handler.UserModel user = (Handler.UserModel)e.Model;
             if (user.ImageKey == "user_disabled.ico" || user.ImageKey == "computer_disabled.ico") { e.Item.ForeColor = Color.Red; }
             else if (user.ImageKey == "user_normal.ico") { e.Item.ForeColor = Color.Blue; }
-            else e.Item.ForeColor = Color.Black;
+
         }
 
         private void fastObjectListView1_DoubleClick(object sender, EventArgs e)
@@ -669,8 +711,8 @@ namespace MattMIS_Directory_Manager
                 Handler.TreeModel parent = directoryTreeView.SelectedObject as Handler.TreeModel;
 
                 Handler.TreeModel s = (from c in parent.Children
-                 where c.Argument == obj.directoryEntry.Path
-                 select c).FirstOrDefault();
+                                       where c.Argument == obj.directoryEntry.Path
+                                       select c).FirstOrDefault();
 
                 directoryTreeView.SelectedObject = s;
                 directoryTreeView.Focus();
@@ -711,7 +753,7 @@ namespace MattMIS_Directory_Manager
 
         private void navigateUpButton_Click(object sender, EventArgs e)
         {
-           // directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
+            // directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
         }
 
         private void DirectoryManager_KeyDown(object sender, KeyEventArgs e)
@@ -793,10 +835,12 @@ namespace MattMIS_Directory_Manager
             SharedMethods.ColorModes.darkMode = darkModeButton.Checked;
             if (SharedMethods.ColorModes.darkMode)
             {
-                SharedMethods.ColorModes.backColor = Color.FromArgb(64, 64, 64);
+                SharedMethods.ColorModes.backColor = Color.Black;
+                //SharedMethods.ColorModes.backColor = Color.FromArgb(64, 64, 64);
                 SharedMethods.ColorModes.foreColor = Color.White;
-                SharedMethods.ColorModes.controlColor = Color.FromArgb(64, 64, 64);
-                
+                SharedMethods.ColorModes.backColor = Color.Black;
+                //SharedMethods.ColorModes.controlColor = Color.FromArgb(64, 64, 64);
+                SharedMethods.ColorModes.controlColor = Color.Black;
                 SharedMethods.ColorModes.themeFlatStyle = FlatStyle.Flat;
                 SharedMethods.ColorModes.itemHoverColor = Color.Gray;
                 SharedMethods.ColorModes.itemSelectedColor = Color.DarkGray;
@@ -814,12 +858,12 @@ namespace MattMIS_Directory_Manager
             }
             if (darkModeButton.Checked) darkModeButton2.Checked = true;
             else darkModeButton2.Checked = false;
-            
+
             fastObjectListView1.RebuildColumns();
             fastObjectListView1.Refresh();
             fastObjectListView1.HotItemStyle.BackColor = SharedMethods.ColorModes.itemHoverColor;
             fastObjectListView1.SelectedBackColor = SharedMethods.ColorModes.itemSelectedColor;
-            
+
             UpdateColorControls(this);
         }
 
@@ -830,12 +874,12 @@ namespace MattMIS_Directory_Manager
 
         private void connectionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void disconnectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void refreshToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -870,6 +914,37 @@ namespace MattMIS_Directory_Manager
         {
 
         }
+
+        private void directoryTreeView_FormatRow(object sender, FormatRowEventArgs e)
+        {
+
+
+        }
+
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
+                    
+                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
+                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
+                    serializer.Serialize(txtWriter, Config.Settings);
+                    txtWriter.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+
+    private void UpdateCustomItems()
+    {
+        foreach(Handler.TreeModel tm in treeview)
     }
 
     public class BackgroundArguments

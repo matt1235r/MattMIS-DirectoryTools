@@ -145,7 +145,7 @@ namespace MattMIS_Directory_Manager
 
         public static object ObjImageGetter(object rowObject)
         {
-            return ((UserModel)rowObject).ImageKey;
+            return ((UserModel)rowObject).ImageKey ?? "";
         }
 
         public static object TreeImageGetter(object rowObject)
@@ -166,6 +166,8 @@ namespace MattMIS_Directory_Manager
             public string ImageKey { get; set; }
 
             public int ChildCount { get; }
+
+            public bool shouldExpand { get; set; }
 
             public DirectoryEntry directoryEntry { get; set; }
 

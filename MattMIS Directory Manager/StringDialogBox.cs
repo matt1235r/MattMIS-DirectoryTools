@@ -20,7 +20,7 @@ namespace MattMIS_Directory_Manager
         public StringDialogBox(string message, string goButton, bool multiLine = false)
         {
             InitializeComponent();
-            messageLabel.Text = message;
+            richTextBox1.Text = message;
             okayButton.Text = goButton;
             textBox2.Visible = multiLine;
         }
@@ -32,7 +32,7 @@ namespace MattMIS_Directory_Manager
 
         private void StringDialogBox_Load(object sender, EventArgs e)
         {
-
+            this.ActiveControl = textBox1;
         }
 
         public string GetValue()
