@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectoryManager));
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle1 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle2 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle3 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle4 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle5 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle6 = new BrightIdeasSoftware.HeaderStateStyle();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -296,8 +296,7 @@
             this.enableAccountToolStripMenuItem,
             this.disableToolStripMenuItem});
             this.UserMenuStrip.Name = "userMenuStrip";
-            this.UserMenuStrip.OwnerItem = this.userOptionsToolStripMenuItem;
-            this.UserMenuStrip.Size = new System.Drawing.Size(238, 170);
+            this.UserMenuStrip.Size = new System.Drawing.Size(241, 203);
             this.UserMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.userMenuStrip_Opening);
             // 
             // viewDetailsToolStripMenuItem
@@ -917,18 +916,18 @@
             // 
             // darkHeaderFormatStyle
             // 
-            headerStateStyle1.BackColor = System.Drawing.Color.DarkGray;
-            headerStateStyle1.ForeColor = System.Drawing.Color.White;
-            headerStateStyle1.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Hot = headerStateStyle1;
-            headerStateStyle2.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle2.ForeColor = System.Drawing.Color.White;
-            headerStateStyle2.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Normal = headerStateStyle2;
-            headerStateStyle3.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle3.ForeColor = System.Drawing.Color.White;
-            headerStateStyle3.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Pressed = headerStateStyle3;
+            headerStateStyle4.BackColor = System.Drawing.Color.DarkGray;
+            headerStateStyle4.ForeColor = System.Drawing.Color.White;
+            headerStateStyle4.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Hot = headerStateStyle4;
+            headerStateStyle5.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle5.ForeColor = System.Drawing.Color.White;
+            headerStateStyle5.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Normal = headerStateStyle5;
+            headerStateStyle6.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle6.ForeColor = System.Drawing.Color.White;
+            headerStateStyle6.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Pressed = headerStateStyle6;
             // 
             // backgroundCommandQueuer
             // 
