@@ -632,23 +632,6 @@ namespace MattMIS_Directory_Manager
 
         private void hideDisabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
-            try
-            {
-                if (DialogResult.OK == saveFileDialog1.ShowDialog())
-                {
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
-                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
-                    serializer.Serialize(txtWriter, Config.Settings);
-                    txtWriter.Close();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
             refreshViewButton.PerformClick();
 
         }
@@ -915,22 +898,17 @@ namespace MattMIS_Directory_Manager
 
         }
 
-        private void directoryTreeView_FormatRow(object sender, FormatRowEventArgs e)
-        {
-
-
-        }
-
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        private void exportSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 if (DialogResult.OK == saveFileDialog1.ShowDialog())
                 {
-                    
+                    Config.Model.RootModel exportModel = Config.Settings;
+                    exportModel.Connection.Password = "";
                     XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
                     TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
-                    serializer.Serialize(txtWriter, Config.Settings);
+                    serializer.Serialize(txtWriter, exportModel);
                     txtWriter.Close();
                 }
 
@@ -940,11 +918,6 @@ namespace MattMIS_Directory_Manager
                 MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    }
-
-    private void UpdateCustomItems()
-    {
-        foreach(Handler.TreeModel tm in treeview)
     }
 
     public class BackgroundArguments

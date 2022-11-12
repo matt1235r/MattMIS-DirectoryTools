@@ -88,6 +88,7 @@ namespace MattMIS_Directory_Manager
                     DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
+                    de.Properties["cn"].Value.ToString();
                     connected = 1;
                 }
                 else if (e.Argument.ToString() == "TRYLOAD")
@@ -141,7 +142,7 @@ namespace MattMIS_Directory_Manager
             else if (connected == 5)
             {
                 progressBar.Visible = false;
-                MessageBox.Show($"Unable to connect to domain controller. Please check you have entered the server address correctly.\n\nError Message: \n{errorMessage}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Unable to connect to domain controller. Please check that you have entered the server address correctly and the credentials provided are correct.\n\nError Message: \n\n{errorMessage}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 connectButton.Enabled = true;
                 connectButton.Text = "Connect";
             }
