@@ -570,23 +570,6 @@ namespace MattMIS_Directory_Manager
 
         private void hideDisabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-
-            try
-            {
-                if (DialogResult.OK == saveFileDialog1.ShowDialog())
-                {
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
-                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
-                    serializer.Serialize(txtWriter, Config.Settings);
-                    txtWriter.Close();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
             refreshViewButton.PerformClick();
             
         }
@@ -869,6 +852,27 @@ namespace MattMIS_Directory_Manager
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void exportSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DialogResult.OK == saveFileDialog1.ShowDialog())
+                {
+                    Config.Model.RootModel exportModel = Config.Settings;
+                    exportModel.Connection.Password = "";
+                    XmlSerializer serializer = new XmlSerializer(typeof(Config.Model.RootModel));
+                    TextWriter txtWriter = new StreamWriter(saveFileDialog1.FileName);
+                    serializer.Serialize(txtWriter, exportModel);
+                    txtWriter.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 
