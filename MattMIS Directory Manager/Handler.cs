@@ -158,6 +158,7 @@ namespace MattMIS_Directory_Manager
         {
             public List<TreeModel> Children { get; set; }
             public string Name { get; set; }
+            public TreeModel Parent { get; set; }
 
             public string Command { get; set; }
 

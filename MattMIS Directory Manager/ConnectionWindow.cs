@@ -88,7 +88,7 @@ namespace MattMIS_Directory_Manager
                     DirectoryEntry de = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                     de.AuthenticationType = AuthenticationTypes.ServerBind;
 
-                    de.Properties["cn"].Value.ToString();
+                    de.Options.PageSize.ToString();
                     connected = 1;
                 }
                 else if (e.Argument.ToString() == "TRYLOAD")
@@ -125,7 +125,7 @@ namespace MattMIS_Directory_Manager
             {
                 progressBar.Style = ProgressBarStyle.Continuous;
 
-                DirectoryManager mainWindow = new DirectoryManager();
+                TabbedMain mainWindow = new TabbedMain();
                 mainWindow.Show();
                 this.Hide();
 

@@ -45,6 +45,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AeroSuite, Version=1.0.6216.29077, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AeroSuite.1.0.50\lib\AeroSuite.dll</HintPath>
+    </Reference>
     <Reference Include="Costura, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.5.7.0\lib\netstandard1.0\Costura.dll</HintPath>
     </Reference>
@@ -212,26 +215,44 @@
       <DependentUpon>ConnectionWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DirectoryManager.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DirectoryManager.Designer.cs">
       <DependentUpon>DirectoryManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Handler.cs" />
+    <Compile Include="Object Views\rename_Object.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Object Views\rename_Object.Designer.cs">
+      <DependentUpon>rename_Object.cs</DependentUpon>
+    </Compile>
     <Compile Include="Object Views\generic_Details.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Object Views\generic_Details.Designer.cs">
       <DependentUpon>generic_Details.cs</DependentUpon>
     </Compile>
+    <Compile Include="Object Views\create_Object.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Object Views\create_Object.Designer.cs">
+      <DependentUpon>create_Object.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedMethods.cs" />
-    <Compile Include="StringDialogBox.cs">
+    <Compile Include="Object Views\change_Password.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StringDialogBox.Designer.cs">
-      <DependentUpon>StringDialogBox.cs</DependentUpon>
+    <Compile Include="Object Views\change_Password.Designer.cs">
+      <DependentUpon>change_Password.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabbedMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TabbedMain.Designer.cs">
+      <DependentUpon>TabbedMain.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolStripCustomRenderer.cs" />
     <Compile Include="Object Views\User_Details.cs">
@@ -246,8 +267,14 @@
     <EmbeddedResource Include="DirectoryManager.resx">
       <DependentUpon>DirectoryManager.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Object Views\rename_Object.resx">
+      <DependentUpon>rename_Object.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Object Views\generic_Details.resx">
       <DependentUpon>generic_Details.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Object Views\create_Object.resx">
+      <DependentUpon>create_Object.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -258,11 +285,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="StringDialogBox.resx">
-      <DependentUpon>StringDialogBox.cs</DependentUpon>
+    <EmbeddedResource Include="Object Views\change_Password.resx">
+      <DependentUpon>change_Password.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Object Views\User_Details.resx">
       <DependentUpon>User_Details.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TabbedMain.resx">
+      <DependentUpon>TabbedMain.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <Compile Include="Dump.cs" />

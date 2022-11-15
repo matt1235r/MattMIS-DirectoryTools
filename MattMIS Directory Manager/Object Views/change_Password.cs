@@ -10,14 +10,14 @@ using System.Windows.Forms;
 
 namespace MattMIS_Directory_Manager
 {
-    public partial class StringDialogBox : Form
+    public partial class change_Password : Form
     {
-        public StringDialogBox()
+        public change_Password()
         {
             InitializeComponent();
         }
 
-        public StringDialogBox(string message, string goButton, bool multiLine = false)
+        public change_Password(string message, string goButton, bool multiLine = false)
         {
             InitializeComponent();
             richTextBox1.Text = message;

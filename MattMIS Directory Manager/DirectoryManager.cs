@@ -24,7 +24,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace MattMIS_Directory_Manager
 {
 
-    public partial class DirectoryManager : Form
+    public partial class DirectoryManager : UserControl
     {
         private const int EM_SETCUEBANNER = 0x1501;
 
@@ -34,6 +34,14 @@ namespace MattMIS_Directory_Manager
         public DirectoryManager()
         {
             InitializeComponent();
+        }
+        TabPage parent;
+
+        public DirectoryManager(TabPage parent, Config.Model.RootModel config = null)
+        {
+            InitializeComponent();
+            this.parent = parent;
+
         }
 
         string[] WhiteBackgroundControls = { "TextBox", "ObjectTreeListView", "FastObjectListView", "ComboBox" };
@@ -88,13 +96,7 @@ namespace MattMIS_Directory_Manager
         {
             Handler.ClearTree();
 
-            SharedMethods.PC = new PrincipalContext(ContextType.Domain, Config.Settings.Connection.ServerAddress, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
-            Handler.TreeModel treeItem = new Handler.TreeModel();
             SendBackgroundCommand("ADTREEVIEW");
-
-
-
-
         }
 
         private void AddSubOU(DirectoryEntry DISPLAYOU, Handler.TreeModel parent, bool hideNode = false)
@@ -108,6 +110,7 @@ namespace MattMIS_Directory_Manager
                 newChild.Argument = DISPLAYOU.Path;
                 newChild.Command = "DISPLAYOU";
                 newChild.ImageKey = "OU.png";
+                newChild.Parent = parent;
                 parent.Children.Add(newChild);
 
             }
@@ -147,7 +150,7 @@ namespace MattMIS_Directory_Manager
 
         private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StringDialogBox dialogBox = new StringDialogBox("Please enter the new password for the user.", "Set", true);
+            change_Password dialogBox = new change_Password("Please enter the new password for the user.", "Set", true);
             DialogResult result = dialogBox.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -166,13 +169,12 @@ namespace MattMIS_Directory_Manager
 
         private void LoadPreRenderListView()
         {
-            currentFolderLocation.Text = "Drawing.................";
+            currentFolderLocation.Text = "";
             fastObjectListView1.SetObjects(Handler.GetObjects());
             amountOfItemsLabel.Text = $"{fastObjectListView1.Items.Count} items displayed";
 
             StripProgressBar.Style = ProgressBarStyle.Continuous;
 
-            currentFolderLocation.Text = "";
             loadingSeperator.Visible = false;
             stopLoadingButton.Visible = false;
 
@@ -213,8 +215,7 @@ namespace MattMIS_Directory_Manager
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            searchTextBox.Text = "";
-            LoadPreRenderListView();
+            exportSettingsToolStripMenuItem_Click(sender, e);
 
         }
 
@@ -324,7 +325,7 @@ namespace MattMIS_Directory_Manager
 
         private void abortableBackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-
+            
             BackgroundArguments arguments = (BackgroundArguments)e.Argument;
             if (arguments.OPERATION == "DISPLAYOU")
             {
@@ -349,7 +350,33 @@ namespace MattMIS_Directory_Manager
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 6;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
+            }
+            else if (arguments.OPERATION == "NAVIGATEOU")
+            {
+                string OU = arguments.ARGUMENT;
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + "/" + OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
+
+                Handler.Clear();
+                DirectorySearcher deSearch = new DirectorySearcher(ADObject);
+                deSearch.SearchScope = SearchScope.OneLevel;
+                deSearch.SizeLimit = 3000;
+                deSearch.PageSize = 3000;
+                deSearch.Filter = $"(&";
+                if (arguments.HIDEDISABLED) deSearch.Filter += "(!(UserAccountControl:1.2.840.113556.1.4.803:=2))";
+                if (arguments.HIDEUNMATCHED) deSearch.Filter += "((comment=* by MattMIS*))";
+                if (showMoreObjects.Checked) { deSearch.Filter += $"(|(objectCategory=person)(objectCategory=printQueue)(objectCategory=volume)(objectCategory=group)(objectClass=User)(objectClass=OrganizationalUnit)(objectClass=Computer)))"; }
+                else { deSearch.Filter += "(objectCategory=person)(objectClass=User))"; }
+                SearchResultCollection userResults = deSearch.FindAll();
+
+                foreach (SearchResult userResult in userResults)
+                {
+                    Handler.AddItem(userResult.GetDirectoryEntry());
+
+                    if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
+                }
+                fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
             }
             else if (arguments.OPERATION == "ADTREEVIEW")
             {
@@ -374,14 +401,10 @@ namespace MattMIS_Directory_Manager
                 adRoot.Command = "DISPLAYOU";
                 adRoot.shouldExpand = true;
 
-                
-
-
-
                 Handler.AddTree(adRoot);
                 AddSubOU(de, adRoot, true);
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 5;
+                e.Result = "5";
             }
             else if (arguments.OPERATION == "BYDEPARTMENT")
             {
@@ -407,7 +430,7 @@ namespace MattMIS_Directory_Manager
 
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 4;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
 
             }
             else if (arguments.OPERATION == "BYADFILTER")
@@ -431,7 +454,7 @@ namespace MattMIS_Directory_Manager
 
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 4;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
 
             }
             else if (arguments.OPERATION == "SEARCHDIRBY")
@@ -462,7 +485,7 @@ namespace MattMIS_Directory_Manager
                 }
 
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 3;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
             }
             else if (arguments.OPERATION == "SEARCHVIEWBY")
             {
@@ -491,11 +514,11 @@ namespace MattMIS_Directory_Manager
                     if (backgroundWorker.CancellationPending) { e.Cancel = true; return; }
                 }
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
-                e.Result = 1;
+                e.Result = ADObject.Properties["distinguishedName"].Value;
             }
             else
             {
-                e.Result = -1;
+                e.Result = "-1";
             }
 
 
@@ -506,38 +529,44 @@ namespace MattMIS_Directory_Manager
             StripProgressBar.Style = ProgressBarStyle.Continuous;
 
             currentFolderLocation.Text = "";
-
+            
             loadingSeperator.Visible = false;
             stopLoadingButton.Visible = false;
+            string path = " ";
             if (e.Cancelled)
             {
                 SendBackgroundCommand(Convert.ToString(directoryTreeView.Tag ?? ""));
+                return;
             }
-            else if ((int)e.Result == 5)
+            else if (e.Result.ToString() == "5")
             {
                 directoryTreeView.SetObjects(Handler.GetTreeObjects());
                 foreach (Handler.TreeModel tm in directoryTreeView.Objects)
                 {
                     if (tm.shouldExpand) { directoryTreeView.Expand(tm); }
-
+                    
                 }
+                if (directoryTreeView.SelectedObjects.Count == 0) directoryTreeView.SelectedIndex = 0;
+                path = "";
+
             }
             else
             {
                 currentFolderLocation.Text = "Finished Thread...";
                 LoadPreRenderListView();
             }
-
+            if (path == " ") path = e.Result.ToString();
+            pathTextBox.Text = path;
         }
 
         private void addCustomNode(Config.Model.TreeItem item, Handler.TreeModel parent = null)
         {
             Handler.TreeModel newChild = new Handler.TreeModel();
-            newChild.Name = item.Name;
+            newChild.Name = item.Name ?? "None";
             newChild.Argument = item.Argument;
             newChild.Command = item.Command;
             newChild.ImageKey = item.ImageKey;
-            if (parent != null) { parent.Children.Add(newChild); parent.shouldExpand = true; }
+            if (parent != null) { newChild.Parent = parent;  parent.Children.Add(newChild); parent.shouldExpand = true; }
             else Handler.AddTree(newChild);
 
 
@@ -603,6 +632,10 @@ namespace MattMIS_Directory_Manager
                 {
                     backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "DISPLAYOU" });
                 }
+                else if (commandValue.StartsWith("NAVIGATEOU"))
+                {
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "DISPLAYOU" });
+                }
                 else
                 {
                     currentFolderLocation.Text = "";
@@ -658,6 +691,7 @@ namespace MattMIS_Directory_Manager
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             SendBackgroundCommand(Convert.ToString(fastObjectListView1.Tag ?? ""));
+            
         }
 
         private void searchTypeBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -736,7 +770,10 @@ namespace MattMIS_Directory_Manager
 
         private void navigateUpButton_Click(object sender, EventArgs e)
         {
-            // directoryTreeView.SelectedNode = directoryTreeView.SelectedNode.Parent;
+            if (directoryTreeView.SelectedItem == null) return;
+
+            Handler.TreeModel obj = directoryTreeView.SelectedItem.RowObject as Handler.TreeModel;
+            directoryTreeView.SelectedObject = obj.Parent;
         }
 
         private void DirectoryManager_KeyDown(object sender, KeyEventArgs e)
@@ -754,7 +791,7 @@ namespace MattMIS_Directory_Manager
 
         private void refreshButton2_Click(object sender, EventArgs e)
         {
-            refreshViewButton.PerformClick();
+            SendBackgroundCommand("ADTREEVIEW");
         }
 
         private void deleteObjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -764,13 +801,22 @@ namespace MattMIS_Directory_Manager
 
         private void generalMenuStrip_Opening(object sender, CancelEventArgs e)
         {
+            //HIDE ALL EXTRAS FROM VIEW FIRST
+            userOptionsToolStripMenuItem.Visible = false;
+            computerOptionsToolStripMenuItem.Visible = false;
+            toolStripMenuItem10.Visible = false;
+            toolStripMenuItem9.Visible = false;
+            toolStripSeparator5.Visible = false;
+
+            if (fastObjectListView1.SelectedObjects.Count == 0) return;
+            toolStripMenuItem10.Visible = true;
+            toolStripMenuItem9.Visible = true;
+            toolStripSeparator5.Visible = true;
+
             List<String> objectTypes = new List<string>();
             for (int i = 0; i < fastObjectListView1.SelectedObjects.Count; i++) objectTypes.Add(((Handler.UserModel)fastObjectListView1.SelectedObjects[i]).ObjectType);
 
-            //HIDE ALL FROM VIEW FIRST
-            userOptionsToolStripMenuItem.Visible = false;
-            computerOptionsToolStripMenuItem.Visible = false;
-
+           
 
             //CHECK WHAT ELEMENTS ARE IN
             if (objectTypes.Where(x => x == "user").Count() == fastObjectListView1.SelectedObjects.Count) userOptionsToolStripMenuItem.Visible = true;
@@ -875,8 +921,11 @@ namespace MattMIS_Directory_Manager
             if (directoryTreeView.SelectedItem == null) return;
 
             Handler.TreeModel obj = directoryTreeView.SelectedItem.RowObject as Handler.TreeModel;
-
+            parent.Text = obj.Name + " - Directory Manager";
             directoryTreeView.Expand(obj);
+
+            searchTypeBox.SelectedIndex = 0;
+            searchTextBox.Text = "";
 
             SendBackgroundCommand(obj.Command, obj.Argument);
             directoryTreeView.Expand(directoryTreeView.SelectedItem);
@@ -885,7 +934,7 @@ namespace MattMIS_Directory_Manager
         private void disconnectToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             new ConnectionWindow().Show();
-            this.Close();
+            this.Dispose();
         }
 
         private void connectionInfoToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -917,6 +966,109 @@ namespace MattMIS_Directory_Manager
             {
                 MessageBox.Show($"Unable to save configuration file. \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            create_Object dialogBox = new create_Object(directoryTreeView.SelectedObject as Handler.TreeModel, "organizationalUnit");
+            DialogResult result = dialogBox.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (dialogBox.GetStatus() == 10) { SendBackgroundCommand("ADTREEVIEW"); refreshViewButton.PerformClick(); }
+            }
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
+            Process p = Process.Start("powershell", "-NoExit -Command Enter-PSSession " + (us.FullName));
+        }
+
+        private void logOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
+            Process p = Process.Start("shutdown", $"/m \\{us.FullName} /l /f -t 0");
+        }
+
+        private void shutDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
+            Process p = Process.Start("shutdown", $"/m \\{us.FullName} /s /f -t 0");
+        }
+
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Handler.UserModel us = (Handler.UserModel)fastObjectListView1.SelectedObjects[0];
+            Process p = Process.Start("shutdown", $"/m \\{us.FullName} /r /f -t 0");
+        }
+
+        private void navigateUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            navigateUpButton.PerformClick();
+        }
+
+        private void pathTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                BackgroundArguments backgroundArguments = new BackgroundArguments();
+                backgroundArguments.OPERATION = "NAVIGATEOU";
+                backgroundArguments.ARGUMENT = pathTextBox.Text;
+                SendBackgroundCommand(backgroundArguments);
+            }
+        }
+
+        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        {
+            rename_Object dialogBox = new rename_Object(fastObjectListView1.SelectedObject as Handler.UserModel);
+            DialogResult result = dialogBox.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (dialogBox.GetStatus() == 10) { SendBackgroundCommand("ADTREEVIEW"); refreshViewButton.PerformClick(); }
+            }
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
+                {
+                    SharedMethods.EnableADAccount(um.directoryEntry);
+                }
+                MessageBox.Show($"Sucessfully enabled computer(s).", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"Unable to enable computer(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (Handler.UserModel um in fastObjectListView1.SelectedObjects)
+                {
+                    SharedMethods.DisableADAccount(um.directoryEntry);
+                }
+                MessageBox.Show($"Sucessfully disabled computer(s).", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                refreshViewButton.PerformClick();
+                fastObjectListView1.SelectedObjects = null;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"Unable to disabled computer(s): \n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void remoteDesktopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("mstsc", $"-v {(fastObjectListView1.SelectedObjects[0] as Handler.UserModel).FullName}");
         }
     }
 

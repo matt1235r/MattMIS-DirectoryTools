@@ -39,7 +39,7 @@ namespace MattMIS_Directory_Manager
         {
             ADObject = entry;
             // find a user
-            user = UserPrincipal.FindByIdentity(pc, entry.Properties["objectSid"].Value.ToString());
+            user = UserPrincipal.FindByIdentity(pc, entry.Properties["distinguishedName"].Value.ToString());
             
 
             groupsListView.Items.Clear();
@@ -250,21 +250,22 @@ namespace MattMIS_Directory_Manager
         private void saveOverviewButton_Click(object sender, EventArgs e)
         {
             //OVERVIEW
-            user.DisplayName = fullNameLabel.Text;
-           user.DisplayName = fullNameTextBox.Text;
-            ADObject.Properties["department"].Value = registrationLabel.Text;
-            ADObject.Properties["userPrincipalName"].Value = emailLabel.Text;
+            user.DisplayName = string.IsNullOrEmpty(fullNameLabel.Text) ?   null : fullNameLabel.Text;
+            user.Save();
 
-            ADObject.Properties["givenName"].Value = firstNameTextBox.Text;
-            ADObject.Properties["sn"].Value = lastNameTextBox.Text;
-
-            ADObject.Properties["homeDrive"].Value = driveComboBox.Text;
-            ADObject.Properties["homeDirectory"].Value = profilePathTextBox.Text;
+            ADObject.Properties["givenName"].Value = string.IsNullOrEmpty(firstNameTextBox.Text) ? null : firstNameTextBox.Text;
+            ADObject.Properties["sn"].Value = string.IsNullOrEmpty(lastNameTextBox.Text) ? null : lastNameTextBox.Text;
+            
+            ADObject.Properties["homeDrive"].Value = string.IsNullOrEmpty(driveComboBox.Text) ? null : driveComboBox.Text;
 
             //EMAIL
             ADObject.Properties["msExchHideFromAddressLists"].Value = !showAddressBook.Checked;
-            ADObject.Properties["mail"].Value = emailTextBox;
+            ADObject.Properties["mail"].Value = string.IsNullOrEmpty(emailTextBox.Text) ? null : emailTextBox.Text;
+            
             ADObject.CommitChanges();
+            
+
+            this.Close();
         }
     }
 }
