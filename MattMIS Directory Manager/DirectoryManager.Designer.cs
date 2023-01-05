@@ -30,9 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectoryManager));
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle31 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle32 = new BrightIdeasSoftware.HeaderStateStyle();
-            BrightIdeasSoftware.HeaderStateStyle headerStateStyle33 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle1 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle2 = new BrightIdeasSoftware.HeaderStateStyle();
+            BrightIdeasSoftware.HeaderStateStyle headerStateStyle3 = new BrightIdeasSoftware.HeaderStateStyle();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -454,7 +454,7 @@
             this.pathTextBox.FormattingEnabled = true;
             this.pathTextBox.Location = new System.Drawing.Point(5, 8);
             this.pathTextBox.Name = "pathTextBox";
-            this.pathTextBox.Size = new System.Drawing.Size(283, 28);
+            this.pathTextBox.Size = new System.Drawing.Size(278, 28);
             this.pathTextBox.TabIndex = 13;
             this.pathTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.pathTextBox_KeyDown);
             // 
@@ -463,7 +463,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(296, 12);
+            this.label1.Location = new System.Drawing.Point(291, 12);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 20);
@@ -532,7 +532,7 @@
             this.fastObjectListView1.SelectedBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.fastObjectListView1.SelectedForeColor = System.Drawing.Color.Black;
             this.fastObjectListView1.ShowGroups = false;
-            this.fastObjectListView1.Size = new System.Drawing.Size(853, 427);
+            this.fastObjectListView1.Size = new System.Drawing.Size(848, 427);
             this.fastObjectListView1.SmallImageList = this.imageList1;
             this.fastObjectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.fastObjectListView1.TabIndex = 2;
@@ -807,7 +807,7 @@
             this.searchButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.searchButton.ImageKey = "android-search_icon-icons.com_50501.ico";
             this.searchButton.ImageList = this.imageList1;
-            this.searchButton.Location = new System.Drawing.Point(773, 7);
+            this.searchButton.Location = new System.Drawing.Point(768, 7);
             this.searchButton.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(30, 31);
@@ -944,7 +944,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(484, 12);
+            this.label2.Location = new System.Drawing.Point(479, 12);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 20);
@@ -963,7 +963,7 @@
             this.searchTypeBox.Items.AddRange(new object[] {
             "This View",
             "Everywhere"});
-            this.searchTypeBox.Location = new System.Drawing.Point(354, 8);
+            this.searchTypeBox.Location = new System.Drawing.Point(349, 8);
             this.searchTypeBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.searchTypeBox.Name = "searchTypeBox";
             this.searchTypeBox.Size = new System.Drawing.Size(120, 28);
@@ -978,7 +978,7 @@
             this.searchTextBox.Cue = "Filter by";
             this.searchTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchTextBox.ForeColor = System.Drawing.Color.Black;
-            this.searchTextBox.Location = new System.Drawing.Point(558, 10);
+            this.searchTextBox.Location = new System.Drawing.Point(553, 10);
             this.searchTextBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(208, 26);
@@ -988,18 +988,18 @@
             // 
             // darkHeaderFormatStyle
             // 
-            headerStateStyle31.BackColor = System.Drawing.Color.DarkGray;
-            headerStateStyle31.ForeColor = System.Drawing.Color.White;
-            headerStateStyle31.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Hot = headerStateStyle31;
-            headerStateStyle32.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle32.ForeColor = System.Drawing.Color.White;
-            headerStateStyle32.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Normal = headerStateStyle32;
-            headerStateStyle33.BackColor = System.Drawing.Color.Gray;
-            headerStateStyle33.ForeColor = System.Drawing.Color.White;
-            headerStateStyle33.FrameColor = System.Drawing.Color.Black;
-            this.darkHeaderFormatStyle.Pressed = headerStateStyle33;
+            headerStateStyle1.BackColor = System.Drawing.Color.DarkGray;
+            headerStateStyle1.ForeColor = System.Drawing.Color.White;
+            headerStateStyle1.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Hot = headerStateStyle1;
+            headerStateStyle2.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle2.ForeColor = System.Drawing.Color.White;
+            headerStateStyle2.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Normal = headerStateStyle2;
+            headerStateStyle3.BackColor = System.Drawing.Color.Gray;
+            headerStateStyle3.ForeColor = System.Drawing.Color.White;
+            headerStateStyle3.FrameColor = System.Drawing.Color.Black;
+            this.darkHeaderFormatStyle.Pressed = headerStateStyle3;
             // 
             // backgroundCommandQueuer
             // 

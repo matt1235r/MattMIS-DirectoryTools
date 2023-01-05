@@ -539,7 +539,7 @@ namespace MattMIS_Sync
                 {
                     if ((Convert.ToString(StaffADObject.Properties["givenName"].Value) ?? "") != $"{simsRecord.PreferredForename[0]}")
                     {
-                        staffLog.Warn($"Found Firstname Mismatch.. {(StaffADObject.Properties["givenName"].Value) ?? ""[0]} should be {simsRecord.PreferredForename[0]}");
+                        staffLog.Warn($"Found Firstname Mismatch.. {(StaffADObject.Properties["givenName"].Value) ?? ""} should be {simsRecord.PreferredForename[0]}");
                         StaffADObject.Properties["givenName"].Value = $"{simsRecord.PreferredForename[0]}";
                     }
                 }

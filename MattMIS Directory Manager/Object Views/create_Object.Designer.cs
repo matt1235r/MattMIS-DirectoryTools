@@ -91,7 +91,7 @@ namespace MattMIS_Directory_Manager
             this.pathTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pathTextBox.Name = "pathTextBox";
             this.pathTextBox.Size = new System.Drawing.Size(269, 23);
-            this.pathTextBox.TabIndex = 5;
+            this.pathTextBox.TabIndex = 2;
             this.pathTextBox.DoubleClick += new System.EventHandler(this.pathTextBox_DoubleClick);
             // 
             // label3
@@ -112,7 +112,7 @@ namespace MattMIS_Directory_Manager
             this.objectNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.objectNameTextBox.Name = "objectNameTextBox";
             this.objectNameTextBox.Size = new System.Drawing.Size(170, 23);
-            this.objectNameTextBox.TabIndex = 3;
+            this.objectNameTextBox.TabIndex = 1;
             // 
             // label2
             // 
@@ -132,7 +132,7 @@ namespace MattMIS_Directory_Manager
             this.friendlyNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.friendlyNameTextBox.Name = "friendlyNameTextBox";
             this.friendlyNameTextBox.Size = new System.Drawing.Size(170, 23);
-            this.friendlyNameTextBox.TabIndex = 1;
+            this.friendlyNameTextBox.TabIndex = 0;
             this.friendlyNameTextBox.TextChanged += new System.EventHandler(this.friendlyNameTextBox_TextChanged_1);
             // 
             // label1

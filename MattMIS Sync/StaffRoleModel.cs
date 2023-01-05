@@ -8,7 +8,10 @@ namespace MattMIS_Sync
 {
     public class StaffRoleModel
     {
-        
+
+
+        // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+        /// <remarks/>
 
         // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
         /// <remarks/>
@@ -23,7 +26,7 @@ namespace MattMIS_Sync
 
             private StaffProvisoningSettings settingsField;
 
-            public StaffRoleRecord[] Roles;
+            private StaffRoleRecord[] rolesField;
 
             /// <remarks/>
             public string ExpiresOn
@@ -53,15 +56,15 @@ namespace MattMIS_Sync
 
             /// <remarks/>
             [System.Xml.Serialization.XmlArrayItemAttribute("Role", IsNullable = false)]
-            public StaffRoleRecord[] staffRoleRecord
+            public StaffRoleRecord[] Roles
             {
                 get
                 {
-                    return this.Roles;
+                    return this.rolesField;
                 }
                 set
                 {
-                    this.Roles = value;
+                    this.rolesField = value;
                 }
             }
         }
@@ -77,12 +80,9 @@ namespace MattMIS_Sync
 
             private string defaultPasswordField;
 
-            private string validateWorkEmailEndsWith;
+            private string validateWorkEmailEndsWithField;
 
-            private string fallbackStaffRoleName;
-
-            private bool stripSpecialCharacters;
-
+            private bool stripSpecialCharactersField;
 
             /// <remarks/>
             public bool UseFirstNameInitial
@@ -111,28 +111,15 @@ namespace MattMIS_Sync
             }
 
             /// <remarks/>
-            public string FallbackStaffRoleName
-            {
-                get
-                {
-                    return this.fallbackStaffRoleName;
-                }
-                set
-                {
-                    this.fallbackStaffRoleName = value;
-                }
-            }
-
-            /// <remarks/>
             public string ValidateWorkEmailEndsWith
             {
                 get
                 {
-                    return this.validateWorkEmailEndsWith;
+                    return this.validateWorkEmailEndsWithField;
                 }
                 set
                 {
-                    this.validateWorkEmailEndsWith = value;
+                    this.validateWorkEmailEndsWithField = value;
                 }
             }
 
@@ -141,11 +128,11 @@ namespace MattMIS_Sync
             {
                 get
                 {
-                    return this.stripSpecialCharacters;
+                    return this.stripSpecialCharactersField;
                 }
                 set
                 {
-                    this.stripSpecialCharacters = value;
+                    this.stripSpecialCharactersField = value;
                 }
             }
         }
@@ -234,6 +221,8 @@ namespace MattMIS_Sync
                 }
             }
         }
+
+
 
 
     }

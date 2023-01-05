@@ -99,8 +99,13 @@ namespace MattMIS_Directory_Manager
 
                     string defaultOU = rootDSE.Properties["defaultNamingContext"].Value.ToString();
 
-
-                    Config.Settings.Connection.ADUserRoot = defaultOU;
+                    Config.Settings = new Config.Model.RootModel();
+                    Config.Settings.Connection = new Config.Model.ConnectionModel();
+                    Config.Settings.PinnedViews = new Config.Model.PinnedViews();
+                    Config.Settings.PinnedViews.CustomNodes = new List<Config.Model.TreeItem>();
+                    Config.Settings.Appearance = new Config.Model.AppearanceModel();
+                    Config.Settings.PinnedViews.CustomNodes.Add(new Config.Model.TreeItem());
+  
                     Config.Settings.Connection.ADTreeRoot = defaultOU;
                     Config.Settings.Connection.ServerAddress = domain.DomainControllers[0].Name;
                     Config.Settings.Connection.Username = $"{Environment.UserDomainName}/{Environment.UserName} (Current User)";

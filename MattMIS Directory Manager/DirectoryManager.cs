@@ -327,10 +327,11 @@ namespace MattMIS_Directory_Manager
         {
             
             BackgroundArguments arguments = (BackgroundArguments)e.Argument;
-            if (arguments.OPERATION == "DISPLAYOU")
+            if (arguments.OPERATION == "NAVIGATEOU")
             {
                 string OU = arguments.ARGUMENT;
-                DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
+                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + "/" + OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
+
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
@@ -352,11 +353,10 @@ namespace MattMIS_Directory_Manager
                 fastObjectListView1.Tag = arguments.OPERATION + "#" + arguments.ARGUMENT;
                 e.Result = ADObject.Properties["distinguishedName"].Value;
             }
-            else if (arguments.OPERATION == "NAVIGATEOU")
+            else  if (arguments.OPERATION == "DISPLAYOU")
             {
                 string OU = arguments.ARGUMENT;
-                DirectoryEntry ADObject = new DirectoryEntry("LDAP://" + Config.Settings.Connection.ServerAddress + "/" + OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
-
+                DirectoryEntry ADObject = new DirectoryEntry(OU, Config.Settings.Connection.Username, Config.Settings.Connection.Password);
                 Handler.Clear();
                 DirectorySearcher deSearch = new DirectorySearcher(ADObject);
                 deSearch.SearchScope = SearchScope.OneLevel;
@@ -391,7 +391,8 @@ namespace MattMIS_Directory_Manager
 
                 Handler.AddTree(searchRoot);
 
-                foreach (Config.Model.TreeItem node in Config.Settings.PinnedViews.CustomNodes) { addCustomNode(node); }
+                if (Config.Settings.PinnedViews != null && Config.Settings.PinnedViews.CustomNodes != null) 
+                foreach(Config.Model.TreeItem node in Config.Settings.PinnedViews.CustomNodes) { addCustomNode(node); }
 
 
                 Handler.TreeModel adRoot = new Handler.TreeModel();
@@ -570,7 +571,7 @@ namespace MattMIS_Directory_Manager
             else Handler.AddTree(newChild);
 
 
-            foreach (Config.Model.TreeItem newTree in item.Children)
+            if(item.Children != null) foreach (Config.Model.TreeItem newTree in item.Children)
             {
                 addCustomNode(newTree, newChild);
             }
@@ -634,7 +635,7 @@ namespace MattMIS_Directory_Manager
                 }
                 else if (commandValue.StartsWith("NAVIGATEOU"))
                 {
-                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "DISPLAYOU" });
+                    backgroundWorker.RunWorkerAsync(argument: new BackgroundArguments() { ARGUMENT = argument, HIDEDISABLED = hideDisabledCheckBox.Checked, HIDEUNMATCHED = hideUnmatchedCheckBox.Checked, OPERATION = "NAVIGATEOU" });
                 }
                 else
                 {
